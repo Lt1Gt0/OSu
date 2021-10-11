@@ -34,4 +34,4 @@ end:
 
 
 HEX_OUT:
-	db "0x0000", 0	; Reserver memory for new string
+	db "0x0000", 0	; Reserve memory for new string
