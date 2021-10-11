@@ -1,24 +1,22 @@
-mov	ah, 0x0e		; TTY mode
+[org 0x7c00]
 
+mov bx, BRUH
+call print
 
-; Simple "Hello" Print to the console ;
-mov	al, 'H'
-int	0x10			; Print 'H'
+call newLine
 
-mov	al, 'E'
-int	0x10			; Print 'E'
+mov dx, 0x1234
+call print_hex
 
-mov	al, 'L'			
-				; Sincle 'L' is repreated and stored in register al, just interupt to 0x10 twice
-int	0x10			; Print 'L'
-int	0x10			; Print 'L'
-
-mov	al, 'O'
-int	0x10			; print 'O'
 
 ; Freeze program ;
 cli
 hlt
+
+BRUH: db "Bruh", 0
+
+%include "print.asm"
+%include "print_hex.asm"
 
 times 	510-($-$$) db 0		; Padding
 dw	0xaa55			; Magic boot value
