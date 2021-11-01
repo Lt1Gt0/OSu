@@ -24,9 +24,11 @@
 ;call print_hex
 ;call print_new_line
 
-mov dh, 0
-mov dl, 4
-call change_color_palette	
+;mov dh, 0
+;mov dl, 4
+;call change_color_palette	
+;
+;call get_input
 
 call get_input
 
@@ -37,11 +39,13 @@ hlt
 ; include files ;
 %include "print.asm"
 %include "print_hex.asm"
+%include "print_decimal.asm"
 %include "recieve_input.asm"
 %include "boot_disk.asm"
 %include "color_palette.asm"
 
 ; define variables ;
+integer_value: db 1, 0
 
 ; BOOT SECTOR PADDING ;
 times 510-($-$$) db 0
