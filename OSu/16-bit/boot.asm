@@ -1,36 +1,7 @@
 [org 0x7c00]
 
-;mov bp, 0x8000
-;mov sp, bp
-;
-;mov bx, 0x9000
-;mov dh, 2
-;
-;call boot_disk
-;
-;mov dx, [0x9000]
-;call print_hex
-;call print_new_line	
-;mov dx, [0x9000 + 512] ; next sector
-;call print_hex
-;call print_new_line
-;
-;
-;mov dh, 1
-;call write_to_disk
-;
-;call boot_disk	
-;mov dx, [0x9000]
-;call print_hex
-;call print_new_line
-
-;mov dh, 0
-;mov dl, 4
-;call change_color_palette	
-;
-;call get_input
-
-call get_input
+mov bx, integer_value
+call print_decimal
 
 ; freeze process;
 cli
@@ -45,7 +16,7 @@ hlt
 %include "color_palette.asm"
 
 ; define variables ;
-integer_value: db 1, 0
+integer_value: db 49, 0
 
 ; BOOT SECTOR PADDING ;
 times 510-($-$$) db 0

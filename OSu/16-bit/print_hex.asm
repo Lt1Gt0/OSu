@@ -6,7 +6,7 @@ hex_loop:
 	cmp cx, 4
 	je hex_end
 
-	mov ax, dx ; use ax as the working register
+	mov ax, dx 		; use ax as the working register
 	and ax, 0x000f  ; 0x1234 -> 0x0004 by masking the first three 0's
 	add al, 0x30	; add 30 to N to convert to ascii 'N'
 	cmp al, 0x39	; if al > 9 add an extra '8' to represent 'A' to 'F'

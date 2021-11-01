@@ -12,12 +12,13 @@ print_loop:
 
 	inc bx			; increment on bx
 	jmp print_loop	; loop to next character in string
-	
+
 end_print:
 	popa			; Restore the stack
 	ret				; Return
 
 print_new_line:
+	pusha
 	mov ah, 0x0e	; declare TTY mode
 	mov al, 0xa		; move return carriage byte to al
 	int 0x10

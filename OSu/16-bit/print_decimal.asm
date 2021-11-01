@@ -1,22 +1,18 @@
-[org 0x7c00]
-
 print_decimal:
 	pusha
 	mov ah, 0x0e
-	mov cx, 0 		; Use as counter
+	mov cx, 0
 
-decimal_loop:
-	mov al, [bx]
-	cmp al, 0
-	je decimal_end
+print_decimal_loop:
+	cmp cx, 5
+	je end_print
+	call print
+	call print_new_line
 
-	int 0x10
-
-	inc bx
+	inc bx	
 	inc cx
-	jmp decimal_loop
+	jmp print_decimal_loop
 
-decimal_end:
-
+print_decimal_end:
 	popa
 	ret
