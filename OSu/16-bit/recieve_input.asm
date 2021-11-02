@@ -1,5 +1,3 @@
-[org 0x7c00]					; Set Origin to 0x7c00
-
 get_input:						; start of the call
 	pusha						; push all registers to stack for retrival later
 	
@@ -25,7 +23,6 @@ loop_input:
 	jmp loop_input
 
 print_input_loop:
-	mov ah, 0x0e				; Move into TTY mode
 	cmp dx, sp
 	je end_input_loop
 	cmp cx, 0 					; Check to see if this is the first iteration of the print so it wont remove the user's inputted line
@@ -33,9 +30,7 @@ print_input_loop:
 	
 	mov bx, dx					; get bx ready to print
 	call print
-
 	sub dx, 2 					; Move down the stack 2 bytes since the value for the character is every 2 bytes
-
 	jmp print_input_loop
 
 format_next_line:
@@ -44,5 +39,9 @@ format_next_line:
 	jmp print_input_loop
 
 end_input_loop:					; end of the function
+	cmp bx, [bp]				; Clear the stack
+	pop bx						
+	jne end_input_loop
+
 	popa						; restore the previous stack
 	ret							; return
