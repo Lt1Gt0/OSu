@@ -18,7 +18,7 @@ hlt
 %include "color_palette.asm"
 
 ; define variables ;
-integer_value: dw 11011, 0
+integer_value: dw 1234, 0
 
 ; BOOT SECTOR PADDING ;
 times 510-($-$$) db 0
