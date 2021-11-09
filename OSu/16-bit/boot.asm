@@ -3,7 +3,7 @@
 mov bx, [integer_value]
 call print_decimal
 
-call get_input
+;call get_input
 
 ; freeze process;
 cli
@@ -18,7 +18,7 @@ hlt
 %include "color_palette.asm"
 
 ; define variables ;
-integer_value: dw 1234, 0
+integer_value: dw 1235, 0
 
 ; BOOT SECTOR PADDING ;
 times 510-($-$$) db 0

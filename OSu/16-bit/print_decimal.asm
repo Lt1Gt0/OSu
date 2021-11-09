@@ -1,63 +1,41 @@
+data_storage_bp: equ 0x7b00
+
 print_decimal:
 	pusha
+	mov ax, bx				; integer value passed through
 
-	mov bx, decimal_value_buffer
-	mov cx, 0
-bruh_loop:
-	mov dx, [bx]
-	cmp [bl], 0
-	je print_decimal_end
+	mov bp, data_storage_bp	; set up the stack pointer and base pointer
+	mov sp, bp
 
-	cmp cx, 10
-	je print_decimal_end
+; Get the digit count ;
+mov cx, 10					; set the divisor to 10
+get_digits:
+	xor dx, dx 				; effectively clear register dx
+	div cx					; divide ax by cx (10)
 
-	call print_hex
-	call print_new_line
+	add dl, 0x30			; Get the correct ascii value for the number that was given in dl (remainder)
+	push dx					; push dx to the stack
 
-	inc cx
-	inc bx
-	jmp bruh_loop
-
-	mov cx, 0
-get_total_digits:
-	cmp cx, 3
-	je start_decimal_loop
-
-	inc cx
-	jmp get_total_digits	
-
-start_decimal_loop:
-	mov ax, bx
-
-	mov byte [total_digits_in_val], cl
-	mov bx, 0x0000
-	mov bl, [total_digits_in_val]
-	add bx, decimal_value_buffer
-	
-	mov cx, 10
-
-print_decimal_loop:	
-	xor dx, dx
-	div cx
-	
-	add dl, 0x30
-	mov [bx], dl
-
-	call print_hex
-	call print_new_line
-
-	dec bx
+	inc bx					; increment bx by 1 and move to the next digit
 	cmp ax, 0
-	je print_decimal_end
-	jmp print_decimal_loop
+	je after_get_digits		; Jump to end of the function call
+	jmp get_digits			; repeat
 
-print_decimal_end:
-	mov bx, decimal_value_buffer
+after_get_digits:
+	mov dx, sp
+print_decimal_loop:
+	mov bx, dx				; get the current hex value on the stack and print
 	call print
-	call print_new_line
+
+	cmp dx, data_storage_bp ; check if the stack pointer is the same as the base pointer
+	je print_decimal_end	
+
+	add dx, 2 				; increase stack pointer by 2 to get the nex hex val	
+	jmp print_decimal_loop	
+print_decimal_end:
+	cmp bx, [bp]			; Clear the stack
+	pop bx						
+	jne print_decimal_end
 
 	popa
 	ret
-
-decimal_value_buffer: times 6 db 0
-total_digits_in_val: db 0
