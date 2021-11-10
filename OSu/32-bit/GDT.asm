@@ -8,7 +8,7 @@ code_descriptor:
 	db 0x0		; Segment base, bits 16-23
 	db 10011010b ; Type flags
 	db 11001111b ; Other flags
-	db 0
+	db 0x0
 
 data_descriptor:
 	dw 0xffff
