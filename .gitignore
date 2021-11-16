@@ -1,0 +1,6 @@
+# No .bin files
+*.bin
+
+# no .o files
+*.o
+
