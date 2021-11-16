@@ -1,7 +1,9 @@
 [org 0x7c00]
 
-mov bx, [integer_value]
-call print_decimal
+;mov bx, [integer_value]
+;	call print_decimal
+
+call get_input
 
 ;call get_input
 
