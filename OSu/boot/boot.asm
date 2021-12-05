@@ -29,9 +29,9 @@
     jmp $                       ;    this will actually never be executed
 
 ; include files ;
-%include "../16-bit/print.asm"
-%include "../16-bit/print_hex.asm"
-%include "../16-bit/boot_disk.asm"
+%include "16-bit/print.asm"
+%include "16-bit/print_hex.asm"
+%include "16-bit/boot_disk.asm"
 
 %include "GDT/GDT.asm"
 %include "kernel/print-32-bit.asm"
