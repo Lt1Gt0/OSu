@@ -1,5 +1,3 @@
- GDT_start:
-
 ; The GDT should start with a null 8 bytes
 null_descriptor:
 	dd 0x0
@@ -27,12 +25,20 @@ data_descriptor:
 	db 10010010b
 	db 11001111b
 	db 0x0
+
 GDT_end:
 
 ; GDT descriptor
 GDT_descriptor:
-	dw GDT_end - GDT_start - 1 		; size (16 bit), always one less of its real size
-	dd GDT_start					; address (32 bit)
+	dw GDT_end - null_descriptor - 1 		; size (16 bit), always one less of its real size
+	dq null_descriptor				; address (32 bit)
 
-CODE_SEG equ code_descriptor - GDT_start
-DATA_SEG equ data_descriptor - GDT_start
+CODE_SEG equ code_descriptor - null_descriptor
+DATA_SEG equ data_descriptor - null_descriptor
+
+[bits 32]
+edit_GDT:
+	mov [code_descriptor + 6], byte 10101111b
+	mov [data_descriptor + 6], byte 10101111b
+	ret
+[bits 16]

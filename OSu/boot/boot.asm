@@ -3,44 +3,21 @@
 ; read article about moving the cursor + print()
 
 
-[org 0x7c00]                    ; bootloader offset
-    KERNEL_LOCATION equ 0x1000                         
-    BOOT_DISK: db 0
-    
-    mov [BOOT_DISK], dl 
-                            
-    xor ax, ax                          
-    mov es, ax
-    mov ds, ax
-    mov bp, 0x8000
-    mov sp, bp
-    
-    mov bx, KERNEL_LOCATION
-    mov dh, 2
-    mov dl, [BOOT_DISK]
-
-    call boot_disk            
-
-    mov ah, 0x0 
-    mov al, 0x3
-    int 0x10
-
-    call switch_to_pm
-    jmp $                       ;    this will actually never be executed
-
-; include files ;
-%include "16-bit/print.asm"
-%include "16-bit/print_hex.asm"
-%include "16-bit/boot_disk.asm"
+[org 0x7c00]                           ; bootloader offset
+    call switch_to_64_bit
+    jmp $                              ;    this will actually never be executed
 
 %include "GDT/GDT.asm"
-%include "kernel/print-32-bit.asm"
 %include "boot/switch.asm"
 ;%include "bootsect.asm"
 
-[bits 32]
-BEGIN_PM:                           ; after the switch go here
-    jmp KERNEL_LOCATION
+[bits 64]
+BEGIN_64_BIT:                           ; after the switch go here
+    mov edi, 0xb8000
+    mov rax, 0x1f201f201f201f20
+    mov ecx, 500
+    rep stosq
+    jmp $
 
 ; bootsector
 times 510-($-$$) db 0
