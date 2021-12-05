@@ -1,5 +1,6 @@
 [bits 16]
 switch_to_pm:
+	call enable_A20
 	cli 								; Clear interrupts
 	lgdt [GDT_descriptor]				; Load the gdt
 	mov eax, cr0						; Change the last bit of cr0 to 1
@@ -22,3 +23,9 @@ start_protected_mode:
 	mov esp, ebp
 
 	call BEGIN_PM
+
+enable_A20:
+	in al, 0x92
+	or al, 2
+	out 0x92, al
+	ret

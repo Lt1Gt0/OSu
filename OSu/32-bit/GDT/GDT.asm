@@ -1,4 +1,4 @@
-GDT_start:
+ GDT_start:
 
 ; The GDT should start with a null 8 bytes
 null_descriptor:
