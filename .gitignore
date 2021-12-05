@@ -1,5 +1,7 @@
-# No .bin files
+# Don't Include any binary files
 *.bin
 
-# no .o files
+# Don't Include any object files
 *.o
+
+/NASM/
