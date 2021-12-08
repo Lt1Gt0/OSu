@@ -1,8 +1,19 @@
 # OSu
-Operating System that plays osu
 
-Nothing much will be displayed currently. Currently in the stages of being a 64 bit OS with nothing much added onto it other than a barebones setup
+Operating System that might eventually play OSU!
 
-To run the OS.bin file in the release, have qemu installed and run this command in terminal
+**There is no correlation between this OS and the development team behind the game OSU!**
+
+There is not much to be offered in the OS in its current stages while I learn more OS development and different protocol implementations
+
+## Running the binary `OS.bin` file ##
+To run the OS.bin file in the release I would reccomend running the binary through qemu
+
+**[Qemu Download Page](https://www.qemu.org/download/)**
+
+Assuming Qemu is instlled properly run the command below in terminal in the same directory as `OS.bin`
+
 
 `qemu-system-x86_64 -drive format=raw,file="OS.bin",index=0,if=floppy -m 128M`
+
+If ran correctly on the release version 1.0.0, there sould be a blue screen in the qemu window and nothing else
