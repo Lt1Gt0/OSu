@@ -1,9 +1,9 @@
-PROGRAM_SPACE equ 0x8000
+PROGRAM_SPACE equ 0x7e00
 
 read_disk:
 	mov ah, 0x02
 	mov bx, PROGRAM_SPACE
-	mov al, 32
+	mov al, 2
 	mov dl, [BOOT_DISK]
 	mov ch, 0x00 
 	mov dh, 0x00 
