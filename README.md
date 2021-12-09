@@ -1,7 +1,5 @@
 # OSu
 
-## CURRENT CLONE WILL NOT BE AS EXPECTED, WORKING ON DISK READING ## 
-
 Operating System that might eventually play OSU!
 
 **There is no correlation between this OS and the development team behind the game OSU!**
