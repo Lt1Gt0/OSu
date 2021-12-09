@@ -4,4 +4,6 @@
 # Don't Include any object files
 *.o
 
-/NASM/
+.vs
+
+.user_misc
