@@ -14,7 +14,7 @@ jmp $                              ;    this will actually never be executed
 ;[extrn _start]
 BEGIN_64_BIT:                           ; after the switch go here
     mov edi, 0xb8000
-    mov rax, 0x1f201f201f201f20
+    mov rax, 0x1f202f203f204f20
     mov ecx, 500
     rep stosq
  ;   jmp _start

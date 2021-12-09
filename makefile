@@ -55,14 +55,22 @@ OBJS = ${CPP_SOURCES:.cpp=.o}
 CPP = i386-elf-gcc
 CPPFLAGS = -ffreestanding -m32 -g
 
-all: tmp_bootloader.bin
+all: sector_1/bootloader.bin
 	$(info ---------- Running OS ----------)
-	qemu-system-x86_64 -drive format=raw,file="tmp_bootloader.bin",index=0,if=floppy -m 128M
-tmp_bootloader.bin: sector_2/ExtendedProgram.bin sector_1/bootloader.asm
-	nasm sector_1/bootloader.asm -f bin -o tmp_bootloader.bin
-	cat sector_2/ExtendedProgram.bin >> tmp_bootloader.bin
+	qemu-system-x86_64 -drive format=raw,file="sector_1/bootloader.bin",index=0,if=floppy -m 128M
+kernel/kernel.bin: kernel/kernel.tmp
+	objcopy -O binary $^ $@
+kernel/kernel.tmp: kernel/kernel.o sector_2/ExtendedProgram.o
+	custom-ld -o kernel/kernel.tmp -Ttext $^
+sector_2/ExtendedProgram.o: sector_2/ExtendedProgram.asm
+	nasm $^ -f elf64 -o $@	
+kernel/kernel.o: kernel/kernel.cpp
+	x86_64-elf-gcc -ffreestanding -mno-red-zone -m64 -c $^ -o $@
+sector_1/bootloader.bin: sector_1/bootloader.asm sector_2/ExtendedProgram.bin
+	nasm sector_1/bootloader.asm -f bin -o sector_1/bootloader.bin
+	cat sector_2/ExtendedProgram.bin >> sector_1/bootloader.bin
 sector_2/ExtendedProgram.bin: sector_2/ExtendedProgram.asm
-	nasm $^ -f bin -o $@		
+	nasm $^ -f bin -o $@	
 #OS.bin: boot/everything.bin boot/zeros.bin
 #	$(info ---------- Generating OS binary ----------)
 #	cat $^ > $@
@@ -90,4 +98,4 @@ sector_2/ExtendedProgram.bin: sector_2/ExtendedProgram.asm
 clean:
 	$(info ---------- Cleaning ----------)
 	rm -fr *.bin kernel/*.bin drivers/*.bin boot/*.bin sector_1/*.bin sector_2/*.bin
-	rm -fr *.o kernel/*.o drivers/*.o boot/*.o#
+	rm -fr *.o kernel/*.o drivers/*.o boot/*.o

@@ -1,9 +1,6 @@
-# Don't Include any binary files
 *.bin
+*.o 		
+*.tmp		
 
-# Don't Include any object files
-*.o
-
-.vs
-
-.user_misc
+.vs		
+.user_misc 	
