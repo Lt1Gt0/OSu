@@ -5,36 +5,33 @@ HEADERS = $(wildcard kernel/*.h drivers/*.h)
 LINKERS = $(wildcard kernel/*.ld drivers/*.ld)
 OBJS = ${CPP_SOURCES:.cpp=.o}
 
-CPP = i386-elf-gcc
-CPPFLAGS = -ffreestanding -m32 -g
-
+LINKER = x86_64-elf-ld
+CPP = x86_64-elf-gcc
+CPPFLAGS = -ffreestanding -mno-red-zone -m64
 
 all: OS.bin
 	$(info ---------- Running OS ----------)
 	qemu-system-x86_64 -drive format=raw,file="OS.bin",index=0,if=floppy -m 128M
-OS.bin: boot/bootloader.bin
-	$(info ---------- Generating OS binary ----------)
+setup:
+	$(info ---------- Setting up environment ----------)
+	export PREFIX="/usr/local/x86_64elfgcc"
+	export TARGET=x86_64-elf
+	export PATH="$$PREFIX/bin:$$PATH"
+OS.bin: boot_sector/bootloader.bin
+	$(info ---------- Generating OS.bin ----------)
 	cat $^ > $@
-boot/bootloader.bin: sector_1/bootloader.asm sector_2/ExtendedProgram.bin
+boot_sector/bootloader.bin: kernel/kernel.bin boot_sector/bootloader.asm
 	$(info ---------- Generating bootloader ----------)
-	nasm sector_1/bootloader.asm -f bin -o boot/bootloader.bin
-	cat sector_2/ExtendedProgram.bin >> boot/bootloader.bin
-sector_2/ExtendedProgram.bin: sector_2/ExtendedProgram.asm
-	nasm $^ -f bin -o $@	
-boot/boot.bin: boot/bootloader.asm
-	$(info ---------- Generating boot file ----------)
-	nasm $^ -f bin -o $@
-#kernel/full_kernel.bin: kernel/kernel_entry.o kernel/kernel.o
-#	$(info ---------- Generating full_kernel.bin ----------)
-#	i386-elf-ld -o $@ -Ttext 0x100 $^ --oformat binary
-$(OUT): $(OBJFILES)
-	$(CPP) $(CPPFLAGS) -o $@ $^
-%.o: %.cpp ${HEADERS}
-	$(info ---------- Generating object files from cpp ----------)
-	$(CPP) $(CPPFLAGS) -c $< -o $@
-	@echo $^
+	nasm boot_sector/bootloader.asm -f bin -o boot_sector/bootloader.bin
+	cat kernel/kernel.bin >> $@
+kernel/kernel.bin: sector_2/ExtendedProgram.o kernel/kernel.o kernel/link.ld
+	$(LINKER) -T"kernel/link.ld" 
+kernel/kernel.o: kernel/kernel.cpp 
+	$(CPP) -Ttext 0x8000 $(CPPFLAGS) -c $^ -o $@
+sector_2/ExtendedProgram.o: sector_2/ExtendedProgram.asm
+	nasm $^ -f elf64 -o $@
 clean:
 	$(info ---------- Cleaning ----------)
-	rm -fr *.bin kernel/*.bin drivers/*.bin boot/*.bin boot/*.bin sector_1/*.bin sector_2/*.bin
-	rm -fr *.o kernel/*.o drivers/*.o boot/*.o
-	rm -fr *.tmp sector_1/*.tmp sector_2/*.tmp 
+	rm -fr *.bin kernel/*.bin drivers/*.bin boot_sector/*.bin sector_2/*.bin
+	rm -fr *.o kernel/*.o drivers/*.o boot_sector/*.o sector_2/*.o
+	rm -fr *.tmp boot_sector/*.tmp sector_2/*.tmp kernel/*.tmp 

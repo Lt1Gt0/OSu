@@ -4,18 +4,18 @@ ENTRY (_start)
 
 INPUT
 (
-	ExtendedProgram.o
-	Kernel.o
+    sector_2/ExtendedProgram.o
+	kernel/kernel.o
 )
 
 OUTPUT 
 (
-	kernel.bin
+	kernel/kernel.bin
 )
 
 SECTIONS
 {
-	. = 0x8000
+	. = 0x8000;
 
 	.text : ALIGN(0x1000)
 	{
