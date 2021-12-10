@@ -4,8 +4,8 @@ ENTRY (_start)
 
 INPUT
 (
-	ExtendedProgram.o
-	Kernel.o
+    ExtendedProgram.o
+	kernel.o
 )
 
 OUTPUT 

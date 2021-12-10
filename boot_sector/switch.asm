@@ -1,4 +1,9 @@
 switch_to_64_bit:
+
+	mov ah, 0x0e
+	mov al, '-'
+	int 0x10
+
 	switch_to_pm:
 		call enable_A20
 		cli 								; Clear interrupts
