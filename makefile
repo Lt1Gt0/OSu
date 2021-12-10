@@ -24,13 +24,10 @@ boot_sector/bootloader.bin: kernel/kernel.bin boot_sector/bootloader.asm
 	$(info ---------- Generating bootloader ----------)
 	nasm boot_sector/bootloader.asm -f bin -o boot_sector/bootloader.bin
 	cat kernel/kernel.bin >> $@
-kernel/kernel.bin: kernel/kernel.tmp
-	$(info ---------- Generating Kernel ----------)
-	objcopy -O binary $^ $@
-kernel/kernel.tmp: sector_2/ExtendedProgram.o kernel/kernel.o 
-	$(LINKER) -o $@ -Ttext 0x7e00 $^ 
+kernel/kernel.bin: sector_2/ExtendedProgram.o kernel/kernel.o kernel/link.ld
+	$(LINKER) -T"kernel/link.ld" 
 kernel/kernel.o: kernel/kernel.cpp 
-	$(CPP) $(CPPFLAGS) -c $^ -o $@
+	$(CPP) -Ttext 0x8000 $(CPPFLAGS) -c $^ -o $@
 sector_2/ExtendedProgram.o: sector_2/ExtendedProgram.asm
 	nasm $^ -f elf64 -o $@
 clean:

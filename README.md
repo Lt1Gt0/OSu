@@ -28,3 +28,7 @@ If followed on linux, add the environment path to your `~./.bashrc`
   at the bottom of the file add `export PATH="$PATH:/usr/local/x86_64elfgcc/bin"`
   
   reboot system with `sudo reboot`
+
+## THINGS TO NOTE ##
+
+Current `/16-bit` just contains random bits of BIOS level functions for bootloader

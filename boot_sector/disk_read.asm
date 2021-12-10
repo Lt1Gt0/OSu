@@ -1,4 +1,4 @@
-PROGRAM_SPACE equ 0x7e00
+PROGRAM_SPACE equ 0x8000
 read_disk:
 	mov ah, 0x02
 	mov bx, PROGRAM_SPACE
