@@ -18,8 +18,8 @@ switch_to_64_bit:
 
 	[bits 32]
 
-	%include "kernel/CPUID.asm"
-	%include "kernel/paging.asm"
+	%include "assembly/CPUID.asm"
+	%include "assembly/paging.asm"
 
 	start_protected_mode:
 		mov ax, DATA_SEG					; Update the segment registers				

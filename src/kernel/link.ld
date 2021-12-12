@@ -4,13 +4,13 @@ ENTRY (_start)
 
 INPUT
 (
-    sector_2/ExtendedProgram.o
-	kernel/kernel.o
+    assembly/sector_2/ExtendedProgram.o
+	src/kernel/kernel.o
 )
 
 OUTPUT 
 (
-	kernel/kernel.bin
+	src/kernel/kernel.bin
 )
 
 SECTIONS

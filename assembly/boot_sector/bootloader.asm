@@ -8,8 +8,8 @@
 	
 	jmp PROGRAM_SPACE
 	
-	%include "boot_sector/print.asm"
-	%include "boot_sector/disk_read.asm"
+	%include "assembly/boot_sector/print.asm"
+	%include "assembly/boot_sector/disk_read.asm"
 	
 	times 510-($-$$) db 0
 	dw 0xaa55
