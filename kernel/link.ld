@@ -5,12 +5,12 @@ ENTRY (_start)
 INPUT
 (
     assembly/sector_2/ExtendedProgram.o
-	src/kernel/kernel.o
+	kernel/src/kernel.o
 )
 
 OUTPUT 
 (
-	src/kernel/kernel.bin
+	kernel/src/kernel.bin
 )
 
 SECTIONS
