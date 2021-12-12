@@ -2,6 +2,8 @@
 
 extern "C" void _start(){
 	Terminal terminal = Terminal();
-	terminal.PrintString("Among Us");
+
+	terminal.InitializeTerminal();
+	terminal.PrintString("Hello World");
 	return;
 }

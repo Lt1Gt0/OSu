@@ -9,7 +9,9 @@
 
 uint8 cursorPos;
 
-Terminal::Terminal(){
+Terminal::Terminal(){}
+
+void Terminal::InitializeTerminal(){
 	SetCursorPosition(0);
 }
 
