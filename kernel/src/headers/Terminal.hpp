@@ -9,7 +9,10 @@ public:
 	void InitializeTerminal();
 
 	void SetCursorPosition(uint16 position);
-	void PrintString(const char* str);
+	void OutputString(const char* str);
 
 	uint8 CursorPositionCoords(uint8 x, uint8 y);
+
+	template<typename T>
+	const char* HexToString(T value);
 };

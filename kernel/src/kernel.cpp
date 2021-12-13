@@ -4,6 +4,6 @@ extern "C" void _start(){
 	Terminal terminal = Terminal();
 
 	terminal.InitializeTerminal();
-	terminal.PrintString("Hello World");
+	terminal.OutputString(terminal.HexToString(0x123478));
 	return;
 }

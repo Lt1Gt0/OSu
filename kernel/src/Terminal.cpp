@@ -27,7 +27,7 @@ void Terminal::SetCursorPosition(uint16 position){
 	cursorPos = position;
 }
 
-void Terminal::PrintString(const char* str){
+void Terminal::OutputString(const char* str){
 	uint8* charPtr = (uint8*)str;
 	uint16 index = cursorPos;
 
@@ -58,4 +58,23 @@ uint8 Terminal::CursorPositionCoords(uint8 x, uint8 y){
 	// 	x = VGA_WIDTH - 1; //Set the Cursor x to the maximum it could be
 
 	return (y * VGA_WIDTH) + x;
+}
+
+char hexToStringOutput[128];
+template<typename T>
+const char* Terminal::HexToString(T value){
+	T* valPtr = &value;
+	uint8* ptr;
+	uint8 temp;
+	uint8 size = (sizeof(T)) * 2 - 1;
+
+	for(uint8 i = 0; i < size; i++){
+		ptr = ((uint8*)valPtr + i);
+		temp = ((*ptr & 0xF0) >> 4);
+		hexToStringOutput[size - (i * 2 + 1)] = temp + (temp > 9 ? 55 : 48);
+		temp = (*ptr & 0x0F);
+		hexToStringOutput[size - (i * 2)] = temp + (temp > 9 ? 55 : 48);
+	}
+	hexToStringOutput[size + 1] = 0;
+	return hexToStringOutput;
 }
