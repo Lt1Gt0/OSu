@@ -52,4 +52,3 @@ Kernel
 
 - [ ] VGA Color Support
 - [ ] User Input
-- [ ] s
