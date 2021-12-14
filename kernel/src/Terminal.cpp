@@ -2,6 +2,7 @@
 
 #include <Terminal.hpp>
 #include <Typedefs.h>
+#include <Color.h>
 #include "IO/IO.hpp" 
 #define VGA_MEMORY (uint8*)0xb8000 
 #define VGA_WIDTH 80
@@ -12,7 +13,19 @@ uint8 cursorPos;
 Terminal::Terminal(){}
 
 void Terminal::InitializeTerminal(){
+	ClearTerminal(BG_BLACK | FG_WHITE);
 	SetCursorPosition(0);
+}
+
+void Terminal::ClearTerminal(uint64 color = BG_BLACK | FG_WHITE){
+	uint64 val = 0;
+	val += color << 8;
+	val += color << 24;
+	val += color << 40;
+	val += color << 56;
+	for(uint64* i = (uint64*)VGA_MEMORY; i < (uint64*)(VGA_MEMORY + 4000); i++){
+		*i = val;
+	}
 }
 
 void Terminal::SetCursorPosition(uint16 position){
@@ -27,7 +40,7 @@ void Terminal::SetCursorPosition(uint16 position){
 	cursorPos = position;
 }
 
-void Terminal::OutputString(const char* str){
+void Terminal::OutputString(const char* str, uint8 color = BG_BLACK | FG_WHITE){
 	uint8* charPtr = (uint8*)str;
 	uint16 index = cursorPos;
 
@@ -38,10 +51,11 @@ void Terminal::OutputString(const char* str){
 				index += VGA_WIDTH;
 				break;
 			case 0x0d: //Return Carriage
-				index -= index % VGA_WIDTH; //TODO FIX
+				index -= index % VGA_WIDTH;
 				break;
 			default:
 				*(VGA_MEMORY + index * 2) = *charPtr;
+				*(VGA_MEMORY + index * 2 + 1) = color;
 				index++;
 		}
 		charPtr++;

@@ -8,8 +8,6 @@ jmp $
 [bits 64]
 [extern _start]
 BEGIN_64_BIT:                           ; after the switch go here
-    mov edi, 0xb8000
-    mov rax, 0x0f200f200f200f20
     mov ecx, 500
     rep stosq
     call _start
