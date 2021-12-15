@@ -25,14 +25,16 @@ assembly/boot_sector/bootloader.bin: kernel/src/kernel.bin assembly/boot_sector/
 	$(info ---------- Generating bootloader ----------)
 	nasm assembly/boot_sector/bootloader.asm -f bin -o assembly/boot_sector/bootloader.bin
 	cat kernel/src/kernel.bin >> $@
-kernel/src/kernel.bin: assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o kernel/link.ld
+kernel/src/kernel.bin: assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o kernel/link.ld assembly/binaries.o
 	$(LINKER) -T"kernel/link.ld" 
 kernel/src/kernel.o: kernel/src/kernel.cpp 
 	$(CPP) -Ttext 0x8000 $(CPPFLAGS) -c $^ -o $@
 assembly/sector_2/ExtendedProgram.o: assembly/sector_2/ExtendedProgram.asm
 	nasm $^ -f elf64 -o $@
+assembly/binaries.o: assembly/binaries.asm
+	nasm $^ -f elf64 -o $@	
 clean:
 	$(info ---------- Cleaning ----------)
 	rm -fr *.bin kernel/*.bin kernel/src/*.bin assembly/boot_sector/*.bin assembly/sector_2/*.bin
-	rm -fr *.o kernel/*.o kernel/src/*.o assembly/sector_2/*.o
+	rm -fr *.o kernel/*.o kernel/src/*.o assembly/sector_2/*.o assembly/*.o
 	rm -fr *.tmp assembly/boot_sector/*.tmp assembly/sector_2/*.tmp

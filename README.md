@@ -50,5 +50,5 @@ If you want to run the most current version of `OS.bin` offered outside of the r
 
 Kernel
 
-- [ ] VGA Color Support
+- [X] VGA Color Support
 - [ ] User Input

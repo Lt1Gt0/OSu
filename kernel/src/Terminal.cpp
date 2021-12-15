@@ -13,11 +13,11 @@ uint8 cursorPos;
 Terminal::Terminal(){}
 
 void Terminal::InitializeTerminal(){
-	ClearTerminal(BG_BLACK | FG_WHITE);
+	ClearTerminal(BG_BLUE | FG_WHITE);
 	SetCursorPosition(0);
 }
 
-void Terminal::ClearTerminal(uint64 color = BG_BLACK | FG_WHITE){
+void Terminal::ClearTerminal(uint64 color = BG_BLUE | FG_WHITE){
 	uint64 val = 0;
 	val += color << 8;
 	val += color << 24;
@@ -40,7 +40,7 @@ void Terminal::SetCursorPosition(uint16 position){
 	cursorPos = position;
 }
 
-void Terminal::OutputString(const char* str, uint8 color = BG_BLACK | FG_WHITE){
+void Terminal::OutputString(const char* str, uint8 color = BG_BLUE | FG_WHITE){
 	uint8* charPtr = (uint8*)str;
 	uint16 index = cursorPos;
 
@@ -49,6 +49,7 @@ void Terminal::OutputString(const char* str, uint8 color = BG_BLACK | FG_WHITE){
 		switch(*charPtr){
 			case 0x0a: //New Line
 				index += VGA_WIDTH;
+				index -= index % VGA_WIDTH;
 				break;
 			case 0x0d: //Return Carriage
 				index -= index % VGA_WIDTH;
