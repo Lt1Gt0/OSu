@@ -1,4 +1,4 @@
-#pragma once 
+ #pragma once 
 
 #include <Terminal.hpp>
 #include <Typedefs.h>
