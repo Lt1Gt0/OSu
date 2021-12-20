@@ -8,7 +8,7 @@ namespace IDT{
     extern "C" void isr1_handler(){
     	uint8 scanCode = inb(0x60);
     	if(scanCode < 0x3A){
-			Terminal::OutputChar(SCTranslator::QWERTYLookupTable[scanCode]);
+			Terminal::outputChar(SCTranslator::QWERTYLookupTable[scanCode]);
 		}
 		IO::outb(0x20, 0x20);
 		IO::outb(0xa0, 0x20);

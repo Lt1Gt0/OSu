@@ -7,4 +7,5 @@
 	%1_size: dq %1_size - %1
 %endmacro
 
-IncBin Test, "assembly/test.txt"
+IncBin OSU_Logo, "assembly/binaries/OSU_Logo.txt"
+IncBin AboutOS, "assembly/binaries/AboutOS.txt"

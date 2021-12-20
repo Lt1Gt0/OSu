@@ -12,14 +12,19 @@
 using namespace IO;
 
 uint64 cursorPos;
+extern const char AboutOS[];
+extern const char OSU_Logo[];
+
+
 
 namespace Terminal{
-	void InitializeTerminal(){
-		ClearTerminal();
-		SetCursorPosition(0);
+	void initializeTerminal(){
+		clearTerminal();
+		displaySplashScreen();
+		setCursorPosition(0);
 	}
 	
-	void ClearTerminal(uint64 color){
+	void clearTerminal(uint64 color){
 		uint64 val = 0;
 		val += color << 8;
 		val += color << 24;
@@ -29,8 +34,14 @@ namespace Terminal{
 			*i = val;
 		}
 	}
+
+	void displaySplashScreen(){
+		outputString(OSU_Logo, Color::FG_WHITE | Color::BG_PINK);
+		outputString("\n\r");
+		outputString(AboutOS);
+	}
 	
-	void SetCursorPosition(uint16 position){
+	void setCursorPosition(uint16 position){
 		// Check if the wanted position is out of bounds
 		if(position >= 2000) position = 1999; 
 	
@@ -42,7 +53,7 @@ namespace Terminal{
 		cursorPos = position;
 	}
 	
-	void OutputString(const char* str, uint8 color){
+	void outputString(const char* str, uint8 color){
 		uint16 index = cursorPos;
 	
 		while(*str != 0){
@@ -63,16 +74,16 @@ namespace Terminal{
 			str++;
 		}
 	
-		SetCursorPosition(index);
+		setCursorPosition(index);
 	}
 
-	void OutputChar(char chr, uint8 color){
-		SetCursorPosition(cursorPos + 1);
+	void outputChar(char chr, uint8 color){
+		setCursorPosition(cursorPos+1);
 		*(VGA_MEMORY + cursorPos * 2) = chr;
 		*(VGA_MEMORY + cursorPos * 2 + 1) = color;
 	}
 	
-	uint8 CursorPositionCoords(uint8 x, uint8 y){
+	uint8 cursorPositionCoords(uint8 x, uint8 y){
 		// Might need ??
 		// if(y >= VGA_HEIGHT)
 		// 	y = VGA_HEIGHT - 1; //Set the Cursor y to the maximum it could be

@@ -5,7 +5,7 @@ ENTRY (_start)
 INPUT
 (
     assembly/sector_2/ExtendedProgram.o
-    assembly/binaries.o
+    assembly/binaries/binaries.o
 	kernel/src/kernel.o
 )
 

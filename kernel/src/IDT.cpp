@@ -15,10 +15,10 @@ struct IDT64{
 
 extern IDT64 _idt[256];
 extern uint64 isr1;
-extern "C" void LoadIDT();
+extern "C" void loadIDT();
 
 namespace IDT{
-	void InitializeIDT(){
+	void initializeIDT(){
 		_idt[1].zero = 0;
 		_idt[1].offset_low = (uint16)(((uint64)&isr1 & 0x000000000000ffff));
 		_idt[1].offset_mid = (uint16)(((uint64)&isr1 & 0x00000000ffff0000) >> 16);
@@ -31,7 +31,7 @@ namespace IDT{
 
 		IO::outb(0x21, 0xfd);
 		IO::outb(0xa1, 0xff);
-		LoadIDT();
+		loadIDT();
 	}
 	
 }

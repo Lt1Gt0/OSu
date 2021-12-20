@@ -6,8 +6,8 @@
 
 extern "C" void _start(){
 	// Initialize different things
-	IDT::InitializeIDT();
-	Terminal::InitializeTerminal();
+	IDT::initializeIDT();
+	Terminal::initializeTerminal();
 
 	return;
 }
