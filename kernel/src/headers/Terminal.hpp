@@ -2,10 +2,7 @@
 #include "Typedefs.h"
 #include "Color.h"
 
-class Terminal{
-public:
-	Terminal();
-
+namespace Terminal{
 	/**
  	 * Initialize termial window with default values
  	 */
@@ -53,4 +50,4 @@ public:
  	 */
 	template<typename T>
 	const char* HexToString(T value);
-};
+}

@@ -7,6 +7,9 @@ jmp $
 
 [bits 64]
 [extern _start]
+
+%include "assembly/IDT.asm"
+
 BEGIN_64_BIT:                           ; after the switch go here
     mov ecx, 500
     rep stosq

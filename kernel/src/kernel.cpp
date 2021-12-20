@@ -1,13 +1,13 @@
 #include "Terminal.cpp"
 #include "Color.h"
-
-extern const char Test[];
+#include "IDT.h"
+#include "IO/IO.cpp"
+#include "IDT.cpp"
 
 extern "C" void _start(){
-	Terminal terminal = Terminal();
-
-	terminal.InitializeTerminal();
-
-	terminal.OutputString(Test);
+	// Initialize different things
+	IDT::InitializeIDT();
+	Terminal::InitializeTerminal();
+	
 	return;
 }

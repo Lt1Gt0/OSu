@@ -1,9 +1,7 @@
-#PATH=$PATH:/usr/local/x86_64elfgcc/bin
-
 CPP_SOURCES = $(wildcard kernel/src/*.cpp)
 HEADER_DIR = kernel/src/headers
 HEADERS = $(wildcard kernel/src/headers/*.h kernel/src/headers/*.hpp)
-LD = kernel.ld
+LD = kernel/kernel.ld
 OBJS = ${CPP_SOURCES:.cpp=.o}
 
 LINKER = x86_64-elf-ld
@@ -27,12 +25,12 @@ assembly/boot_sector/bootloader.bin: kernel/src/kernel.bin assembly/boot_sector/
 	cat kernel/src/kernel.bin >> $@
 kernel/src/kernel.bin: assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o kernel/link.ld assembly/binaries.o
 	$(LINKER) -T"kernel/link.ld" 
-kernel/src/kernel.o: kernel/src/kernel.cpp 
+%.o: %.cpp
 	$(CPP) -Ttext 0x8000 $(CPPFLAGS) -c $^ -o $@
-assembly/sector_2/ExtendedProgram.o: assembly/sector_2/ExtendedProgram.asm
-	nasm $^ -f elf64 -o $@
-assembly/binaries.o: assembly/binaries.asm
+%.o: %.asm 
 	nasm $^ -f elf64 -o $@	
+
+#Can rewrite to make easier to read
 clean:
 	$(info ---------- Cleaning ----------)
 	rm -fr *.bin kernel/*.bin kernel/src/*.bin assembly/boot_sector/*.bin assembly/sector_2/*.bin
