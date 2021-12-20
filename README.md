@@ -52,3 +52,5 @@ Kernel
 
 - [X] VGA Color Support
 - [X] User Input
+- [ ] Scan input code
+

@@ -14,7 +14,7 @@ namespace Terminal{
  	 * @param color (optional) - foreground and background color 
  	 * 							 to clear the screen with (default to black on white)
  	 */
-	void ClearTerminal(uint64 color);
+	void ClearTerminal(uint64 color = Color::BG_BLUE | Color::FG_WHITE);
 
 	/**
  	 * Set the cursor position on the terminall window
@@ -30,7 +30,16 @@ namespace Terminal{
  	 * @param color (optional) - foreground and background color 
  	 * 							 to clear the screen with (default to black on white)
  	 */
-	void OutputString(const char* str, uint8 color);
+	void OutputString(const char* str, uint8 color = Color::FG_WHITE | Color::BG_BLUE);
+
+	/**
+	 * Display a single char onto the terminal window
+	 * 
+	 * @param chr - character value to output
+	 * @param color (optional) - foreground and background color 
+ 	 * 							 to clear the screen with (default to black on white)
+	 */
+	void OutputChar(char chr, uint8 color = Color::FG_WHITE | Color::BG_BLUE);
 
 	/**
 	 * Return an (x,y) position as a mapped coordinate

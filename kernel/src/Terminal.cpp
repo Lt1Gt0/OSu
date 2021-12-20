@@ -15,11 +15,11 @@ uint64 cursorPos;
 
 namespace Terminal{
 	void InitializeTerminal(){
-		ClearTerminal(BG_BLUE | FG_WHITE);
+		ClearTerminal();
 		SetCursorPosition(0);
 	}
 	
-	void ClearTerminal(uint64 color = BG_BLUE | FG_WHITE){
+	void ClearTerminal(uint64 color){
 		uint64 val = 0;
 		val += color << 8;
 		val += color << 24;
@@ -42,7 +42,7 @@ namespace Terminal{
 		cursorPos = position;
 	}
 	
-	void OutputString(const char* str, uint8 color = BG_BLUE | FG_WHITE){
+	void OutputString(const char* str, uint8 color){
 		uint16 index = cursorPos;
 	
 		while(*str != 0){
@@ -64,6 +64,12 @@ namespace Terminal{
 		}
 	
 		SetCursorPosition(index);
+	}
+
+	void OutputChar(char chr, uint8 color){
+		SetCursorPosition(cursorPos + 1);
+		*(VGA_MEMORY + cursorPos * 2) = chr;
+		*(VGA_MEMORY + cursorPos * 2 + 1) = color;
 	}
 	
 	uint8 CursorPositionCoords(uint8 x, uint8 y){
