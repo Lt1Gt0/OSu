@@ -4,8 +4,8 @@ HEADERS = $(wildcard kernel/src/headers/*.h kernel/src/headers/*.hpp)
 LD = kernel/kernel.ld
 OBJS = ${CPP_SOURCES:.cpp=.o}
 
-LINKER = x86_64-elf-ld
-CPP = x86_64-elf-gcc
+LINKER = ld
+CPP = gcc
 CPPFLAGS = -ffreestanding -mno-red-zone -m64 -masm=intel -I$(HEADER_DIR)
 
 all: OS.bin

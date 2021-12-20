@@ -1,5 +1,6 @@
- #pragma once 
+#pragma once 
 
+/*** Includes ***/
 #include <Terminal.hpp>
 #include <Typedefs.h>
 #include <Color.h>
@@ -10,7 +11,7 @@
 
 using namespace IO;
 
-uint8 cursorPos;
+uint64 cursorPos;
 
 namespace Terminal{
 	void InitializeTerminal(){
@@ -30,8 +31,8 @@ namespace Terminal{
 	}
 	
 	void SetCursorPosition(uint16 position){
-		if(position >= 2000) // Check if the wanted position is out of bounds
-			position = 1999; 
+		// Check if the wanted position is out of bounds
+		if(position >= 2000) position = 1999; 
 	
 		outb(0x3D4, 0x0F);
 		outb(0x3D5, (uint8)(position & 0xFF));
@@ -42,12 +43,10 @@ namespace Terminal{
 	}
 	
 	void OutputString(const char* str, uint8 color = BG_BLUE | FG_WHITE){
-		uint8* charPtr = (uint8*)str;
 		uint16 index = cursorPos;
 	
-		while(*charPtr != 0){
-	
-			switch(*charPtr){
+		while(*str != 0){
+			switch(*str){
 				case 0x0a: //New Line
 					index += VGA_WIDTH;
 					index -= index % VGA_WIDTH;
@@ -56,11 +55,12 @@ namespace Terminal{
 					index -= index % VGA_WIDTH;
 					break;
 				default:
-					*(VGA_MEMORY + index * 2) = *charPtr;
+					*(VGA_MEMORY + index * 2) = *str;
 					*(VGA_MEMORY + index * 2 + 1) = color;
 					index++;
+					break;
 			}
-			charPtr++;
+			str++;
 		}
 	
 		SetCursorPosition(index);
