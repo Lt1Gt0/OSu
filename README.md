@@ -55,6 +55,12 @@ Kernel
   - [ ] Special Character Scancodes
     - [ ] Backspacing
     - [ ] Enter
+    - [ ] up/down arrows
+    - [ ] lShift/rShift
+    - [ ] esc
+    - [ ] ctrl
+    - [ ] alt
+    - [ ] f(1..12)
   - [ ] Support for different keyboard layouts
   - [ ] Display integers
   - [ ] Display floats/doubles

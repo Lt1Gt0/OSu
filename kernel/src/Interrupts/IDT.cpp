@@ -1,13 +1,13 @@
-#include <IDT.h>
+#include <../Interrupts/IDT.h>
 #include <Typedefs.h>
 #include <Terminal.hpp>
-#include "IO/IO.hpp"
+#include "../IO/IO.hpp"
 
 struct IDT64{
 	uint16 offset_low;
 	uint16 selector;
-	uint8 ist;
-	uint8 types_attrs;
+	byte ist;
+	byte types_attrs;
 	uint16 offset_mid;
 	uint32 offset_high;
 	uint32 zero;
@@ -17,8 +17,9 @@ extern IDT64 _idt[256];
 extern uint64 isr1;
 extern "C" void loadIDT();
 
+//void (*MainKeyboardHandler)(byte scanCode, byte chr);
 namespace IDT{
-	void initializeIDT(){
+	void InitializeIDT(){
 		_idt[1].zero = 0;
 		_idt[1].offset_low = (uint16)(((uint64)&isr1 & 0x000000000000ffff));
 		_idt[1].offset_mid = (uint16)(((uint64)&isr1 & 0x00000000ffff0000) >> 16);

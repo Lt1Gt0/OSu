@@ -5,23 +5,19 @@
 #include <Typedefs.h>
 #include <Color.h>
 #include "IO/IO.hpp" 
-#define VGA_MEMORY (uint8*)0xb8000 
-#define VGA_WIDTH 80
-#define VGA_HEIGHT 25
+
+/*** Defines ***/
 
 using namespace IO;
 
-uint64 cursorPos;
 extern const char AboutOS[];
 extern const char OSU_Logo[];
 
-
-
 namespace Terminal{
-	void initializeTerminal(){
+	void InitializeTerminal(){
 		clearTerminal();
 		displaySplashScreen();
-		setCursorPosition(0);
+		setCursorPosition(cursorPos + VGA_WIDTH - (cursorPos % VGA_WIDTH));
 	}
 	
 	void clearTerminal(uint64 color){
@@ -36,7 +32,14 @@ namespace Terminal{
 	}
 
 	void displaySplashScreen(){
-		outputString(OSU_Logo, Color::FG_WHITE | Color::BG_PINK);
+		byte logoSize = 84;
+
+		mForegroundColor = Color::FG_WHITE;
+		mBackgroundColor = Color::BG_PINK;
+
+		outputString(OSU_Logo, logoSize);
+		mBackgroundColor = Color::BG_BLUE;
+
 		outputString("\n\r");
 		outputString(AboutOS);
 	}
@@ -46,18 +49,31 @@ namespace Terminal{
 		if(position >= 2000) position = 1999; 
 	
 		outb(0x3D4, 0x0F);
-		outb(0x3D5, (uint8)(position & 0xFF));
+		outb(0x3D5, (byte)(position & 0xFF));
 		outb(0x3D4, 0x0E);
-		outb(0x3D5, (uint8)((position >> 8) & 0xFF));
+		outb(0x3D5, (byte)((position >> 8) & 0xFF));
 	
 		cursorPos = position;
 	}
 	
-	void outputString(const char* str, uint8 color){
+	size_t len(const char* str){
+		size_t i = 0;
+		while(str[i]) i++;
+		return i;
+	}
+
+	inline void outputString(const char* str){
+		outputString(str, len(str));
+	}
+
+	void outputString(const char* str, size_t length){
 		uint16 index = cursorPos;
 	
-		while(*str != 0){
-			switch(*str){
+		for(size_t i = 0; i < length; i++){
+			switch(str[i]){
+				case 0x00:
+					index++;
+					break;
 				case 0x0a: //New Line
 					index += VGA_WIDTH;
 					index -= index % VGA_WIDTH;
@@ -66,24 +82,22 @@ namespace Terminal{
 					index -= index % VGA_WIDTH;
 					break;
 				default:
-					*(VGA_MEMORY + index * 2) = *str;
-					*(VGA_MEMORY + index * 2 + 1) = color;
+					*(VGA_MEMORY + index * 2) = str[i];
+					*(VGA_MEMORY + index * 2 + 1) = mForegroundColor | mBackgroundColor;
 					index++;
 					break;
 			}
-			str++;
 		}
-	
 		setCursorPosition(index);
 	}
 
-	void outputChar(char chr, uint8 color){
-		setCursorPosition(cursorPos+1);
+	void outputChar(char chr, byte color){
 		*(VGA_MEMORY + cursorPos * 2) = chr;
 		*(VGA_MEMORY + cursorPos * 2 + 1) = color;
+		setCursorPosition(cursorPos+1);
 	}
 	
-	uint8 cursorPositionCoords(uint8 x, uint8 y){
+	byte cursorPositionCoords(byte x, byte y){
 		// Might need ??
 		// if(y >= VGA_HEIGHT)
 		// 	y = VGA_HEIGHT - 1; //Set the Cursor y to the maximum it could be
@@ -97,12 +111,12 @@ namespace Terminal{
 	template<typename T>
 	const char* HexToString(T value){
 		T* valPtr = &value;
-		uint8* ptr;
-		uint8 temp;
-		uint8 size = (sizeof(T)) * 2 - 1;
+		byte* ptr;
+		byte temp;
+		byte size = (sizeof(T)) * 2 - 1;
 	
-		for(uint8 i = 0; i < size; i++){
-			ptr = ((uint8*)valPtr + i);
+		for(byte i = 0; i < size; i++){
+			ptr = ((byte*)valPtr + i);
 			temp = ((*ptr & 0xF0) >> 4);
 			hexToStringOutput[size - (i * 2 + 1)] = temp + (temp > 9 ? 55 : 48);
 			temp = (*ptr & 0x0F);

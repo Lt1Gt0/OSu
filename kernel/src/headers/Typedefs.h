@@ -4,6 +4,8 @@ typedef signed short int16;
 typedef signed int int32;
 typedef signed long long int64;
 
+typedef unsigned long long size_t;
+
 typedef unsigned char byte;
 typedef unsigned char uint8;
 typedef unsigned short uint16;
