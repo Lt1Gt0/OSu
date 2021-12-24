@@ -43,7 +43,7 @@ namespace Terminal{
 		outputString("\n\r");
 		outputString(AboutOS);
 	}
-	
+
 	void setCursorPosition(uint16 position){
 		// Check if the wanted position is out of bounds
 		if(position >= 2000) position = 1999; 

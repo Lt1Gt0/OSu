@@ -2,10 +2,15 @@
 #include "Terminal.hpp"
 #include "Typedefs.h"
 
+bool ls_pressed = false;
+bool rs_pressed = false;
+byte lastScanCode;
+
 namespace Keyboard{
-	void standardKBHandler(byte scanCode, byte chr){
+	void standardKBHandler(byte scanCode, byte chr) {
 		if(chr != 0){
-			switch(leftShiftPressed | rightShiftPressed){
+			Terminal::outputChar(' ', Color::BG_WHITE | Color::BLACK);
+			switch(ls_pressed | rs_pressed){					
 				case true:
 					Terminal::outputChar(chr - 32);
 					break;
@@ -13,39 +18,40 @@ namespace Keyboard{
 					Terminal::outputChar(chr);
 					break;
 			}
-		}
-		else{
+		} else {
 			switch(scanCode){
-				/* Backspace */
-				case 0x0E: //Pressed
-					Terminal::setCursorPosition(Terminal::cursorPos-1);
+				case BACKSPACE_PRESSED:
+					Terminal::setCursorPosition(Terminal::cursorPos - 1);
+					break;
+				case BACKSPACE_RELEASED:
+					Terminal::setCursorPosition(Terminal::cursorPos - 1);
 					Terminal::outputChar(' ');
+					Terminal::setCursorPosition(Terminal::cursorPos - 1);
 					break;
-				case 0x8E: //released
-					Terminal::setCursorPosition(Terminal::cursorPos-2);
-					Terminal::outputChar(' ');
-					Terminal::setCursorPosition(Terminal::cursorPos-2);
+				case L_SHIFT_PRESSED:
+					Terminal::outputChar(' ', Color::BLACK | Color::FG_ORANGE);
+					ls_pressed = true;
+					break;
+				case L_SHIFT_RELEASED:
+					ls_pressed = false;
+				case R_SHIFT_PRESSED:
+					Terminal::outputChar(' ', Color::BLACK | Color::FG_ORANGE);
+					rs_pressed = true;
+					break;
+				case R_SHIFT_RELEASED:
+					rs_pressed = false;
+				case PAGE_UP_RELEASED:
+					//Terminal::setCursorPosition()
+					break;
+				case HOME_RELEASED:
+					Terminal::setCursorPosition(Terminal::cursorPos - (Terminal::cursorPos % VGA_WIDTH));
+					break;
+				case END_RELEASED:
+					Terminal::setCursorPosition(Terminal::cursorPos + (VGA_WIDTH - Terminal::cursorPos)); //TODO
 					break;
 
-				/* Left Shift */
-				case 0x2A: //Pressed
-					leftShiftPressed = true;
-					break;
-				case 0xAA: //Released
-					leftShiftPressed = false;
-					break;
-
-				/* Right Shift */
-				case 0x36: //Pressed
-					rightShiftPressed = true;
-					break;
-				case 0xB6: //Released
-					rightShiftPressed = false;
-					break;
-
-				/* Enter */
-				case 0x9C:
-					Terminal::outputString("\n\r");
+				case ENTER_PRESSED:
+					Terminal::outputString("\r\n");
 					break;
 			}
 		}
@@ -53,10 +59,12 @@ namespace Keyboard{
 
 	void kbHandler0xE0(byte scanCode){
 		switch(scanCode){
-			case 0x50: //Down arrow
+
+			/*** TODO ***/
+			case ARROW_DOWN:
 				Terminal::setCursorPosition(Terminal::cursorPos + VGA_WIDTH);
 				break;
-			case 0x48: //up arrow
+			case ARROW_UP:
 				Terminal::setCursorPosition(Terminal::cursorPos + VGA_WIDTH);
 				break;
 			default:

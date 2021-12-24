@@ -27,11 +27,11 @@ namespace IDT{
     	byte scanCode = inb(0x60);
    		byte chr = 0;
 
-    	if(scanCode < 0x3A){
-			Terminal::outputChar(SCTranslator::QWERTYLookupTable[scanCode]);
-		}
 		if(MainKeyboardHandler != 0){
 			MainKeyboardHandler(scanCode, chr);
+		}
+    	if(scanCode < 0x3A){
+			Terminal::outputChar(SCTranslator::QWERTYLookupTable[scanCode]);
 		}
 		IO::outb(0x20, 0x20);
 		IO::outb(0xa0, 0x20);

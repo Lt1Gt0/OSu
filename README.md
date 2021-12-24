@@ -54,7 +54,7 @@ Kernel
 - [ ] Terminal
   - [ ] Special Character Scancodes
     - [ ] Backspacing
-    - [ ] Enter
+    - [X] Enter
     - [ ] up/down arrows
     - [ ] lShift/rShift
     - [ ] esc
