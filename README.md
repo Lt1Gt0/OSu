@@ -52,20 +52,27 @@ If you want to run the most current version of `OS.bin` offered outside of the r
 Kernel
 
 - [ ] Terminal
-  - [ ] Special Character Scancodes
-    - [ ] Backspacing
-    - [X] Enter
-    - [ ] up/down arrows
-    - [ ] lShift/rShift
-    - [ ] esc
-    - [ ] ctrl
-    - [ ] alt
-    - [ ] f(1..12)
+  - [ ] Keyboard
+    - [ ] Special Character Scancodes
+      - [ ] Backspacing
+        - [X] Single backspace
+        - [ ] Hold backspace
+      - [X] Enter
+      - [ ] Arrow keys
+      - [ ] lShift/rShift
+      - [ ] esc
+      - [ ] ctrl
+      - [ ] alt
+      - [ ] f(1..12)
+      - [X] Home
+      - [ ] End
+  - [ ] Mouse Support
+  - [ ] Scrolling
   - [ ] Support for different keyboard layouts
   - [ ] Display integers
   - [ ] Display floats/doubles
-  - [ ] Spash screen on startup
-    - [ ] Set cursor position under splash text so it wont override
+  - [X] Spash screen on startup
+  - [X] Set cursor position under splash text so it wont override
 - [ ] Memory
   - [ ] Memory mapping
     - [ ] dynamic memory

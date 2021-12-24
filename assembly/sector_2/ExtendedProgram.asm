@@ -16,4 +16,4 @@ BEGIN_64_BIT:                           ; after the switch go here
     call _start
     jmp $
 
-times 2048-($-$$) db 0
+times 2048-($-$$) db 0                  ; padding

@@ -1,6 +1,6 @@
-#include <../Interrupts/IDT.h>
-#include <Typedefs.h>
-#include <Terminal.hpp>
+#include "../Interrupts/IDT.h"
+#include "Typedefs.h"
+#include "Terminal.hpp"
 #include "../IO/IO.hpp"
 
 struct IDT64{

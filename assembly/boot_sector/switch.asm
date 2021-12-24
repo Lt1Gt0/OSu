@@ -1,4 +1,5 @@
 switch_to_64_bit:
+	; Switch to protected mode ;
 	switch_to_pm:
 		call enable_A20
 		cli 								; Clear interrupts
@@ -10,6 +11,7 @@ switch_to_64_bit:
 	
 		jmp CODE_SEG:start_protected_mode	; far jump
 	
+	; Enable to A20 line;
 	enable_A20:
 		in al, 0x92
 		or al, 2
@@ -29,12 +31,12 @@ switch_to_64_bit:
 		mov fs, ax
 		mov gs, ax
 	
-		call detect_CPUID
-		call detect_long_mode
-		call set_up_identity_paging
-		call edit_GDT
+		call detect_CPUID					; Check for CPUID
+		call detect_long_mode				; Check for Long Mode
+		call set_up_identity_paging			; Set up paging
+		call edit_GDT						; Modify the gdt for 64 bit
 	
-		jmp CODE_SEG:start_64_bit
+		jmp CODE_SEG:start_64_bit			; long jump to 64-bit start
 	
 	[bits 64]
 	start_64_bit:

@@ -1,9 +1,9 @@
 #pragma once 
 
 /*** Includes ***/
-#include <Terminal.hpp>
-#include <Typedefs.h>
-#include <Color.h>
+#include "Terminal.hpp"
+#include "Typedefs.h"
+#include "Color.h"
 #include "IO/IO.hpp" 
 
 /*** Defines ***/

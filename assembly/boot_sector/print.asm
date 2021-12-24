@@ -1,3 +1,4 @@
+; Simple 16-bit print function from BIOS interrupts ;
 print:
 	pusha			; push registers to the stack to return the previous values at the end of the function
 	mov ah, 0x0e	; TTY Mode

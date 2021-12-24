@@ -56,7 +56,7 @@ namespace Terminal{
 	 * 
 	 * @param chr character value to output
 	 * @param color (optional) foreground and background color 
- 	 *to clear the screen with (default to black on white)
+ 	 * to clear the screen with (default to black on white)
 	 */
 	void outputChar(char chr, byte color = mBackgroundColor | mForegroundColor);
 

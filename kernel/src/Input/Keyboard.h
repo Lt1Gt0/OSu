@@ -26,24 +26,23 @@ namespace Keyboard{
 
     
     /**
-     * @brief 
+     * @brief Standard keyboard handler
      * 
-     * @param scanCode 
-     * @param chr 
+     * @param scanCode Scancode byte value
+     * @param chr Character byte value
      */
     void standardKBHandler(byte scanCode, byte chr);
 
     /**
-     * @brief 
+     * @brief Special Keyboard handler (ie. Ctrl, l/r shift, alt...)
      * 
-     * @param scanCode 
-     * @param chr 
+     * @param scanCode Scancode byte value
+     * @param chr Character byte value
      */
     void specialKbHandler(byte scanCode, byte chr);
 
     /**
-     * @brief 
-     * 
+     * @brief Special keyboard handler for the event of the 0xE0 scancode
      */
     void kbHandler0xE0(byte scanCode);
 }

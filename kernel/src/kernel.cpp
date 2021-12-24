@@ -1,4 +1,5 @@
 /*** Includes ***/
+// Need to fix/rework code to not have to include all files
 #include "Terminal.cpp"
 #include "Color.h"
 #include "IO/IO.cpp"
@@ -12,6 +13,7 @@ extern "C" void _start(){
 	IDT::InitializeIDT();
 	Terminal::InitializeTerminal();
 
+	//Set the main keyboard handler of the IDT to the standard keyboard handler
 	IDT::MainKeyboardHandler = Keyboard::standardKBHandler;
 
 	return;
