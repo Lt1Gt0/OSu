@@ -15,6 +15,6 @@ extern "C" void _start(){
 
 	//Set the main keyboard handler of the IDT to the standard keyboard handler
 	IDT::MainKeyboardHandler = Keyboard::standardKBHandler;
-
+	Terminal::outputString(Terminal::floatToString(-1.334f, 2));	
 	return;
 }

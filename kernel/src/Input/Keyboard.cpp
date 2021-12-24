@@ -12,7 +12,7 @@ namespace Keyboard{
 			Terminal::outputChar(' ', Color::BG_WHITE | Color::BLACK); //DEBUG LINE REMOVE LATER
 			//Check if either left shift or right shift is pressed
 			switch(ls_pressed | rs_pressed){					
-				//If so, capitialize the character by subracted 32 from the chr byte
+				//If so, capitialize the character by subtracting 32 from the chr byte
 				case true:
 					Terminal::outputChar(chr - 32);
 					break;
@@ -22,11 +22,13 @@ namespace Keyboard{
 					break;
 			}
 		} else {
+			byte currentRow = Terminal::cursorPos / VGA_WIDTH;
+
 			// Check scancode cases
 			switch(scanCode){
-				case BACKSPACE_PRESSED:
-					Terminal::setCursorPosition(Terminal::cursorPos - 1);
-					break;
+				// case BACKSPACE_PRESSED:
+				// 	Terminal::setCursorPosition(Terminal::cursorPos - 1);
+				// 	break;
 				case BACKSPACE_RELEASED:
 					Terminal::setCursorPosition(Terminal::cursorPos - 1);
 					Terminal::outputChar(' ');
@@ -44,14 +46,17 @@ namespace Keyboard{
 					break;
 				case R_SHIFT_RELEASED:
 					rs_pressed = false;
-				case PAGE_UP_RELEASED:
-					//Terminal::setCursorPosition()
+				case PAGE_UP_PRESSED:
+					Terminal::setCursorPosition(Terminal::cursorPos - (currentRow * VGA_WIDTH));
 					break;
-				case HOME_RELEASED:
+				case PAGE_DOWN_PRESSED:
+					Terminal::setCursorPosition(Terminal::cursorPos + ((VGA_HEIGHT-currentRow-1) * VGA_WIDTH));
+					break;
+				case HOME_PRESSED:
 					Terminal::setCursorPosition(Terminal::cursorPos - (Terminal::cursorPos % VGA_WIDTH));
 					break;
-				case END_RELEASED:
-					Terminal::setCursorPosition(Terminal::cursorPos + (VGA_WIDTH - Terminal::cursorPos)); //TODO
+				case END_PRESSED:
+					Terminal::setCursorPosition(Terminal::cursorPos - 1 + VGA_WIDTH - (Terminal::cursorPos % VGA_WIDTH)); // Could be reworked
 					break;
 
 				case ENTER_PRESSED:

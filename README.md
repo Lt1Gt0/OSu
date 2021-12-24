@@ -60,19 +60,14 @@ Kernel
       - [X] Enter
       - [ ] Arrow keys
       - [ ] lShift/rShift
-      - [ ] esc
-      - [ ] ctrl
-      - [ ] alt
-      - [ ] f(1..12)
+      - [X] Page up/down
       - [X] Home
-      - [ ] End
+      - [X] End
   - [ ] Mouse Support
   - [ ] Scrolling
   - [ ] Support for different keyboard layouts
-  - [ ] Display integers
+  - [X] Display integers
   - [ ] Display floats/doubles
-  - [X] Spash screen on startup
-  - [X] Set cursor position under splash text so it wont override
 - [ ] Memory
   - [ ] Memory mapping
     - [ ] dynamic memory

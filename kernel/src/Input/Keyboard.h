@@ -13,13 +13,12 @@ namespace Keyboard{
         ARROW_UP = 0x48,
         PAGE_UP_PRESSED = 0x49,
         PAGE_UP_RELEASED = 0xC9,
-        PAGE_DOWN_PRESSED = 0x7A,
+        PAGE_DOWN_PRESSED = 0x51,
         PAGE_DOWN_RELEASED = 0xD1,
         HOME_PRESSED = 0x47, 
         HOME_RELEASED = 0xC7, 
         END_PRESSED =  0x4F,
         END_RELEASED =  0xCF,
-
         
         ENTER_PRESSED = 0x9C
     };

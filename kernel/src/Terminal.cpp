@@ -109,7 +109,7 @@ namespace Terminal{
 	
 	char hexToStringOutput[128];
 	template<typename T>
-	const char* HexToString(T value){
+	const char* hexToString(T value){
 		T* valPtr = &value;
 		byte* ptr;
 		byte temp;
@@ -124,5 +124,62 @@ namespace Terminal{
 		}
 		hexToStringOutput[size + 1] = 0;
 		return hexToStringOutput;
+	}
+
+	char intToStringOutput[128];
+	template<typename T>
+	const char* intToString(T value){
+		byte isNegative = 0;
+		if (value < 0){
+			isNegative = 1;
+			value *= -1;
+			intToStringOutput[0] = '-';
+		}
+		byte size = 0;
+		uint64 sizeTester = (uint64)value;
+		while(sizeTester / 10 > 0){
+			sizeTester /= 10;
+			size++;
+		}
+
+		byte index = 0;
+		uint64 newVal = (uint64)value;
+		while(newVal / 10 > 0){
+			byte remainder = newVal % 10;
+			newVal /= 10;
+			intToStringOutput[isNegative + size - index] = remainder + 48;
+			index++;
+		}
+		byte remainder = newVal % 10;
+		intToStringOutput[isNegative + size - index] = remainder + 48;
+		intToStringOutput[isNegative + size + 1] = 0;
+		return intToStringOutput;
+	}
+
+	char floatToStringOutput[128];
+	const char* floatToString(float value, byte decimalPlaces){
+		char* intPtr = (char*)intToString((int)value);
+		char* floatPtr = floatToStringOutput;
+
+		if (value < 0) value *= -1;
+
+		while(*intPtr != 0){
+			*floatPtr = *intPtr;
+			intPtr++;
+			floatPtr++;
+		}
+		*floatPtr = '.';
+		floatPtr++;
+
+		float newVal = value - (int)value;
+		for(byte i = 0; i < decimalPlaces; i++){
+			newVal *= 10;
+			*floatPtr = (int)newVal + 48;
+			newVal -=(int)newVal;
+			floatPtr++;
+		}
+		*floatPtr = 0;
+
+		return floatToStringOutput;
 	}
 }

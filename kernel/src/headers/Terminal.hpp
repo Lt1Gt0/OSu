@@ -75,8 +75,30 @@ namespace Terminal{
  	 * @brief return a hex value input as a string output
  	 * 
  	 * @param T hex value
- 	 * @return char* that can be printed on terminal window
+ 	 * @return const char*
  	 */
 	template<typename T>
 	const char* hexToString(T value);
+
+	/**
+	 * @brief Return an integer value input as a string output
+	 * 
+	 * @tparam T 
+	 * @param Value integer value
+	 * @return const char* 
+	 */
+	template<typename T>
+	const char* intToString(T Value);
+
+	/**
+	 * @brief Return a floating point value to a string output
+	 * based off of the amount of decimal places you would like
+	 * to round to
+	 * 
+	 * @param value Floating point value input to convert to string 
+	 * @param decimalPlaces The amount of decimal places of percision
+	 * to be rounded to
+	 * @return const char* 
+	 */
+	const char* floatToString(float value, byte decimalPlaces);
 }
