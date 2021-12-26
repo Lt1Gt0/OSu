@@ -26,7 +26,7 @@ namespace Terminal{
 		val += color << 24;
 		val += color << 40;
 		val += color << 56;
-		for(uint64* i = (uint64*)VGA_MEMORY; i < (uint64*)(VGA_MEMORY + 4000); i++){
+		for(uint64* i = (uint64*)VGA_MEMORY; i < (uint64 *)(VGA_MEMORY + 4000); i++){
 			*i = val;
 		}
 	}

@@ -1,6 +1,11 @@
+[bits 16]
+%include "assembly/DetectMemory.asm"
+
 switch_to_64_bit:
+
 	; Switch to protected mode ;
 	switch_to_pm:
+		call detect_memory
 		call enable_A20
 		cli 								; Clear interrupts
 		lgdt [GDT_descriptor]				; Load the gdt

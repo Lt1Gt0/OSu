@@ -5,6 +5,7 @@ jmp $
 %include "assembly/boot_sector/switch.asm"
 %include "assembly/GDT.asm"
 
+
 [bits 64]
 [extern _start]
 
