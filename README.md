@@ -64,6 +64,7 @@ Kernel
 - [ ] Memory
   - [ ] Memory mapping
     - [ ] dynamic memory
+      - [ ] Detect Memory Map 
       - [ ] malloc
       - [ ] free
       - [ ] calloc

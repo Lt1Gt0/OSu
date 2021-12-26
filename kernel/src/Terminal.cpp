@@ -1,12 +1,9 @@
 #pragma once 
 
-/*** Includes ***/
 #include "Terminal.hpp"
 #include "Typedefs.h"
 #include "Color.h"
 #include "IO/IO.hpp" 
-
-/*** Defines ***/
 
 using namespace IO;
 
@@ -22,18 +19,24 @@ namespace Terminal{
 	
 	void clearTerminal(uint64 color){
 		uint64 val = 0;
+
+		//Bit shift left according to VGA color and characters
 		val += color << 8;
 		val += color << 24;
 		val += color << 40;
 		val += color << 56;
+
+		//Clear each value in VGA Memory
 		for(uint64* i = (uint64*)VGA_MEMORY; i < (uint64 *)(VGA_MEMORY + 4000); i++){
 			*i = val;
 		}
 	}
 
 	void displaySplashScreen(){
+		//length of the osu size (static, might make it somehow dynamic)
 		byte logoSize = 84;
 
+		//Color of the slash screen
 		mForegroundColor = Color::FG_WHITE;
 		mBackgroundColor = Color::BG_PINK;
 
@@ -47,7 +50,8 @@ namespace Terminal{
 	void setCursorPosition(uint16 position){
 		// Check if the wanted position is out of bounds
 		if(position >= 2000) position = 1999; 
-	
+
+		//Tell IO for the terminal to move cursor with color value to the position
 		outb(0x3D4, 0x0F);
 		outb(0x3D5, (byte)(position & 0xFF));
 		outb(0x3D4, 0x0E);
@@ -71,7 +75,7 @@ namespace Terminal{
 	
 		for(size_t i = 0; i < length; i++){
 			switch(str[i]){
-				case 0x00:
+				case 0x00: //Null character
 					index++;
 					break;
 				case 0x0a: //New Line
@@ -81,7 +85,7 @@ namespace Terminal{
 				case 0x0d: //Return Carriage
 					index -= index % VGA_WIDTH;
 					break;
-				default:
+				default: //No special character
 					*(VGA_MEMORY + index * 2) = str[i];
 					*(VGA_MEMORY + index * 2 + 1) = mForegroundColor | mBackgroundColor;
 					index++;
@@ -107,6 +111,7 @@ namespace Terminal{
 		return (y * VGA_WIDTH) + x;
 	}
 	
+	// Hex buffer
 	char hexToStringOutput[128];
 	template<typename T>
 	const char* hexToString(T value){
@@ -114,21 +119,23 @@ namespace Terminal{
 		byte* ptr;
 		byte temp;
 		byte size = (sizeof(T)) * 2 - 1;
-	
+
 		for(byte i = 0; i < size; i++){
 			ptr = ((byte*)valPtr + i);
 			temp = ((*ptr & 0xF0) >> 4);
-			hexToStringOutput[size - (i * 2 + 1)] = temp + (temp > 9 ? 55 : 48);
+			hexToStringOutput[size - (i * 2 + 1)] = temp + (temp > 9 ? 55 : 48); //Ascii range for hex values
 			temp = (*ptr & 0x0F);
-			hexToStringOutput[size - (i * 2)] = temp + (temp > 9 ? 55 : 48);
+			hexToStringOutput[size - (i * 2)] = temp + (temp > 9 ? 55 : 48); //Ascii range for hex values
 		}
 		hexToStringOutput[size + 1] = 0;
 		return hexToStringOutput;
 	}
 
+	// Integer buffer
 	char intToStringOutput[128];
 	template<typename T>
 	const char* intToString(T value){
+		//If the given integer is a negative value
 		byte isNegative = 0;
 		if (value < 0){
 			isNegative = 1;
@@ -137,6 +144,8 @@ namespace Terminal{
 		}
 		byte size = 0;
 		uint64 sizeTester = (uint64)value;
+
+		// Get the size of the integer's string equivalent
 		while(sizeTester / 10 > 0){
 			sizeTester /= 10;
 			size++;
@@ -144,25 +153,32 @@ namespace Terminal{
 
 		byte index = 0;
 		uint64 newVal = (uint64)value;
+
+		// Add the remainder value of the integer to the integer buffer until the value of the new integer is 0
 		while(newVal / 10 > 0){
 			byte remainder = newVal % 10;
 			newVal /= 10;
 			intToStringOutput[isNegative + size - index] = remainder + 48;
 			index++;
 		}
+		// Last value of the integer
 		byte remainder = newVal % 10;
-		intToStringOutput[isNegative + size - index] = remainder + 48;
-		intToStringOutput[isNegative + size + 1] = 0;
+		intToStringOutput[isNegative + size - index] = remainder + 48; // Resized for negative number
+		intToStringOutput[isNegative + size + 1] = 0;				   // Resized for negative number
 		return intToStringOutput;
 	}
 
+	// Floating point buffer
 	char floatToStringOutput[128];
 	const char* floatToString(float value, byte decimalPlaces){
 		char* intPtr = (char*)intToString((int)value);
 		char* floatPtr = floatToStringOutput;
 
+		// Same thing as the ineger negaive check, except it can be reduced cause the intToDecimal
+		// function is being used partially in this function
 		if (value < 0) value *= -1;
-
+		
+		// get the integer value of everything to the left of the decimal place
 		while(*intPtr != 0){
 			*floatPtr = *intPtr;
 			intPtr++;
@@ -172,6 +188,8 @@ namespace Terminal{
 		floatPtr++;
 
 		float newVal = value - (int)value;
+		//Get every integer value of everything to the right of the decimal place by multiplying the value by
+		//10 and doing effectivly the same thing as before with everything to the left of the decimal
 		for(byte i = 0; i < decimalPlaces; i++){
 			newVal *= 10;
 			*floatPtr = (int)newVal + 48;

@@ -9,7 +9,6 @@ byte lastScanCode;
 namespace Keyboard{
 	void standardKBHandler(byte scanCode, byte chr) {
 		if(chr != 0){
-			Terminal::outputChar(' ', Color::BG_WHITE | Color::BLACK); //DEBUG LINE REMOVE LATER
 			//Check if either left shift or right shift is pressed
 			switch(ls_pressed | rs_pressed){					
 				//If so, capitialize the character by subtracting 32 from the chr byte
@@ -26,22 +25,20 @@ namespace Keyboard{
 
 			// Check scancode cases
 			switch(scanCode){
-				// case BACKSPACE_PRESSED:
-				// 	Terminal::setCursorPosition(Terminal::cursorPos - 1);
-				// 	break;
+				case BACKSPACE_PRESSED:
+					Terminal::setCursorPosition(Terminal::cursorPos - 1);
+					break;
 				case BACKSPACE_RELEASED:
 					Terminal::setCursorPosition(Terminal::cursorPos - 1);
 					Terminal::outputChar(' ');
 					Terminal::setCursorPosition(Terminal::cursorPos - 1);
 					break;
 				case L_SHIFT_PRESSED:
-					Terminal::outputChar(' ', Color::BLACK | Color::FG_ORANGE); //DEBUG LINE REMOVE LATER
 					ls_pressed = true;
 					break;
 				case L_SHIFT_RELEASED:
 					ls_pressed = false;
 				case R_SHIFT_PRESSED:
-					Terminal::outputChar(' ', Color::BLACK | Color::FG_ORANGE); //DEBUG LINE REMOVE LATER
 					rs_pressed = true;
 					break;
 				case R_SHIFT_RELEASED:
