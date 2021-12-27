@@ -1,11 +1,14 @@
-MemoryRegionCount:
-    db 0
-    GLOBAL MemoryRegionCount
+MemoryRegionCount: db 0
+MemoryMapLocation: dw 0x500
+dq 0
+
+GLOBAL MemoryRegionCount
+GLOBAL MemoryMapLocation
 
 detect_memory:
     mov ax, 0
     mov es, ax
-    mov di, 0x5000                      ; Random location to store memory map
+    mov di, [MemoryMapLocation]         ; Random location to store memory map
     mov edx, 0x534D4150                 ; SMAP
     xor ebx, ebx                        ; Clear ebx
 

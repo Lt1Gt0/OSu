@@ -1,4 +1,4 @@
-; Very Simple paging setup, subject to modification in the future;
+; Very Simple paging setup, subject to modification in the future ;
 
 page_table_entry equ 0x1000		; define page table entry point at the beginning od memory
 

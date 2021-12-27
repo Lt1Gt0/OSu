@@ -12,7 +12,13 @@ struct MemoryMapEntry{
     uint32 ExtendedAttributes;
 };
 
-extern byte MemoryRegionCount;
+extern "C" byte MemoryRegionCount;
+extern "C" MemoryMapEntry* MemoryMapLocation;
+
+bool memoryRegionsGot = false;
+byte usableMemoryRegionCount;
+
+MemoryMapEntry* usableMemoryRegions[10];
 
 /**
  * @brief Print out the memory map that is given as an input
@@ -21,7 +27,7 @@ extern byte MemoryRegionCount;
  * @param position position of the cursor to print memory map at
  */
 void printMemoryMap(MemoryMapEntry* memoryMap, uint16 position){
-    Terminal::setCursorPosition(position);
+    setCursorPosition(position);
     
     outputString("Memory Base: ");
     outputString(intToString(memoryMap->BaseAddress));
@@ -37,4 +43,21 @@ void printMemoryMap(MemoryMapEntry* memoryMap, uint16 position){
     
     outputString("Memory Attributes: ");
     outputString(hexToString(memoryMap->ExtendedAttributes));
+}
+
+MemoryMapEntry** getUsableMemoryRegions(){
+    if(memoryRegionsGot) return usableMemoryRegions;
+
+    byte usableRegionIndex;
+    for(byte i = 0; i < MemoryRegionCount; i++){
+        MemoryMapEntry* MemoryMapLocation = (MemoryMapEntry*)0x500;
+        MemoryMapLocation += i;
+        if(MemoryMapLocation->RegionType == 1){
+            usableMemoryRegions[usableRegionIndex] = MemoryMapLocation;
+            usableRegionIndex++;
+        }
+    }
+    usableMemoryRegionCount = usableRegionIndex;
+    memoryRegionsGot = true;
+    return usableMemoryRegions;
 }

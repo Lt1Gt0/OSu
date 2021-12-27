@@ -17,11 +17,12 @@ extern "C" void _start(){
 	Terminal::setCursorPosition(0);
 	//Set the main keyboard handler of the IDT to the standard keyboard handler
 	IDT::MainKeyboardHandler = Keyboard::standardKBHandler;
+	
+	MemoryMapEntry** usableMemoryMaps = getUsableMemoryRegions();
 
-	for(byte i = 0; i < MemoryRegionCount; i++){
-		MemoryMapEntry* memMap = (MemoryMapEntry*)0x5000; //Memory address was as defined in DetectMemory.asm
-		memMap += i;
-		printMemoryMap(memMap, Terminal::cursorPos);
+	for(byte i = 0; i < usableMemoryRegionCount; i++){
+		MemoryMapEntry* MemoryMapLocation = usableMemoryMaps[i]; //Memory address was as defined in DetectMemory.asm
+		printMemoryMap(MemoryMapLocation, Terminal::cursorPos);
 		Terminal::outputString("\n\n\r");
 	}
 	return;
