@@ -1,4 +1,5 @@
 #pragma once
+#include "Terminal.hpp"
 #include "Typedefs.h"
 
 namespace Keyboard{
@@ -23,7 +24,10 @@ namespace Keyboard{
         ENTER_PRESSED = 0x9C
     };
 
-    
+    extern "C" bool ls_pressed;
+    extern "C" bool rs_pressed;
+    extern "C" byte lastScanCode;
+
     /**
      * @brief Standard keyboard handler
      * 

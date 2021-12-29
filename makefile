@@ -4,6 +4,8 @@ LINKER = ld
 CPP = gcc
 CPPFLAGS = -ffreestanding -mno-red-zone -m64 -masm=intel -I$(HEADER_DIR)
 
+OBJ_FILES = assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o assembly/binaries/binaries.o kernel/src/Interrupts/IDT.o kernel/src/IO/IO.o kernel/src/Input/Keyboard.o kernel/src/Memory/MemoryMap.o kernel/src/Terminal.o
+
 all: OS.bin
 	$(info ---------- Running OS ----------)
 	qemu-system-x86_64 -drive format=raw,file="OS.bin",index=0,if=floppy -m 128M
@@ -19,7 +21,7 @@ assembly/boot_sector/bootloader.bin: kernel/src/kernel.bin assembly/boot_sector/
 	$(info ---------- Generating Bootloader ----------)
 	nasm assembly/boot_sector/bootloader.asm -f bin -o assembly/boot_sector/bootloader.bin
 	cat kernel/src/kernel.bin >> $@
-kernel/src/kernel.bin: assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o kernel/link.ld assembly/binaries/binaries.o
+kernel/src/kernel.bin: $(OBJ_FILES) kernel/link.ld 
 	$(info ---------- Linking Files ----------)
 	$(LINKER) -T"kernel/link.ld" 
 %.o: %.cpp

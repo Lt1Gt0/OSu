@@ -1,16 +1,12 @@
-#pragma once 
-
 #include "Terminal.hpp"
-#include "Typedefs.h"
-#include "Color.h"
-#include "IO/IO.hpp" 
 
 using namespace IO;
 
-extern const char AboutOS[];
-extern const char OSU_Logo[];
-
 namespace Terminal{
+	byte mBackgroundColor = Color::BG_BLUE;
+	byte mForegroundColor = Color::FG_WHITE;
+	uint16 cursorPos;
+
 	void InitializeTerminal(){
 		clearTerminal();
 		displaySplashScreen();
@@ -131,6 +127,15 @@ namespace Terminal{
 		return hexToStringOutput;
 	}
 
+	const char* hexToString(uint8 value) { return hexToString<uint8>(value); }
+	const char* hexToString(uint16 value) { return hexToString<uint16>(value); }
+	const char* hexToString(uint32 value) { return hexToString<uint32>(value); }
+	const char* hexToString(uint64 value) { return hexToString<uint64>(value); }
+	const char* hexToString(char value) { return hexToString<char>(value); }
+	const char* hexToString(short value) { return hexToString<short>(value); }
+	const char* hexToString(int value) { return hexToString<int>(value); }
+	const char* hexToString(long long value) { return hexToString<long long>(value); }
+
 	// Integer buffer
 	char intToStringOutput[128];
 	template<typename T>
@@ -167,6 +172,15 @@ namespace Terminal{
 		intToStringOutput[isNegative + size + 1] = 0;				   // Resized for negative number
 		return intToStringOutput;
 	}
+	
+	const char* intToString(uint8 value) { return intToString<uint8>(value); }
+	const char* intToString(uint16 value) { return intToString<uint16>(value); }
+	const char* intToString(uint32 value) { return intToString<uint32>(value); }
+	const char* intToString(uint64 value) { return intToString<uint64>(value); }
+	const char* intToString(char value) { return intToString<char>(value); }
+	const char* intToString(short value) { return intToString<short>(value); }
+	const char* intToString(int value) { return intToString<int>(value); }
+	const char* intToString(long long value) { return intToString<long long>(value); }
 
 	// Floating point buffer
 	char floatToStringOutput[128];
@@ -200,4 +214,13 @@ namespace Terminal{
 
 		return floatToStringOutput;
 	}
+
+	const char* floatToString(uint8 value) { return floatToString(value); }
+	const char* floatToString(uint16 value) { return floatToString(value); }
+	const char* floatToString(uint32 value) { return floatToString(value); }
+	const char* floatToString(uint64 value) { return floatToString(value); }
+	const char* floatToString(char value) { return floatToString(value); }
+	const char* floatToString(short value) { return floatToString(value); }
+	const char* floatToString(int value) { return floatToString(value); }
+	const char* floatToString(long long value) { return floatToString(value); }
 }

@@ -1,13 +1,6 @@
-// Need to fix/rework code to not have to include all files
-#include "Terminal.cpp"
-#include "Color.h"
-#include "IO/IO.cpp"
-#include "Interrupts/IDT.h"
-#include "Interrupts/IDT.cpp"
+#include "Interrupts/IDT.hpp"
 #include "Input/Keyboard.h"
-#include "Input/Keyboard.cpp"
-//#include "Memory/MemoryMap.hpp"
-#include "Memory/MemoryMap.cpp" // Dont want this one to just be the .cpp file, need to move to hpp
+#include "MemoryMap.h"
 
 extern "C" void _start(){
 	// Initialize different things
@@ -18,10 +11,10 @@ extern "C" void _start(){
 	//Set the main keyboard handler of the IDT to the standard keyboard handler
 	IDT::MainKeyboardHandler = Keyboard::standardKBHandler;
 	
-	MemoryMapEntry** usableMemoryMaps = getUsableMemoryRegions();
+	MemoryMap::MemoryMapEntry** usableMemoryMaps = MemoryMap::getUsableMemoryRegions();
 
-	for(byte i = 0; i < usableMemoryRegionCount; i++){
-		MemoryMapEntry* MemoryMapLocation = usableMemoryMaps[i]; //Memory address was as defined in DetectMemory.asm
+	for(byte i = 0; i < MemoryMap::usableMemoryRegionCount; i++){
+		MemoryMap::MemoryMapEntry* MemoryMapLocation = usableMemoryMaps[i]; //Memory address was as defined in DetectMemory.asm
 		printMemoryMap(MemoryMapLocation, Terminal::cursorPos);
 		Terminal::outputString("\n\n\r");
 	}

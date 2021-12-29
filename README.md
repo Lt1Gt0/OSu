@@ -8,16 +8,24 @@
 
 ## About
 
+**I am not a professional at OS Development by any means.**
+**Don't expect this OS to do anything for a long while**
+
 **There is no correlation between this OS and the development team behind the game OSU!**
+
+There is not much to be offered in the OS in its current stages while I learn more OS development and different protocol implementations
 
 - 64-bit OS with simple barebones kernel
 - Emulator: QEMU
 - Cross compiler: x86_64-elf-gcc
 - Linker: x86_64-elf-ld
 
-There is not much to be offered in the OS in its current stages while I learn more OS development and different protocol implementations
+Notible Features as of current
 
-As of now, there is support for 16 VGA colors, scancode set for the QWERTY keyboard layout and reading binary files
+- 16 VGA Color Support
+- Scancode set for QWERTY Keyboard layout
+- Reading text/binary files
+- Memory Map display (Show usable memory map locations)
 
 ## Cloning the repository
 
@@ -64,7 +72,6 @@ Kernel
 - [ ] Memory
   - [ ] Memory mapping
     - [ ] dynamic memory
-      - [X] Detect Memory Map
       - [ ] malloc
       - [ ] free
       - [ ] calloc
@@ -72,3 +79,10 @@ Kernel
       - [ ] realloc
       - [ ] memcpy
       - [ ] alligned_alloc
+
+Code Cleanup
+
+- [ ] Move cpp files to work with headers
+- [ ] Clean up includes in kernel
+- [ ] Overall simplification
+- [ ] 

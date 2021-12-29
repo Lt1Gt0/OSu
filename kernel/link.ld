@@ -7,6 +7,11 @@ INPUT
     assembly/sector_2/ExtendedProgram.o
     assembly/binaries/binaries.o
 	kernel/src/kernel.o
+	kernel/src/Interrupts/IDT.o 
+	kernel/src/IO/IO.o 
+	kernel/src/Input/Keyboard.o
+	kernel/src/Memory/MemoryMap.o
+	kernel/src/Terminal.o
 )
 
 OUTPUT 

@@ -1,6 +1,4 @@
 #include "../Input/Keyboard.h"
-#include "Terminal.hpp"
-#include "Typedefs.h"
 
 bool ls_pressed = false;
 bool rs_pressed = false;

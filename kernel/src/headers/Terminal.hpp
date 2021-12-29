@@ -1,15 +1,20 @@
 #pragma once
+#include "Terminal.hpp"
 #include "Typedefs.h"
 #include "Color.h"
+#include "IO.h" 
 
 namespace Terminal{
 	#define VGA_MEMORY (byte*)0xb8000 
 	#define VGA_WIDTH 80
 	#define VGA_HEIGHT 25
 
-	byte mBackgroundColor = Color::BG_BLUE;
-	byte mForegroundColor = Color::FG_WHITE;
-	uint64 cursorPos;
+	extern "C" const char AboutOS[];
+	extern "C" const char OSU_Logo[];
+
+	extern "C" byte mBackgroundColor;
+	extern "C" byte mForegroundColor;
+	extern "C" uint16 cursorPos;
 
 	/**
  	 * @brief Initialize termial window with default values
@@ -41,7 +46,7 @@ namespace Terminal{
 	 */
 	size_t len(const char* str);
 	
-	inline void outputString(const char* str);
+	void outputString(const char* str);
 
 	/**
  	 * @brief Output a string value to the terminal window
@@ -101,4 +106,31 @@ namespace Terminal{
 	 * @return const char* 
 	 */
 	const char* floatToString(float value, byte decimalPlaces);
+
+	const char* hexToString(uint8 value);
+	const char* hexToString(uint16 value);
+	const char* hexToString(uint32 value);
+	const char* hexToString(uint64 value);
+	const char* hexToString(char value);
+	const char* hexToString(short value);
+	const char* hexToString(int value);
+	const char* hexToString(long long value);
+
+	const char* intToString(uint8 value);
+	const char* intToString(uint16 value);
+	const char* intToString(uint32 value);
+	const char* intToString(uint64 value);
+	const char* intToString(char value);
+	const char* intToString(short value);
+	const char* intToString(int value);
+	const char* intToString(long long value);
+
+	const char* floatToString(uint8 value);
+	const char* floatToString(uint16 value);
+	const char* floatToString(uint32 value);
+	const char* floatToString(uint64 value);
+	const char* floatToString(char value);
+	const char* floatToString(short value);
+	const char* floatToString(int value);
+	const char* floatToString(long long value);
 }

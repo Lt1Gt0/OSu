@@ -1,24 +1,7 @@
-#include "../Interrupts/IDT.h"
-#include "Typedefs.h"
-#include "Terminal.hpp"
-#include "../IO/IO.hpp"
+#include "IDT.hpp"
 
-struct IDT64{
-	uint16 offset_low;
-	uint16 selector;
-	byte ist;
-	byte types_attrs;
-	uint16 offset_mid;
-	uint32 offset_high;
-	uint32 zero;
-};
-
-extern IDT64 _idt[256];
-extern uint64 isr1;
-extern "C" void loadIDT();
-
-//void (*MainKeyboardHandler)(byte scanCode, byte chr);
 namespace IDT{
+	IDT64 _idt[256];
 	void InitializeIDT(){
 		_idt[1].zero = 0;
 		_idt[1].offset_low = (uint16)(((uint64)&isr1 & 0x000000000000ffff));
@@ -35,4 +18,19 @@ namespace IDT{
 		loadIDT();
 	}
 	
+	void (*MainKeyboardHandler)(byte scanCode, byte chr);
+
+	extern "C" void isr1_handler(){
+		byte scanCode = IO::inb(0x60);
+		byte chr = 0;
+		if(MainKeyboardHandler != 0){
+			MainKeyboardHandler(scanCode, chr);
+		}
+		if(scanCode < 0x3A){
+			Terminal::outputChar(ScancodeTranslator::QWERTYLookupTable[scanCode]);
+		}
+		// IO for keyboard handler
+		IO::outb(0x20, 0x20);
+		IO::outb(0xa0, 0x20);
+	}
 }
