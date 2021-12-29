@@ -74,11 +74,11 @@ namespace Terminal{
 				case 0x00: //Null character
 					index++;
 					break;
-				case 0x0a: //New Line
+				case '\n': //New Line
 					index += VGA_WIDTH;
 					index -= index % VGA_WIDTH;
 					break;
-				case 0x0d: //Return Carriage
+				case '\r': //Return Carriage
 					index -= index % VGA_WIDTH;
 					break;
 				default: //No special character

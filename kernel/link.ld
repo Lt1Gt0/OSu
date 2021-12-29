@@ -12,6 +12,7 @@ INPUT
 	kernel/src/Input/Keyboard.o
 	kernel/src/Memory/MemoryMap.o
 	kernel/src/Terminal.o
+	kernel/src/Memory/Heap.o
 )
 
 OUTPUT 

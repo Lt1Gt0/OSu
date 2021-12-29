@@ -72,7 +72,7 @@ Kernel
 - [ ] Memory
   - [ ] Memory mapping
     - [ ] dynamic memory
-      - [ ] malloc
+      - [X] malloc
       - [ ] free
       - [ ] calloc
       - [ ] memset
@@ -82,7 +82,6 @@ Kernel
 
 Code Cleanup
 
-- [ ] Move cpp files to work with headers
-- [ ] Clean up includes in kernel
+- [X] Move cpp files to work with headers
+- [X] Clean up includes in kernel
 - [ ] Overall simplification
-- [ ] 

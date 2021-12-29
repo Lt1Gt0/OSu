@@ -1,6 +1,7 @@
 #include "Interrupts/IDT.hpp"
 #include "Input/Keyboard.h"
 #include "MemoryMap.h"
+#include "Heap.h"
 
 extern "C" void _start(){
 	// Initialize different things
@@ -13,10 +14,14 @@ extern "C" void _start(){
 	
 	MemoryMap::MemoryMapEntry** usableMemoryMaps = MemoryMap::getUsableMemoryRegions();
 
-	for(byte i = 0; i < MemoryMap::usableMemoryRegionCount; i++){
-		MemoryMap::MemoryMapEntry* MemoryMapLocation = usableMemoryMaps[i]; //Memory address was as defined in DetectMemory.asm
-		printMemoryMap(MemoryMapLocation, Terminal::cursorPos);
-		Terminal::outputString("\n\n\r");
-	}
+	InitializeHeap(0x100000, 0x100000);
+	void* TestMemoryAddress1 = malloc(0x10);
+	void* TestMemoryAddress2 = malloc(0x10);
+	void* TestMemoryAddress3 = malloc(0x10);
+	Terminal::outputString(Terminal::hexToString((uint64)TestMemoryAddress1));
+	Terminal::outputString("\n\r");
+	Terminal::outputString(Terminal::hexToString((uint64)TestMemoryAddress2));
+	Terminal::outputString("\n\r");
+	Terminal::outputString(Terminal::hexToString((uint64)TestMemoryAddress3));
 	return;
 }
