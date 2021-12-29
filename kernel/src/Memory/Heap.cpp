@@ -69,7 +69,15 @@ void* calloc(uint64 num, uint64 size){
 }
 
 void* realloc(void* address, uint64 newSize){
-    MemorySegmentHeader* oldSegmentHeader = (MemorySegmentHeader*)address - 1;
+    MemorySegmentHeader* oldSegmentHeader;
+
+    AlignedMemorySegmentHeader* AMSH = (AlignedMemorySegmentHeader*)address - 1;
+    if(AMSH->IsAligned){
+        oldSegmentHeader = (MemorySegmentHeader*)(uint64)AMSH->MemorySegmentHeader;
+    } else{
+        oldSegmentHeader = ((MemorySegmentHeader*)address) - 1;
+    }
+   
     uint64 smallerSize = newSize;
     if(oldSegmentHeader->MemoryLength < newSize) smallerSize = oldSegmentHeader->MemoryLength;
 
@@ -77,6 +85,33 @@ void* realloc(void* address, uint64 newSize){
     memcpy(newMem, address, smallerSize);
     free(address);
     return(newMem);
+}
+
+void* aligned_alloc(uint64 alignment, uint64 size){
+    uint64 alignmentRemainder = alignment % 8;
+    alignment -= alignmentRemainder;
+    if(alignmentRemainder != 0) alignment += 8;
+
+    uint64 sizeRemainder = size % 8;
+    alignment -= sizeRemainder;
+    if(sizeRemainder != 0) size += 8;
+
+    uint64 fullSize = size + alignment;
+
+    void* mallocVal = malloc(fullSize);
+    uint64 address = (uint64)mallocVal;
+
+    uint64 remainder = address % alignment;
+    address -= remainder;
+
+    if(remainder != 0){
+        address += alignment;
+        AlignedMemorySegmentHeader* AMSH = (AlignedMemorySegmentHeader*)address - 1;
+        AMSH->IsAligned = true;
+        AMSH->MemorySegmentHeader = (uint64)mallocVal - sizeof(MemorySegmentHeader);
+    }
+
+    return (void*)address;
 }
 
 void combineFreeSegments(MemorySegmentHeader* a, MemorySegmentHeader* b){
@@ -102,7 +137,14 @@ void combineFreeSegments(MemorySegmentHeader* a, MemorySegmentHeader* b){
 }
 
 void free(void* address){
-    MemorySegmentHeader* currentMemorySegment = ((MemorySegmentHeader*)address) - 1;
+    MemorySegmentHeader* currentMemorySegment;
+
+    AlignedMemorySegmentHeader* AMSH = (AlignedMemorySegmentHeader*)address - 1;
+    if(AMSH->IsAligned){
+        currentMemorySegment = (MemorySegmentHeader*)(uint64)AMSH->MemorySegmentHeader;
+    } else{
+    currentMemorySegment = ((MemorySegmentHeader*)address) - 1;
+    }
     currentMemorySegment->Free = true;
 
     if(currentMemorySegment < FirstFreeMemorySegment) FirstFreeMemorySegment = currentMemorySegment;

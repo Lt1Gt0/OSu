@@ -73,12 +73,12 @@ Kernel
   - [ ] Memory mapping
     - [ ] dynamic memory
       - [X] malloc
-      - [ ] free
-      - [ ] calloc
-      - [ ] memset
-      - [ ] realloc
-      - [ ] memcpy
-      - [ ] alligned_alloc
+      - [X] free
+      - [X] calloc
+      - [X] memset
+      - [X] realloc
+      - [X] memcpy
+      - [X] alligned_alloc
 
 Code Cleanup
 

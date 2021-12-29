@@ -16,18 +16,15 @@ extern "C" void _start(){
 
 	InitializeHeap(0x100000, 0x100000);
 	
-	uint64* TAddress = (uint64*)malloc(0x08);
-	*TAddress = 12345678;
-	Terminal::outputString(Terminal::intToString(*TAddress));
-	Terminal::outputString("\n\r");
-
-	uint64* TAddress2 = (uint64*)realloc(TAddress,0x08);
-	Terminal::outputString(Terminal::intToString(*TAddress2));
-	Terminal::outputString("\n\r");
-
-	uint64* TAddress3 = (uint64*)calloc(0x08);
-	Terminal::outputString(Terminal::intToString(*TAddress3));
-	Terminal::outputString("\n\r");
 	
+	uint64* TestAddress = (uint64*)aligned_alloc(0x4000, 0x08);
+	Terminal::outputString(Terminal::hexToString((uint64)TestAddress));
+	Terminal::outputString("\n\r");
+	free(TestAddress);
+
+	uint64* TestAddress2 = (uint64*)malloc(0x4000);
+	Terminal::outputString(Terminal::hexToString((uint64)TestAddress2));
+	Terminal::outputString("\n\r");
+
 	return;
 }
