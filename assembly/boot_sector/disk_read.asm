@@ -2,7 +2,7 @@ PROGRAM_SPACE equ 0x8000				; Define where the program space is located
 read_disk:
 	mov ah, 0x02						; BIOS interrupt to read from disk sectors
 	mov bx, PROGRAM_SPACE				; pointer to buffer
-	mov al, 48							; read sectors 
+	mov al, 60							; read sectors 
 	mov dl, [BOOT_DISK]					; Drive number
 	mov ch, 0x00 						; Read from track 0
 	mov dh, 0x00 						; Read from head 0

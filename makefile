@@ -4,7 +4,8 @@ LINKER = ld
 CPP = gcc
 CPPFLAGS = -ffreestanding -mno-red-zone -m64 -masm=intel -I$(HEADER_DIR)
 
-OBJ_FILES = assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o assembly/binaries/binaries.o kernel/src/Interrupts/IDT.o kernel/src/IO/IO.o kernel/src/Input/Keyboard.o kernel/src/Memory/MemoryMap.o kernel/src/Terminal.o kernel/src/Memory/Heap.o
+OBJ_FILES = assembly/sector_2/ExtendedProgram.o kernel/src/kernel.o assembly/binaries/binaries.o kernel/src/Interrupts/IDT.o kernel/src/IO/IO.o kernel/src/Input/Keyboard.o kernel/src/Memory/MemoryMap.o kernel/src/Terminal.o kernel/src/Memory/Heap.o kernel/src/Memory/Memory.o
+
 
 all: OS.bin
 	$(info ---------- Running OS ----------)

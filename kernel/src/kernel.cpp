@@ -15,13 +15,19 @@ extern "C" void _start(){
 	MemoryMap::MemoryMapEntry** usableMemoryMaps = MemoryMap::getUsableMemoryRegions();
 
 	InitializeHeap(0x100000, 0x100000);
-	void* TestMemoryAddress1 = malloc(0x10);
-	void* TestMemoryAddress2 = malloc(0x10);
-	void* TestMemoryAddress3 = malloc(0x10);
-	Terminal::outputString(Terminal::hexToString((uint64)TestMemoryAddress1));
+	
+	uint64* TAddress = (uint64*)malloc(0x08);
+	*TAddress = 12345678;
+	Terminal::outputString(Terminal::intToString(*TAddress));
 	Terminal::outputString("\n\r");
-	Terminal::outputString(Terminal::hexToString((uint64)TestMemoryAddress2));
+
+	uint64* TAddress2 = (uint64*)realloc(TAddress,0x08);
+	Terminal::outputString(Terminal::intToString(*TAddress2));
 	Terminal::outputString("\n\r");
-	Terminal::outputString(Terminal::hexToString((uint64)TestMemoryAddress3));
+
+	uint64* TAddress3 = (uint64*)calloc(0x08);
+	Terminal::outputString(Terminal::intToString(*TAddress3));
+	Terminal::outputString("\n\r");
+	
 	return;
 }

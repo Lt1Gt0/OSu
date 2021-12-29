@@ -13,6 +13,7 @@ INPUT
 	kernel/src/Memory/MemoryMap.o
 	kernel/src/Terminal.o
 	kernel/src/Memory/Heap.o
+	kernel/src/Memory/Memory.o
 )
 
 OUTPUT 
