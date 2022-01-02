@@ -1,5 +1,5 @@
 
-OSNAME = CustomOS
+OSNAME = OSu
 
 GNUEFI = ../gnu-efi
 OVMFDIR = ../OVMFbin
