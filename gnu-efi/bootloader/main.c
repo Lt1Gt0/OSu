@@ -4,6 +4,37 @@
 
 typedef unsigned long long size_t ;
 
+typedef struct{
+	void* BaseAddress;
+	size_t BufferSize;
+	unsigned int Width;
+	unsigned int Height;
+	unsigned int PixelsPerScanLine;
+} FrameBuffer;
+
+FrameBuffer frameBuffer;
+FrameBuffer* InitializeGOP(){
+	EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+	EFI_GRAPHICS_OUTPUT_PROTOCOL* gop;
+	EFI_STATUS status; //Check for failures
+
+	status = uefi_call_wrapper(BS->LocateProtocol, 3, &gopGuid, NULL, (void**)&gop);
+	if(EFI_ERROR(status)){
+		Print(L"Unable to Locate GOP\n\r");
+		return NULL;
+	} else {
+		Print(L"GOP Located\n\r");
+	}
+
+	frameBuffer.BaseAddress = (void*)gop->Mode->FrameBufferBase;
+	frameBuffer.BufferSize = gop->Mode->FrameBufferSize;
+	frameBuffer.Width = gop->Mode->Info->HorizontalResolution;
+	frameBuffer.Height = gop->Mode->Info->VerticalResolution;
+	frameBuffer.PixelsPerScanLine = gop->Mode->Info->PixelsPerScanLine;
+
+	return &frameBuffer;
+}
+
 EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable){
 	EFI_FILE* LoadedFile;
 
@@ -101,9 +132,24 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	}
 	Print(L"Kernel Loaded\n\r");
 
-	int(*KernelStart)() = ((__attribute__((sysv_abi)) int (*)() ) header.e_entry); // Define an integer function pointer at the address of header.e_entry with the attribute provided
+	void(*KernelStart)(FrameBuffer*) = ((__attribute__((sysv_abi)) void (*)(FrameBuffer*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
+	FrameBuffer* newBuffer = InitializeGOP();
 
-	Print(L"%d\r\n", KernelStart());
+	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelsPerScanLine: %d\n\r\n\r", 
+	newBuffer->BaseAddress, 
+	newBuffer->BufferSize,
+	newBuffer->Width,
+	newBuffer->Height,
+	newBuffer->PixelsPerScanLine);
+
+	// unsigned int y = 50;
+	// unsigned int BPP = 4;// Bytes per pixel
+
+	// for(unsigned int x = 0; x < newBuffer->Width/2 * BPP; x+=BPP){
+	// 	*(unsigned int*)(x + (y * newBuffer->PixelsPerScanLine * BPP) + newBuffer->BaseAddress ) = 0x00ff00ff;// Calculate address
+    // }
+
+	KernelStart(newBuffer);
 
 	return EFI_SUCCESS; // Exit the UEFI application
 }
