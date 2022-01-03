@@ -113,6 +113,14 @@ int memcmp(const void* aptr, const void* bptr, size_t n){
 	return 0;
 }
 
+typedef struct{
+	FrameBuffer* frameBuffer;
+	PSF1_FONT* psf1_font;
+	EFI_MEMORY_DESCRIPTOR* mMap;
+	UINTN mMapSize;
+	UINTN mMapDescSize;
+}BootInfo;
+
 EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	InitializeLib(ImageHandle, SystemTable); //Set up the UEFI environment commands
 	Print(L"Bootloader Initialized\n\r");
@@ -180,8 +188,6 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 		}
 	}
 	Print(L"Kernel Loaded\n\r");
-
-	void(*KernelStart)(FrameBuffer*, PSF1_FONT*) = ((__attribute__((sysv_abi)) void (*)(FrameBuffer*, PSF1_FONT*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
 	
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
 	if(newFont == NULL){
@@ -200,7 +206,27 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	newBuffer->Height,
 	newBuffer->PixelsPerScanLine);
 
-	KernelStart(newBuffer, newFont);
+	EFI_MEMORY_DESCRIPTOR* Map = NULL; // Pointer to memory descriptor, contains number of pages of the memory section, address of the memory segment, type of memory segment, etc... 
+	UINTN MapSize, MapKey; //MapSize - Complete size of the map in bytes. MapKey - Needed for UEFI
+	UINTN DescriptorSize; //Size of descriptor entries
+	UINT32 DescriptorVersion;
+	{
+		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
+		SystemTable->BootServices->AllocatePool(EfiLoaderData, MapSize, (void**)&Map);
+		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
+	}
+	void(*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void (*)(BootInfo*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
+
+	BootInfo bootInfo;
+	bootInfo.frameBuffer = newBuffer;
+	bootInfo.psf1_font = newFont;
+	bootInfo.mMap = Map;
+	bootInfo.mMapSize = MapSize;
+	bootInfo.mMapDescSize = DescriptorSize;
+
+	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey); //Exit boot services
+
+	KernelStart(&bootInfo);
 
 	return EFI_SUCCESS; // Exit the UEFI application
 }
