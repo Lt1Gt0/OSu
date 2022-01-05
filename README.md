@@ -36,7 +36,7 @@ To run the OS.bin file in the release I would reccomend running the `OSu.img` fi
 **[Qemu Download Page](https://www.qemu.org/download/)**
 
 - build-essentials
-- mtools
+- mtools (4.0.27)
 - qemu
 
 #### Installation
