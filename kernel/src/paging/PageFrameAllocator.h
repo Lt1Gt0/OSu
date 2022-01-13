@@ -18,6 +18,12 @@ class PageFrameAllocator{
     uint64_t GetReservedRAM();
 
     private:
+    /**
+     * @brief Initialize a bitmap given a size and a base address
+     * 
+     * @param bitmapSize Size
+     * @param bufferAddress Base address
+     */
     void InitBitmap(size_t bitmapSize, void* bufferAddress);
     void ReservePage(void* address);
     void ReservePages(void* address, uint64_t pageCount);

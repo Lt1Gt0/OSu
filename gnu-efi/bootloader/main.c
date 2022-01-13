@@ -12,6 +12,7 @@ typedef struct{
 	unsigned int PixelsPerScanLine;
 } FrameBuffer;
 
+// PSF file magic number (idk why)
 #define PSF1_MAGIC0 0x36
 #define PSF1_MAGIC1 0x04
 
@@ -26,6 +27,8 @@ typedef struct{
 	void* glyphBuffer;
 } PSF1_FONT;
 
+
+//Declare and initialize the frame buffer and its protocol for graphics (simple graphics)
 FrameBuffer frameBuffer;
 FrameBuffer* InitializeGOP(){
 	EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
@@ -189,6 +192,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	}
 	Print(L"Kernel Loaded\n\r");
 	
+	// Load the font file into memory
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
 	if(newFont == NULL){
 		Print(L"Font is not valid or not found\n\r");
@@ -199,6 +203,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 
 	FrameBuffer* newBuffer = InitializeGOP();
 
+	//Print out the base, size, width, height, and pixels per scan line in GOP
 	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelsPerScanLine: %d\n\r\n\r", 
 	newBuffer->BaseAddress, 
 	newBuffer->BufferSize,
@@ -217,15 +222,18 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	}
 	void(*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void (*)(BootInfo*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
 
+	// Define the boot info to pass into the kernel
 	BootInfo bootInfo;
 	bootInfo.frameBuffer = newBuffer;
 	bootInfo.psf1_font = newFont;
 	bootInfo.mMap = Map;
 	bootInfo.mMapSize = MapSize;
 	bootInfo.mMapDescSize = DescriptorSize;
-
+	
+	// Exit the boot services
 	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey); //Exit boot services
-
+	
+	// Load the kernel in to memeory
 	KernelStart(&bootInfo);
 
 	return EFI_SUCCESS; // Exit the UEFI application
