@@ -66,3 +66,7 @@ make run
 ```
 
 ## TODO
+
+Random Bug fixed
+Mouse and keyboard support
+Interrupts
