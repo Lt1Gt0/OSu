@@ -53,12 +53,13 @@ void PageFrameAllocator::InitBitmap(size_t bitmapSize, void* bufferAddress){
     }
 }
 
+uint64_t pageBitmapIndex = 0;
 void* PageFrameAllocator::RequestPage(){
     //Subject to future optimization
-    for(uint64_t index = 0; index < PageBitmap.Size * 8; index++){
-        if(PageBitmap[index] == true) continue;
-        LockPage((void*)(index * 4096));
-        return (void*)(index*4096); //Memory address of new free page frame
+    for(; pageBitmapIndex < PageBitmap.Size * 8; pageBitmapIndex++){
+        if(PageBitmap[pageBitmapIndex] == true) continue;
+        LockPage((void*)(pageBitmapIndex * 0x1000));
+        return (void*)(pageBitmapIndex * 0x1000); //Memory address of new free page frame
     }
 
     return NULL; //Page frame swap to file
@@ -68,9 +69,11 @@ void PageFrameAllocator::FreePage(void* address){
     uint64_t index = (uint64_t)address / 4096;
     //Check if page is free
     if(PageBitmap[index] == false) return;
-    PageBitmap.Set(index, false); // Make free
-    freeMemory += 4096;
-    usedMemory += 4096;
+    if (PageBitmap.Set(index, false)){ // Make free
+        freeMemory += 4096;
+        usedMemory += 4096;
+        if(pageBitmapIndex > index) pageBitmapIndex = index;
+    }
 }
 void PageFrameAllocator::FreePages(void* address, uint64_t pageCount){
     for(int t = 0; t < pageCount; t++){
@@ -82,9 +85,10 @@ void PageFrameAllocator::LockPage(void* address){
     uint64_t index = (uint64_t)address / 4096;
     //Check if page is Locked
     if(PageBitmap[index] == true) return;
-    PageBitmap.Set(index, true); // Make locked
-    freeMemory -= 4096;
-    usedMemory += 4096;
+    if(PageBitmap.Set(index, true)){ // Make locked
+        freeMemory -= 4096;
+        usedMemory += 4096;
+    }
 }
 void PageFrameAllocator::LockPages(void* address, uint64_t pageCount){
     for(int t = 0; t < pageCount; t++){
@@ -95,9 +99,11 @@ void PageFrameAllocator::LockPages(void* address, uint64_t pageCount){
 void PageFrameAllocator::UnreservePage(void* address){
     uint64_t index = (uint64_t)address / 4096;
     if(PageBitmap[index] == false) return;
-    PageBitmap.Set(index, false);
-    freeMemory += 4096;
-    reservedMemory -= 4096;
+    if(PageBitmap.Set(index, false)){
+        freeMemory += 4096;
+        reservedMemory -= 4096;
+        if(pageBitmapIndex > index) pageBitmapIndex = index;
+    }
 }
 void PageFrameAllocator::UnreservePages(void* address, uint64_t pageCount){
     for(int t = 0; t < pageCount; t++){
@@ -109,9 +115,10 @@ void PageFrameAllocator::ReservePage(void* address){
     uint64_t index = (uint64_t)address / 4096;
     //Check if page is free
     if(PageBitmap[index] == true) return;
-    PageBitmap.Set(index, true);
-    freeMemory -= 4096;
-    reservedMemory += 4096;
+    if(PageBitmap.Set(index, true)){
+        freeMemory -= 4096;
+        reservedMemory += 4096;
+    }
 }
 void PageFrameAllocator::ReservePages(void* address, uint64_t pageCount){
     for(int t = 0; t < pageCount; t++){

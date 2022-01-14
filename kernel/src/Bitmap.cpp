@@ -1,6 +1,7 @@
 #include "Bitmap.h"
 
 bool Bitmap::operator[](uint64_t index){
+    if(index > Size * 8) return false; //Prevent buffer overflow
     uint64_t byteIndex = index / 8;
     uint8_t bitIndex= index % 8;
 
@@ -13,7 +14,8 @@ bool Bitmap::operator[](uint64_t index){
     return false;
 }
 
-void Bitmap::Set(uint64_t index, bool value){
+bool Bitmap::Set(uint64_t index, bool value){
+    if(index > Size * 8) return false; //Prevent buffer overflow
     uint64_t byteIndex = index / 8;
     uint8_t bitIndex= index % 8;
     uint8_t bitIndexer = 0b10000000 >> bitIndex;
@@ -23,4 +25,5 @@ void Bitmap::Set(uint64_t index, bool value){
     if(value){ // Not off
         Buffer[byteIndex] |= bitIndexer;
     }
+    return true;
 }

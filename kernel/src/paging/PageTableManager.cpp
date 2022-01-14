@@ -16,51 +16,51 @@ void PageTableManager::MapMemory(void* virtualMemory, void* physicalMemory){
     PageTable* PDP;
 
     // Create new PDP
-    if(!PDE.Present){
+    if(!PDE.GetFlag(PT_Flag::Present)){
         PDP = (PageTable*)GlobalAllocator.RequestPage();
         memset(PDP, 0, 0x1000);
-        PDE.Address = (uint64_t)PDP >> 12;
-        PDE.Present = true;
-        PDE.ReadWrite = true;
+        PDE.SetAddress((uint64_t)PDP >> 12);
+        PDE.SetFlag(PT_Flag::Present, true);
+        PDE.SetFlag(PT_Flag::ReadWrite, true);
         PML4->entries[indexer.PDP_i] = PDE;
     } else {
-        PDP = (PageTable*)((uint64_t)PDE.Address << 12); // Get the address stored in the PDP
+        PDP = (PageTable*)((uint64_t)PDE.GetAddress() << 12); // Get the address stored in the PDP
     }
 
     PDE = PDP->entries[indexer.PD_i];
     PageTable* PD;
 
     // Create new PD
-    if(!PDE.Present){
+    if(!PDE.GetFlag(PT_Flag::Present)){
         PD = (PageTable*)GlobalAllocator.RequestPage();
         memset(PD, 0, 0x1000);
-        PDE.Address = (uint64_t)PD >> 12;
-        PDE.Present = true;
-        PDE.ReadWrite = true;
+        PDE.SetAddress((uint64_t)PD >> 12);
+        PDE.SetFlag(PT_Flag::Present, true);
+        PDE.SetFlag(PT_Flag::ReadWrite, true);
         PDP->entries[indexer.PD_i] = PDE;
     } else {
-        PD = (PageTable*)((uint64_t)PDE.Address << 12); // Get the address stored in the PDP
+        PD = (PageTable*)((uint64_t)PDE.GetAddress() << 12); // Get the address stored in the PDP
     }
 
     PDE = PD->entries[indexer.PT_i];
     PageTable* PT;
 
     // Create new PT
-    if(!PDE.Present){
+    if(!PDE.GetFlag(PT_Flag::Present)){
         PT = (PageTable*)GlobalAllocator.RequestPage();
         memset(PT, 0, 0x1000);
-        PDE.Address = (uint64_t)PT >> 12;
-        PDE.Present = true;
-        PDE.ReadWrite = true;
+        PDE.SetAddress((uint64_t)PT >> 12);
+        PDE.SetFlag(PT_Flag::Present, true);
+        PDE.SetFlag(PT_Flag::ReadWrite, true);
         PD->entries[indexer.PT_i] = PDE;
     } else {
-        PT = (PageTable*)((uint64_t)PDE.Address << 12); // Get the address stored in the PDP
+        PT = (PageTable*)((uint64_t)PDE.GetAddress() << 12); // Get the address stored in the PDP
     }
 
     PDE = PT->entries[indexer.P_i];
-    PDE.Address = (uint64_t)physicalMemory >> 12; // Convert physical memory into an accessible address for the PDP
-    PDE.Present = true;
-    PDE.ReadWrite = true;
+    PDE.SetAddress((uint64_t)physicalMemory >> 12); // Convert physical memory into an accessible address for the PDP
+    PDE.SetFlag(PT_Flag::Present, true);
+    PDE.SetFlag(PT_Flag::ReadWrite, true);
     PT->entries[indexer.P_i] = PDE;
 
 }

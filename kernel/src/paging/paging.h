@@ -1,18 +1,26 @@
 #pragma once
 #include <stdint.h>
 
+enum PT_Flag{
+    Present = 0, // Page is present meaning the MMU can access it
+    ReadWrite = 1, // Page can be read or written to
+    UserSuper = 2, // Privilage level
+    WriteThrough = 3,
+    CacheDisabled = 4,
+    Accessed = 5,
+    LargerPages = 7,
+    Custom0 = 9,
+    Custom1 = 10,
+    Custom2 = 11,
+    NX = 63 //Only if supported
+};
+
 struct PageDirectoryEntry{
-    bool Present        : 1; // Page is present meaning the MMU can access it
-    bool ReadWrite      : 1; // Page can be read or written to
-    bool UserSuper      : 1; // Privilage level
-    bool WriteThrough   : 1;
-    bool CacheDisabled  : 1;
-    bool Accessed       : 1;
-    bool ignore0        : 1; // Reserved
-    bool LargerPages    : 1;
-    bool ignore1        : 1; // Reserved
-    uint8_t Available   : 3;
-    uint64_t Address    : 52;
+    uint64_t Value;
+    void SetFlag(PT_Flag flag, bool enabled);
+    bool GetFlag(PT_Flag flag);
+    void SetAddress(uint64_t address);
+    uint64_t GetAddress();
 };
 
 struct PageTable {
