@@ -27,3 +27,5 @@ class BasicRenderer{
      */
     void PutChar(char chr, unsigned int xOff, unsigned int yOff);
 };
+
+extern BasicRenderer* GlobalRenderer;
