@@ -9,6 +9,26 @@ BasicRenderer::BasicRenderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Fon
     Color = 0xffffffff; // Default frambuffer foreground color set to white
     CursorPosition = {0, 0}; // Default framebuffer cursor position set to x = 0, y = 0
 }
+
+void BasicRenderer::Clear(uint32_t color){
+    uint64_t fbBase = (uint64_t)TargetFrameBuffer->BaseAddress;
+    uint64_t bytesPerScanLine = TargetFrameBuffer->PixelsPerScanLine * 4;
+    uint64_t fbHeight = TargetFrameBuffer->Height;
+    uint64_t fbSize = TargetFrameBuffer->BufferSize;
+
+    for(int verticalScanLine = 0; verticalScanLine < fbHeight; verticalScanLine++){
+        uint64_t pixPtrBase = fbBase + (bytesPerScanLine * verticalScanLine); // First pixel in row
+        for(uint32_t* pixPtr = (uint32_t*)pixPtrBase; pixPtr < (uint32_t*)(pixPtrBase + bytesPerScanLine); pixPtr++){
+            *pixPtr = color;
+        }
+    }
+}
+
+void BasicRenderer::Next(){
+    CursorPosition.X = 0;
+    CursorPosition.Y += 16;
+}
+
 void BasicRenderer::Print(const char* str)
 {
     char* chr = (char*)str;

@@ -2,6 +2,7 @@
 #include "math.h"
 #include "FrameBuffer.h"
 #include "SimpleFonts.h"
+#include <stdint.h>
 
 class BasicRenderer{
     public:
@@ -26,6 +27,9 @@ class BasicRenderer{
      * @param yOff offset of the y position for the char
      */
     void PutChar(char chr, unsigned int xOff, unsigned int yOff);
+
+    void Clear(uint32_t color);
+    void Next();
 };
 
 extern BasicRenderer* GlobalRenderer;
