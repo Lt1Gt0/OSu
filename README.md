@@ -1,19 +1,32 @@
-# Table Of Contents
+# OSu
 
-- [Table Of Contents](#table-of-contents)
+__I am not a professional at OS Development by any means.__
+__Don't expect this OS to do anything for a long while__
+
+## Table Of Contents
+
+- [OSu](#osu)
+  - [Table Of Contents](#table-of-contents)
+  - [Disclaimer](#disclaimer)
   - [About](#about)
+  - [Notable Features](#notable-features)
   - [Branch Structures](#branch-structures)
   - [Running `OSu.img`](#running-osuimg)
     - [Pre-requisites before building and running the OS](#pre-requisites-before-building-and-running-the-os)
       - [Installation](#installation)
   - [TODO](#todo)
 
+## Disclaimer
+
+  **There is no correlation between this OS and the development team behind the game OSU!**
+
+  As a restatment from the beginning I am not a professional at OS Development by any means. Don't expect this OS to do anything for a long while
+
+  This was started as a hobby project to play around with CPU architecture and learning computers at a fundamental level.
+
+  Also I just thought that `OSU` and `OSu` would be kinda funny because of the name to be honest
+
 ## About
-
-__I am not a professional at OS Development by any means.__
-__Don't expect this OS to do anything for a long while__
-
-**There is no correlation between this OS and the development team behind the game OSU!**
 
 There is not much to be offered in the OS in its current stages while I learn more OS development and different protocol implementations
 
@@ -22,6 +35,14 @@ There is not much to be offered in the OS in its current stages while I learn mo
 - Cross compiler: gcc
 - Linker: ld
 - UEFI bootloader services
+
+To my kowledge this should work outside of QEMU as in real hardware, I have yet to try it out, but later version I will experiment further with real hardware
+
+## Notable Features
+
+- PS2 Keyboard support
+- Simple frame buffer
+- UEFI bootloader
 
 ## Branch Structures
 
@@ -45,9 +66,17 @@ To run the OS.bin file in the release I would reccomend running the `OSu.img` fi
 sudo apt update 
 sudo apt-get install build-essentials
 sudo apt-get install mtools
+sudo apt-get qemu
 ```
 
-OSu.img in the current release does not appear for the time being
+The mtools installation should work fine on ubunutu 20.04 LTS
+If it doest work then run and install this package
+
+```bash
+wget -S https://ftp.gnu.org/gnu/mtools/floppyd_4.0.27_amd64.deb
+```
+
+If for some reason qemu doesn't work, go to the [Qemu Download Page](https://www.qemu.org/download/) and follow the instruction for installtion there
 
 Assuming QEMU is installed properly and you do have the OSu.img. In the same directory where the .img file is saved, run the command
 
@@ -61,12 +90,20 @@ If cloned from the repository itself, to build the bootloader and the kernel, na
 cd gnu-efi/
 make bootloader
 cd ../kernel
+makek kernel
 make buildimg
 make run
 ```
 
 ## TODO
 
-Random Bug fixed
-Mouse and keyboard support
-Interrupts
+- PS2 Interface
+  - Keyboard
+  - Mouse
+- USB
+  - [ ] 1.0
+  - [ ] 2.0
+  - [ ] 3.0
+- networking capabilities
+  - Unknown currently
+- [ ] Test OS on real hardware
