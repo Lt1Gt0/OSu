@@ -11,6 +11,7 @@ class BasicRenderer{
     FrameBuffer* TargetFrameBuffer;
     PSF1_FONT* PSF1_Font;
     unsigned int Color;
+    unsigned int ClearColor;
 
     /**
      * @brief Print a string value to the render buffer
@@ -26,9 +27,21 @@ class BasicRenderer{
      * @param xOff offset of the x position for the char
      * @param yOff offset of the y position for the char
      */
-    void PutChar(char chr, unsigned int xOff, unsigned int yOff);
+    void PutChar(char chr, unsigned int xOff, unsigned int yOff); 
+    void PutChar(char chr);
 
-    void Clear(uint32_t color);
+    void ClearChar();
+
+    /**
+     * @breif Clear terminal to a single color
+     *
+     * @param color
+     */
+    void Clear();
+    
+    /**
+     * @brief Console new line
+     */
     void Next();
 };
 

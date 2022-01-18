@@ -10,17 +10,43 @@ BasicRenderer::BasicRenderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Fon
     CursorPosition = {0, 0}; // Default framebuffer cursor position set to x = 0, y = 0
 }
 
-void BasicRenderer::Clear(uint32_t color){
+void BasicRenderer::Clear(){
     uint64_t fbBase = (uint64_t)TargetFrameBuffer->BaseAddress;
-    uint64_t bytesPerScanLine = TargetFrameBuffer->PixelsPerScanLine * 4;
+    uint64_t bytesPerScanLine = TargetFrameBuffer->PixelsPerScanLine * 4; // Bytes in one row
     uint64_t fbHeight = TargetFrameBuffer->Height;
     uint64_t fbSize = TargetFrameBuffer->BufferSize;
 
+    /* Go through each row in the frame buffer and set each value to the specified color */
     for(int verticalScanLine = 0; verticalScanLine < fbHeight; verticalScanLine++){
-        uint64_t pixPtrBase = fbBase + (bytesPerScanLine * verticalScanLine); // First pixel in row
+        uint64_t pixPtrBase = fbBase + (bytesPerScanLine * verticalScanLine); // point to the first pixel in row
         for(uint32_t* pixPtr = (uint32_t*)pixPtrBase; pixPtr < (uint32_t*)(pixPtrBase + bytesPerScanLine); pixPtr++){
-            *pixPtr = color;
+            *pixPtr = ClearColor; // Set the color
         }
+    }
+}
+
+void BasicRenderer::ClearChar(){
+    if(CursorPosition.X == 0){
+        CursorPosition.X = TargetFrameBuffer->Width;
+        CursorPosition.Y -= 16;
+        if(CursorPosition.Y > 0) CursorPosition.Y = 0;
+    }
+    
+    unsigned int xOff = CursorPosition.X;
+    unsigned int yOff = CursorPosition.Y;
+
+    unsigned int* pixelPtr = (unsigned int*)TargetFrameBuffer->BaseAddress;
+    for(unsigned long y = yOff; y < yOff + 16; y++){ // 16 is added as the height of a character (glyph)
+        for(unsigned long x = xOff - 8; x < xOff; x++){ // 8 is added as the width of a character (glyph)
+                *(unsigned int*)(pixelPtr + x + (y * TargetFrameBuffer->PixelsPerScanLine)) = ClearColor;
+        }  
+    }
+    
+    CursorPosition.X -= 8;
+    if(CursorPosition.X < 0){
+        CursorPosition.X = TargetFrameBuffer->Width;
+        CursorPosition.Y -= 16;
+        if(CursorPosition.Y < 0) CursorPosition.Y = 0;
     }
 }
 
@@ -56,4 +82,13 @@ void BasicRenderer::PutChar(char chr, unsigned int xOff, unsigned int yOff){
         }
         fontPtr++;
     } 
+}
+
+void BasicRenderer::PutChar(char chr){
+    PutChar(chr, CursorPosition.X, CursorPosition.Y);
+    CursorPosition.X += 8;
+    if(CursorPosition.X + 8 > TargetFrameBuffer->Width){
+      CursorPosition.X = 0;
+      CursorPosition.Y += 16;
+    }
 }
