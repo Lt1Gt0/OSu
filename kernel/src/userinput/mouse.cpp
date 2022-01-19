@@ -30,6 +30,12 @@ uint8_t MouseRead(){
     return inb(0x60);
 }
 
+/* The PS2 Mouse works by sending information packets 
+ * The first byte of the packet includes mouse information like
+ * overflows, signs and button clicks
+ * The second and third byte of the packet is the X and Y movement
+ * of the mouse respectively
+ */
 uint8_t MouseCycle = 0;
 uint8_t MousePacket[4];
 bool MousePacketReady = false;
@@ -37,18 +43,20 @@ Point MousePosition;
 void HandlePS2Mouse(uint8_t data){
 
     switch(MouseCycle){
-        case 0:
+        case 0: // x-y overflow, sign, button click
             if (MousePacketReady) break;
+            //The 5 bit of the data will always be set to 1
+            //In the case it is not, the packet is misaligned to break
             if (data & 0b00001000 == 0) break;
             MousePacket[0] = data;
             MouseCycle++;
             break;
-        case 1:
+        case 1: // X movement
             if (MousePacketReady) break;
             MousePacket[1] = data;
             MouseCycle++;
             break;
-        case 2:
+        case 2: // Y movement
             if (MousePacketReady) break;
             MousePacket[2] = data;
             MousePacketReady = true;

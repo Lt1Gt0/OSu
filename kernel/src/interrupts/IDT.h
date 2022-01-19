@@ -8,18 +8,18 @@
 
 
 struct IDTDescEntry{
-    uint16_t offset0;
-    uint16_t selector;      // Segment selector
-    uint8_t ist;            // Interrupt stack table offset
-    uint8_t type_attr;
-    uint16_t offset1;
-    uint32_t offset2;
-    uint32_t ignore;
-    void SetOffset(uint64_t offset);
-    uint64_t GetOffset();
+    uint16_t  offset0;
+    uint16_t  selector;       // Segment selector
+    uint8_t   ist;            // Interrupt stack table offset
+    uint8_t   type_attr;
+    uint16_t  offset1;
+    uint32_t  offset2;
+    uint32_t  ignore;
+    void      SetOffset(uint64_t offset);
+    uint64_t  GetOffset();
 };
 
 struct IDTR{
-    uint16_t Limit;
-    uint64_t Offset;
+    uint16_t  Limit;
+    uint64_t  Offset;
 }__attribute__((packed));

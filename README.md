@@ -41,7 +41,7 @@ To my kowledge this should work outside of QEMU as in real hardware, I have yet 
 ## Notable Features
 
 - PS2 Keyboard support
-- PS2 Mouse support
+- PS2 Mouse support (kind of)
 - Simple frame buffer
 - UEFI bootloader
 
@@ -106,8 +106,8 @@ make run
 ## TODO
 
 - PS2 Interface
-  [x] Keyboard
-  [x] Mouse (kind of)
+  - [x] Keyboard
+  - [x] Mouse Support (kind of)
 - USB
   - [ ] 1.0
   - [ ] 2.0

@@ -1,8 +1,4 @@
 #include "kernelUtil.h"
-#include "gdt/gdt.h"
-#include "interrupts/IDT.h"
-#include "interrupts/interrupts.h"
-#include "IO.h"
 
 KernelInfo kernelInfo;
 PageTableManager pageTableManager = NULL;
@@ -49,7 +45,6 @@ void SetIDTGate(void* handler, uint8_t entryOffset, uint8_t type_attr, uint8_t s
     interrupt->type_attr = type_attr;
     interrupt->selector = selector;
 }
-
 
 void PrepareInterrupts(){
     idtr.Limit = 0x0FFF;

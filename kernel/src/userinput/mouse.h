@@ -3,6 +3,10 @@
 #include "../math.h"
 #include "../BasicRenderer.h"
 
+/* IO PORTS FOR MOUSE COMM 
+ * 0x60 (after Initialize of mouse) -  
+ */
+
 #define PS2LeftButton   0b00000001
 #define PS2MiddleButton 0b00000010
 #define PS2RightButton  0b00000100
@@ -11,7 +15,20 @@
 #define PS2XOverflow    0b01000000
 #define PS2YOverflow    0b10000000
 
+/**
+ * @brief Initialize the PS2 Mouse
+ */
 void InitPS2Mouse();
+
+/*
+ * @brief Handle PS2 Mouse incoming packets
+ *
+ * @param data
+ */
 void HandlePS2Mouse(uint8_t data);
+
+/**
+ * @brief Process a PS2 mouse packet
+ */
 void ProcessMousePacket();
 extern Point MousePosition;

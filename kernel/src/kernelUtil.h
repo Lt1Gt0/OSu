@@ -11,6 +11,10 @@
 #include "paging/paging.h"
 #include "paging/PageTableManager.h"
 #include "userinput/mouse.h"
+#include "gdt/gdt.h"
+#include "interrupts/IDT.h"
+#include "interrupts/interrupts.h"
+#include "IO.h"
 
 struct BootInfo {
 	FrameBuffer* frameBuffer;
