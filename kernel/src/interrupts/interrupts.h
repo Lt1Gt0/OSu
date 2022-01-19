@@ -3,6 +3,7 @@
 #include "../panic.h"
 #include "../IO.h"
 #include "../userinput/keyboard.h"
+#include "../userinput/mouse.h"
 
 #define PIC1_COMMAND  0x20 // IO base address for the mater PIC
 #define PIC1_DATA     0x21 // IO base address for the master PIC data
@@ -16,10 +17,11 @@
 
 
 struct interrupt_frame;
-__attribute__((interrupt)) void PageFault_Handler(struct interrupt_frame* frame);
-__attribute__((interrupt)) void DoubleFault_Handler(struct interrupt_frame* frame);
-__attribute__((interrupt)) void GPFault_Handler(struct interrupt_frame* frame);
-__attribute__((interrupt)) void KeyboardInt_Handler(struct interrupt_frame* frame);
+__attribute__((interrupt)) void PageFault_Handler(interrupt_frame* frame);
+__attribute__((interrupt)) void DoubleFault_Handler(interrupt_frame* frame);
+__attribute__((interrupt)) void GPFault_Handler(interrupt_frame* frame);
+__attribute__((interrupt)) void KeyboardInt_Handler(interrupt_frame* frame);
+__attribute__((interrupt)) void MouseInt_Handler(interrupt_frame* frame);
 
 
 void RemapPIC();
