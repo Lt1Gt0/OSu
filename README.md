@@ -41,6 +41,7 @@ To my kowledge this should work outside of QEMU as in real hardware, I have yet 
 ## Notable Features
 
 - PS2 Keyboard support
+- PS2 Mouse support
 - Simple frame buffer
 - UEFI bootloader
 
@@ -59,21 +60,28 @@ To run the OS.bin file in the release I would reccomend running the `OSu.img` fi
 - build-essentials
 - mtools (4.0.27)
 - qemu
+- g++
+- nasm
 
 #### Installation
 
 ``` bash
 sudo apt update 
 sudo apt-get install build-essentials
-sudo apt-get install mtools
-sudo apt-get qemu
+sudo apt-get install qemu
+sudo apt-get install g++
+sudo apt-get install nasm
 ```
 
 The mtools installation should work fine on ubunutu 20.04 LTS
-If it doest work then run and install this package
+If it doesn't work then install mtools as so
 
 ```bash
-wget -S https://ftp.gnu.org/gnu/mtools/floppyd_4.0.27_amd64.deb
+wget -S ftp.gnu.org/gnu/mtools/mtools-4.0.27.tar.gz
+tar xf mtools-4.0.27.tar.gz
+cd mtools-4.0.27
+./configure
+sudo make install
 ```
 
 If for some reason qemu doesn't work, go to the [Qemu Download Page](https://www.qemu.org/download/) and follow the instruction for installtion there
@@ -98,8 +106,8 @@ make run
 ## TODO
 
 - PS2 Interface
-  - Keyboard
-  - Mouse
+  [x] Keyboard
+  [x] Mouse (kind of)
 - USB
   - [ ] 1.0
   - [ ] 2.0
