@@ -35,7 +35,7 @@ void PageFrameAllocator::ReadEFIMemoryMap(EFI_MEMORY_DESCRIPTOR* mMap, size_t mM
     InitBitmap(bitmapSize, largestFreeMemSeg);
 
     // Lock pages of bitmap and reserve pages of unusable/reserved memory
-    LockPages(&PageBitmap, PageBitmap.Size / 4096 + 1);
+    LockPages(PageBitmap.Buffer, PageBitmap.Size / 4096 + 1);
 
     for(int i = 0; i < mMapEntries; i++){
         EFI_MEMORY_DESCRIPTOR* desc = (EFI_MEMORY_DESCRIPTOR*)((uint64_t)mMap + (i * mMapDescSize));
