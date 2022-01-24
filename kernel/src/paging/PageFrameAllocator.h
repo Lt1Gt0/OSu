@@ -15,7 +15,7 @@ class PageFrameAllocator{
     void* RequestPage();
     uint64_t GetFreeRAM();
     uint64_t GetUsedRAM();
-    uint64_t etReservedRAM();
+    uint64_t GetReservedRAM();
 
     private:
     /**

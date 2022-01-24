@@ -12,7 +12,10 @@ class BasicRenderer{
     PSF1_FONT* PSF1_Font;
     unsigned int Color;
     unsigned int ClearColor;
-
+    uint32_t MouseCursorBuffer[16 * 16];
+    uint32_t MouseCursorBufferAfter[16 * 16];
+    bool MouseDrawn;
+    
     /**
      * @brief Print a string value to the render buffer
      * 
@@ -43,6 +46,12 @@ class BasicRenderer{
      * @brief Console new line
      */
     void Next();
+    
+
+    void ClearMouseCursor(uint8_t* mouseCursor, Point position);
+    uint32_t GetPix(uint32_t x, uint32_t y);
+    void PutPix(uint32_t x, uint32_t y, uint32_t color);
+    void DrawOverlayMouseCursor(uint8_t* MouseCursor, Point position, uint32_t color);
 };
 
 extern BasicRenderer* GlobalRenderer;
