@@ -1,22 +1,22 @@
 #include "mouse.h"
 
 uint8_t MousePointer[] = {
-    0b11111111, 0b11100000, 
-    0b11111111, 0b10000000,
-    0b11111110, 0b00000000,
-    0b11111100, 0b00000000,
-    0b11111000, 0b00000000,
-    0b11110000, 0b00000000,
-    0b11100000, 0b00000000,
+    0b10000000, 0b00000000, 
     0b11000000, 0b00000000,
-    0b11000000, 0b00000000, 
-    0b10000000, 0b00000000,
-    0b10000000, 0b00000000,
-    0b00000000, 0b00000000,
-    0b00000000, 0b00000000,
-    0b00000000, 0b00000000,
-    0b00000000, 0b00000000,
-    0b00000000, 0b00000000,
+    0b11100000, 0b00000000,
+    0b11110000, 0b00000000,
+    0b11111000, 0b00000000,
+    0b11111100, 0b00000000,
+    0b11111110, 0b00000000,
+    0b11111111, 0b00000000,
+    0b11111111, 0b00000000, 
+    0b11111111, 0b11000000,
+    0b11111100, 0b00000000,
+    0b11001100, 0b00000000,
+    0b10000110, 0b00000000,
+    0b00000110, 0b00000000,
+    0b00000011, 0b00000000,
+    0b00000011, 0b00000000,
 };
 
 void MouseWait(){
@@ -114,7 +114,8 @@ void ProcessMousePacket(){
             if (xOverflow){
                 MousePosition.X += 255;
             }
-        } else
+        } 
+        else
         {
             MousePacket[1] = 256 - MousePacket[1];
             MousePosition.X -= MousePacket[1];
@@ -145,7 +146,11 @@ void ProcessMousePacket(){
         
         GlobalRenderer->ClearMouseCursor(MousePointer, MousePositionOld);
         GlobalRenderer->DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
-
+        
+        /*** 
+         * colors for mouse buttons were placed to see if they worked, will have
+         * different functionality in place later when there is a reason to change it
+         * ***/
         if(MousePacket[0] & PS2LeftButton){
             GlobalRenderer->PutChar('a', MousePosition.X, MousePositionOld.Y);
         }

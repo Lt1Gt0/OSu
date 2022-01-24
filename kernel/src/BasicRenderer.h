@@ -46,11 +46,35 @@ class BasicRenderer{
      * @brief Console new line
      */
     void Next();
-    
-
+   
+    /**
+     * @brief Clear the mouse cursoe from the frame buffer
+     *
+     * @param mouseCursor Pointer to a mouse  
+     * @param position Position of mouse
+     */
     void ClearMouseCursor(uint8_t* mouseCursor, Point position);
+    
+    /**
+     * @brief Get information about pixel on frame buffer
+     *
+     * @param x - Pixel X
+     * @param y - Pixel Y
+     */
     uint32_t GetPix(uint32_t x, uint32_t y);
+    
+    /**
+     * @brief place a pixel on framebuffer 
+     *
+     * @param x - Pixel X
+     * @param y - Pixel Y
+     * @param color - Pixel Color
+     */
     void PutPix(uint32_t x, uint32_t y, uint32_t color);
+    
+    /**
+     *
+     */
     void DrawOverlayMouseCursor(uint8_t* MouseCursor, Point position, uint32_t color);
 };
 
