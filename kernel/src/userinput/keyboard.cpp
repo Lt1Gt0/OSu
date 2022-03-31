@@ -30,7 +30,5 @@ void HandlerKeyboard(uint8_t scancode){
     }
     char ascii = QWERTYKeyboard::Translate(scancode, isLeftShiftPressed | isRightShiftPressed);
 
-    if (ascii != 0){
-        GlobalRenderer->PutChar(ascii);
-    }
+    if (ascii != 0) GlobalRenderer->PutChar(ascii);
 }

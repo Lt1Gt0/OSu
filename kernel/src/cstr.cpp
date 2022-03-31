@@ -124,17 +124,13 @@ const char* to_hstring(uint8_t value){
 
 char doubleTo_StringOutput[128];
 const char* to_string(double value, uint8_t decimalPlaces){
-    if(decimalPlaces > 20) 
-    {
-         decimalPlaces = 20;
-    }
+    if(decimalPlaces > 20) decimalPlaces = 20;
+    
 
     char* intPtr = (char*)to_string((int64_t)value);
     char* doublePtr = doubleTo_StringOutput;
 
-    if (value < 0){
-        value *= -1;
-    }
+    if (value < 0) value *= -1;
 
     while(*intPtr != 0){
         *doublePtr = *intPtr;

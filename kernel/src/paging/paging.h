@@ -2,17 +2,17 @@
 #include <stdint.h>
 
 enum PT_Flag{
-    Present = 0, // Page is present meaning the MMU can access it
-    ReadWrite = 1, // Page can be read or written to
-    UserSuper = 2, // Privilage level
-    WriteThrough = 3,
-    CacheDisabled = 4,
-    Accessed = 5,
-    LargerPages = 7,
-    Custom0 = 9,
-    Custom1 = 10,
-    Custom2 = 11,
-    NX = 63 //Only if supported
+    Present         = 0, // Page is present meaning the MMU can access it
+    ReadWrite       = 1, // Page can be read or written to
+    UserSuper       = 2, // Privilage level
+    WriteThrough    = 3,
+    CacheDisabled   = 4,
+    Accessed        = 5,
+    LargerPages     = 7,
+    Custom0         = 9,
+    Custom1         = 10,
+    Custom2         = 11,
+    NX              = 63 //Only if supported
 };
 
 struct PageDirectoryEntry{

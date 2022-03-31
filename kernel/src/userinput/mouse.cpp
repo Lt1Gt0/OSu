@@ -22,18 +22,16 @@ uint8_t MousePointer[] = {
 void MouseWait(){
     uint64_t timeout = 100000;
     while (timeout--){
-        if ((inb(0x64) & 0b10) == 0){
-            return;
-        }
+        //Check if mouse is avaliable to be read
+        if ((inb(0x64) & 0b10) == 0) return;
     }
 }
 
 void MouseWaitInput(){
     uint64_t timeout = 100000;
     while (timeout--){
-        if (inb(0x64) & 0b1){
-            return;
-        }
+        //Check if mouse is avaliable to be read
+        if (inb(0x64) & 0b1) return;
     }
 }
 
@@ -68,8 +66,8 @@ void HandlePS2Mouse(uint8_t data){
     switch(MouseCycle){
         case 0: // x-y overflow, sign, button click
             if (MousePacketReady) break;
-            //The 5 bit of the data will always be set to 1
-            //In the case it is not, the packet is misaligned to break
+            //The 5th bit of the data will always be set to 1
+            //In the case it is not, the packet is misaligned then break
             if (data & 0b00001000 == 0) break;
             MousePacket[0] = data;
             MouseCycle++;
@@ -95,54 +93,47 @@ void ProcessMousePacket(){
 
         if (MousePacket[0] & PS2XSign){
             xNegative = true;
-        }else xNegative = false;
+        } else { xNegative = false; }
 
         if (MousePacket[0] & PS2YSign){
             yNegative = true;
-        }else yNegative = false;
+        } else { yNegative = false; }
 
         if (MousePacket[0] & PS2XOverflow){
             xOverflow = true;
-        }else xOverflow = false;
+        } else { xOverflow = false; }
 
         if (MousePacket[0] & PS2YOverflow){
             yOverflow = true;
-        }else yOverflow = false;
+        } else { yOverflow = false; }
 
-        if (!xNegative){
+        if (!xNegative) {
             MousePosition.X += MousePacket[1];
-            if (xOverflow){
-                MousePosition.X += 255;
-            }
-        } 
-        else
-        {
+            if (xOverflow) MousePosition.X += 255;
+        } else {
             MousePacket[1] = 256 - MousePacket[1];
             MousePosition.X -= MousePacket[1];
-            if (xOverflow){
-                MousePosition.X -= 255;
-            }
+            if (xOverflow) MousePosition.X -= 255;
         }
 
-        if (!yNegative){
+        if (!yNegative) {
             MousePosition.Y -= MousePacket[2];
-            if (yOverflow){
-                MousePosition.Y -= 255;
-            }
-        } else
-        {
+            if (yOverflow) MousePosition.Y -= 255;
+        } else {
             MousePacket[2] = 256 - MousePacket[2];
             MousePosition.Y += MousePacket[2];
-            if (yOverflow){
-                MousePosition.Y += 255;
-            }
+            if(yOverflow) MousePosition.Y += 255;
         }
 
-        if (MousePosition.X < 0) MousePosition.X = 0;
-        if (MousePosition.X > GlobalRenderer->TargetFrameBuffer->Width-1) MousePosition.X = GlobalRenderer->TargetFrameBuffer->Width-1;
+        if(MousePosition.X < 0) 
+            MousePosition.X = 0;
+        if(MousePosition.X > GlobalRenderer->TargetFrameBuffer->Width-1) 
+            MousePosition.X = GlobalRenderer->TargetFrameBuffer->Width-1;
 
-        if (MousePosition.Y < 0) MousePosition.Y = 0;
-        if (MousePosition.Y > GlobalRenderer->TargetFrameBuffer->Height-1) MousePosition.Y = GlobalRenderer->TargetFrameBuffer->Height-1;
+        if(MousePosition.Y < 0) 
+            MousePosition.Y = 0;
+        if(MousePosition.Y > GlobalRenderer->TargetFrameBuffer->Height-1) 
+            MousePosition.Y = GlobalRenderer->TargetFrameBuffer->Height-1;
         
         GlobalRenderer->ClearMouseCursor(MousePointer, MousePositionOld);
         GlobalRenderer->DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
@@ -151,12 +142,13 @@ void ProcessMousePacket(){
          * colors for mouse buttons were placed to see if they worked, will have
          * different functionality in place later when there is a reason to change it
          * ***/
-        if(MousePacket[0] & PS2LeftButton){
+        if(MousePacket[0] & PS2LeftButton)
             GlobalRenderer->PutChar('a', MousePosition.X, MousePositionOld.Y);
-        }
+        
         if(MousePacket[0] & PS2MiddleButton){
-
+            /* TODO */
         }
+        
         if(MousePacket[0] & PS2RightButton){
             uint32_t color = GlobalRenderer->Color;
             GlobalRenderer->Color = 0x000000ff;

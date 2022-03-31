@@ -20,10 +20,11 @@ namespace QWERTYKeyboard{
     };
 
     char Translate(uint8_t scancode, bool uppercase){
-        if(scancode > 58) return 0; // longer than array
+        if(scancode > 58) 
+            return 0; // longer than array
         
         if(uppercase) 
-          return ASCIITable[scancode] - 32;
+            return ASCIITable[scancode] - 32;
         
         return ASCIITable[scancode];
     }

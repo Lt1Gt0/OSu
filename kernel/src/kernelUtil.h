@@ -17,11 +17,12 @@
 #include "IO.h"
 
 struct BootInfo {
-	FrameBuffer* frameBuffer;
-	PSF1_FONT* psf1_font;
-	EFI_MEMORY_DESCRIPTOR* mMap;
-	uint64_t mMapSize;
-	uint64_t mMapDescSize;
+	FrameBuffer* 			frameBuffer;
+	PSF1_FONT* 				psf1_font;
+	EFI_MEMORY_DESCRIPTOR* 	mMap;
+	uint64_t 				mMapSize;
+	uint64_t 				mMapDescSize;
+  void* rsdp;
 };
 
 extern "C" uint64_t _KernelStart;
