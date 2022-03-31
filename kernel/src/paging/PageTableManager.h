@@ -19,3 +19,5 @@ class PageTableManager{
      */
     void MapMemory(void* virtualMemory, void* physicalMemory);
 };
+
+extern PageTableManager g_PageTableManager;
