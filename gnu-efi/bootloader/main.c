@@ -12,7 +12,6 @@ typedef struct{
 	unsigned int 	PixelsPerScanLine;
 } FrameBuffer;
 
-// PSF file magic number (idk why)
 #define PSF1_MAGIC0 0x36
 #define PSF1_MAGIC1 0x04
 
