@@ -5,11 +5,11 @@
 typedef unsigned long long size_t ;
 
 typedef struct{
-	void* BaseAddress;
-	size_t BufferSize;
-	unsigned int Width;
-	unsigned int Height;
-	unsigned int PixelsPerScanLine;
+	void* 			BaseAddress;
+	size_t			BufferSize;
+	unsigned int 	Width;
+	unsigned int 	Height;
+	unsigned int 	PixelsPerScanLine;
 } FrameBuffer;
 
 // PSF file magic number (idk why)
@@ -23,8 +23,8 @@ typedef struct{
 } PSF1_HEADER;
 
 typedef struct{
-	PSF1_HEADER* psf1_Header;
-	void* glyphBuffer;
+	PSF1_HEADER* 	psf1_Header;
+	void* 			glyphBuffer;
 } PSF1_FONT;
 
 
@@ -39,9 +39,7 @@ FrameBuffer* InitializeGOP(){
 	if(EFI_ERROR(status)){
 		Print(L"Unable to Locate GOP\n\r");
 		return NULL;
-	} else {
-		Print(L"GOP Located\n\r");
-	}
+	} else { Print(L"GOP Located\n\r"); }
 
 	frameBuffer.BaseAddress = (void*)gop->Mode->FrameBufferBase;
 	frameBuffer.BufferSize = gop->Mode->FrameBufferSize;
@@ -62,9 +60,7 @@ EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EF
 	SystemTable->BootServices->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (void**)&FileSystem); //Get file system where booted from
 
 	//If the directory is null set the directory to the root of the file system
-	if(Directory == NULL){
-		FileSystem->OpenVolume(FileSystem, &Directory);
-	}
+	if(Directory == NULL) FileSystem->OpenVolume(FileSystem, &Directory);
 
 	EFI_STATUS s = Directory->Open(Directory, &LoadedFile, Path, EFI_FILE_MODE_READ, EFI_FILE_READ_ONLY);
 	if (s != EFI_SUCCESS) return NULL;
@@ -77,9 +73,9 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 	if(font == NULL) return NULL; // File doesnt not exist
 
 	PSF1_HEADER* fontHeader;
-	SystemTable->BootServices->AllocatePool(EfiLoaderData, sizeof(PSF1_HEADER), (void**)&fontHeader);
-	UINTN size = sizeof(PSF1_HEADER);
-	font->Read(font, &size, fontHeader); // Load header into memory
+	UINTN psf1Headersize = sizeof(PSF1_HEADER);
+	SystemTable->BootServices->AllocatePool(EfiLoaderData, psf1Headersize, (void**)&fontHeader);
+	font->Read(font, &psf1Headersize, fontHeader); // Load header into memory
 
 	// Check for incorrect font format
 	if(fontHeader->magic[0] != PSF1_MAGIC0 || fontHeader->magic[1] != PSF1_MAGIC1){
@@ -94,7 +90,7 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 	// Define glyph buffer and read information into it
 	void* glyphBuffer;
 	{
-		font->SetPosition(font, sizeof(PSF1_HEADER));
+		font->SetPosition(font, psf1Headersize);
 		SystemTable->BootServices->AllocatePool(EfiLoaderData, glyphBufferSize, (void**)&glyphBuffer); // Allocate memory for the glyph buffer
 		font->Read(font, &glyphBufferSize, glyphBuffer); // Read data into memory
 	}
@@ -117,12 +113,22 @@ int memcmp(const void* aptr, const void* bptr, size_t n){
 }
 
 typedef struct{
-	FrameBuffer* frameBuffer;
-	PSF1_FONT* psf1_font;
-	EFI_MEMORY_DESCRIPTOR* mMap;
-	UINTN mMapSize;
-	UINTN mMapDescSize;
+	FrameBuffer* 			frameBuffer;
+	PSF1_FONT* 				psf1_font;
+	EFI_MEMORY_DESCRIPTOR* 	mMap;
+	UINTN 					mMapSize;
+	UINTN 					mMapDescSize;
+	void* 					rsdp;
 }BootInfo;
+
+UINTN strcmp(CHAR8* a, CHAR8* b, UINTN len){
+  for(UINTN i = 0; i < len; i++){
+    if(*a != *b) return 0;
+	a++;
+	b++;
+  }
+  return 1;
+}
 
 EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	InitializeLib(ImageHandle, SystemTable); //Set up the UEFI environment commands
@@ -131,9 +137,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	EFI_FILE* Kernel = LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable); // Load file 
 	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL){
 		Print(L"Could Not Load Kernel \n\r");
-	} else {
-		Print(L"Kernel Loaded Successfully\n\r");
-	}
+	} else { Print(L"Kernel Loaded Successfully\n\r"); }
 
 	Elf64_Ehdr header; // Create ELF Header
 	{
@@ -200,7 +204,6 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 		Print(L"Font Found. Char size = %d\r\n", newFont->psf1_Header->charsize);
 	}
 
-
 	FrameBuffer* newBuffer = InitializeGOP();
 
 	//Print out the base, size, width, height, and pixels per scan line in GOP
@@ -220,6 +223,20 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 		SystemTable->BootServices->AllocatePool(EfiLoaderData, MapSize, (void**)&Map);
 		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
 	}
+  
+  EFI_CONFIGURATION_TABLE* configTable = SystemTable->ConfigurationTable;
+  void* rsdp = NULL;
+  EFI_GUID Acpi2TableGuid = ACPI_20_TABLE_GUID;
+
+  for(UINTN index = 0; index < SystemTable->NumberOfTableEntries; index++){
+    if (CompareGuid(&configTable[index].VendorGuid, &Acpi2TableGuid)){
+      if(strcmp((CHAR8*)"RSD PTR ", (CHAR8*)configTable->VendorTable, 8)){
+        rsdp = (void*)configTable->VendorTable;
+      }
+    }
+    configTable++;
+  }
+
 	void(*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void (*)(BootInfo*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
 
 	// Define the boot info to pass into the kernel
@@ -229,7 +246,8 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	bootInfo.mMap = Map;
 	bootInfo.mMapSize = MapSize;
 	bootInfo.mMapDescSize = DescriptorSize;
-	
+	bootInfo.rsdp = rsdp;
+
 	// Exit the boot services
 	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey); //Exit boot services
 	
