@@ -1,7 +1,6 @@
 #include "pci.h"
 
-namespace PCI{
-    
+namespace PCI{ 
     void EnumerateFunction(uint64_t deviceAddress, uint64_t function){
         uint64_t offset = function << 12;
         uint64_t functionAddress = deviceAddress + offset;

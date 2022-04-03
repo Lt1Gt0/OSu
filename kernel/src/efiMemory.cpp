@@ -1,6 +1,5 @@
 #include "efiMemory.h"
 
-
 /*
 This was set up more just to declare the different EFI MEMORY TYPES
 the majority of these wont be used other than maybe boot service codes and

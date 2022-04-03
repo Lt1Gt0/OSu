@@ -62,23 +62,22 @@ Point MousePosition;
 Point MousePositionOld;
 
 void HandlePS2Mouse(uint8_t data){
-
+    ProcessMousePacket();
+    static bool skip = true;
+    if(skip) {skip = false; return;}
     switch(MouseCycle){
         case 0: // x-y overflow, sign, button click
-            if (MousePacketReady) break;
             //The 5th bit of the data will always be set to 1
             //In the case it is not, the packet is misaligned then break
-            if (data & 0b00001000 == 0) break;
+            if ((data & 0b00001000) == 0) break;
             MousePacket[0] = data;
             MouseCycle++;
             break;
         case 1: // X movement
-            if (MousePacketReady) break;
             MousePacket[1] = data;
             MouseCycle++;
             break;
         case 2: // Y movement
-            if (MousePacketReady) break;
             MousePacket[2] = data;
             MousePacketReady = true;
             MouseCycle = 0;

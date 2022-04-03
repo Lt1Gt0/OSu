@@ -33,16 +33,18 @@ void PageFrameAllocator::ReadEFIMemoryMap(EFI_MEMORY_DESCRIPTOR* mMap, size_t mM
 
     // Initialize bitmap
     InitBitmap(bitmapSize, largestFreeMemSeg);
+    ReservePages(0, memorySize / 4096 + 1);
 
     // Lock pages of bitmap and reserve pages of unusable/reserved memory
-    LockPages(PageBitmap.Buffer, PageBitmap.Size / 4096 + 1);
 
     for(int i = 0; i < mMapEntries; i++){
         EFI_MEMORY_DESCRIPTOR* desc = (EFI_MEMORY_DESCRIPTOR*)((uint64_t)mMap + (i * mMapDescSize));
-        if(desc->type != 7){ // not efiConventionalMemory
-            ReservePages(desc->physAddr, desc->numPages);
+        if(desc->type = 7){ // efiConventionalMemory
+            UnreservePages(desc->physAddr, desc->numPages);
         }        
     }
+    ReservePages(0, 0x100); // Reserve 0->0x100000 for BIOS
+    LockPages(PageBitmap.Buffer, PageBitmap.Size / 4096 + 1);
 }
 
 void PageFrameAllocator::InitBitmap(size_t bitmapSize, void* bufferAddress){

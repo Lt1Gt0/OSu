@@ -78,7 +78,7 @@ KernelInfo InitializeKernel(BootInfo* bootInfo){
     
     PrepareMemory(bootInfo);
     memset(bootInfo->frameBuffer->BaseAddress, 0, bootInfo->frameBuffer->BufferSize);
-
+    InitializeHeap((void*)0x0000100000000000, 0x10);
     PrepareInterrupts(); 
     InitPS2Mouse(); 
     PrepareACPI(bootInfo);
