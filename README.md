@@ -44,6 +44,8 @@ To my kowledge this should work outside of QEMU as in real hardware, I have yet 
 - PS2 Mouse support (kind of)
 - Simple frame buffer
 - UEFI bootloader
+- PCI
+- Simple heap
 
 ## Branch Structures
 
@@ -105,11 +107,7 @@ make run
 
 ## TODO
 
-- PS2 Interface
-  - [x] Keyboard
-  - [x] Mouse Support (kind of)
 - USB
-  - [ ] 1.0
   - [ ] 2.0
   - [ ] 3.0
 - networking capabilities
