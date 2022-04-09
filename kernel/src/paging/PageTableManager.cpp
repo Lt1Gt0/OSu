@@ -1,12 +1,14 @@
-#include "PageTableManager.h"
+#include "paging/PageTableManager.h"
 
 PageTableManager g_PageTableManager = NULL;
 
-PageTableManager::PageTableManager(PageTable* PML4Address){
+PageTableManager::PageTableManager(PageTable *PML4Address)
+{
     this->PML4 = PML4Address;
 }
 
-void PageTableManager::MapMemory(void* virtualMemory, void* physicalMemory){
+void PageTableManager::MapMemory(void *virtualMemory, void *physicalMemory)
+{
     PageMapIndexer indexer = PageMapIndexer((uint64_t)virtualMemory);
     PageDirectoryEntry PDE;
 
@@ -14,7 +16,7 @@ void PageTableManager::MapMemory(void* virtualMemory, void* physicalMemory){
     PageTable* PDP;
 
     // Create new PDP
-    if(!PDE.GetFlag(PT_Flag::Present)){
+    if (!PDE.GetFlag(PT_Flag::Present)) {
         PDP = (PageTable*)GlobalAllocator.RequestPage();
         memset(PDP, 0, 0x1000);
         PDE.SetAddress((uint64_t)PDP >> 12);
@@ -29,7 +31,7 @@ void PageTableManager::MapMemory(void* virtualMemory, void* physicalMemory){
     PageTable* PD;
 
     // Create new PD
-    if(!PDE.GetFlag(PT_Flag::Present)){
+    if (!PDE.GetFlag(PT_Flag::Present)) {
         PD = (PageTable*)GlobalAllocator.RequestPage();
         memset(PD, 0, 0x1000);
         PDE.SetAddress((uint64_t)PD >> 12);
@@ -44,7 +46,7 @@ void PageTableManager::MapMemory(void* virtualMemory, void* physicalMemory){
     PageTable* PT;
 
     // Create new PT
-    if(!PDE.GetFlag(PT_Flag::Present)){
+    if (!PDE.GetFlag(PT_Flag::Present)) {
         PT = (PageTable*)GlobalAllocator.RequestPage();
         memset(PT, 0, 0x1000);
         PDE.SetAddress((uint64_t)PT >> 12);
@@ -60,5 +62,4 @@ void PageTableManager::MapMemory(void* virtualMemory, void* physicalMemory){
     PDE.SetFlag(PT_Flag::Present, true);
     PDE.SetFlag(PT_Flag::ReadWrite, true);
     PT->entries[indexer.P_i] = PDE;
-
 }

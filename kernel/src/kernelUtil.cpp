@@ -1,7 +1,8 @@
 #include "kernelUtil.h"
 
 KernelInfo kernelInfo;
-void PrepareMemory(BootInfo* bootInfo){
+void PrepareMemory(BootInfo *bootInfo)
+{
     uint64_t mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize; // get the total map entries by dividing the size of the map by the descriptor size
 
     GlobalAllocator = PageFrameAllocator(); // Declare the global allocator to an instance of a PageFrameAllocator
@@ -20,7 +21,7 @@ void PrepareMemory(BootInfo* bootInfo){
 
     g_PageTableManager = PageTableManager(PML4);
 
-    for(uint64_t t = 0; t < GetMemorySize(bootInfo->mMap, mMapEntries, bootInfo->mMapDescSize); t += 0x1000){
+    for (uint64_t t = 0; t < GetMemorySize(bootInfo->mMap, mMapEntries, bootInfo->mMapDescSize); t += 0x1000) {
         g_PageTableManager.MapMemory((void*)t, (void*)t);
     }  
 
@@ -28,7 +29,7 @@ void PrepareMemory(BootInfo* bootInfo){
     uint64_t fbBase = (uint64_t)bootInfo->frameBuffer->BaseAddress;
     uint64_t fbSize = (uint64_t)bootInfo->frameBuffer->BufferSize + 0x1000;
     GlobalAllocator.LockPages((void*)fbBase, fbSize / 0x1000 + 1);
-    for(uint64_t t = fbBase; t < fbBase + fbSize; t += 0x1000){
+    for (uint64_t t = fbBase; t < fbBase + fbSize; t += 0x1000) {
         g_PageTableManager.MapMemory((void*)t, (void*)t); //Map the frame buffer pages to virtual memory
     }
 
@@ -38,14 +39,16 @@ void PrepareMemory(BootInfo* bootInfo){
 }
 
 IDTR idtr;
-void SetIDTGate(void* handler, uint8_t entryOffset, uint8_t type_attr, uint8_t selector){
+void SetIDTGate(void *handler, uint8_t entryOffset, uint8_t type_attr, uint8_t selector)
+{
     IDTDescEntry* interrupt = (IDTDescEntry*)(idtr.Offset + entryOffset * sizeof(IDTDescEntry));
     interrupt->SetOffset((uint64_t)handler);
     interrupt->type_attr = type_attr;
     interrupt->selector = selector;
 }
 
-void PrepareInterrupts(){
+void PrepareInterrupts()
+{
     idtr.Limit = 0x0FFF;
     idtr.Offset = (uint64_t)GlobalAllocator.RequestPage(); // allocate space for IDT
     
@@ -61,14 +64,16 @@ void PrepareInterrupts(){
     RemapPIC();
 }
 
-void PrepareACPI(BootInfo* bootInfo){
+void PrepareACPI(BootInfo *bootInfo)
+{
     ACPI::SDTHeader* xsdt = (ACPI::SDTHeader*)(bootInfo->rsdp->XSDTAddress);
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
     PCI::EnumeratePCI(mcfg);
 }
 
 BasicRenderer r = BasicRenderer(NULL, NULL);
-KernelInfo InitializeKernel(BootInfo* bootInfo){
+KernelInfo InitializeKernel(BootInfo *bootInfo)
+{
     r = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
     GlobalRenderer = &r;
     

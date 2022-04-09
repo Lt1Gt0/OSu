@@ -8,7 +8,7 @@ CC = gcc
 ASMC = nasm
 LD = ld
 
-CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone
+CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone $(INCLUDES)
 ASMFLAGS = 
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
 
@@ -16,6 +16,9 @@ SRCDIR := src
 OBJDIR := lib
 BUILDDIR = bin
 BOOTEFI := $(GNUEFI)/x86_64/bootloader/main.efi
+
+INCLUDES = -I$(SRCDIR)/headers
+CFLAGS += $(INCLUDES)
 
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
@@ -30,7 +33,7 @@ kernel: $(OBJS) link
 $(OBJDIR)/interrupts/interrupts.o: $(SRCDIR)/interrupts/interrupts.cpp
 	@ echo ~~~~~ COMPILING $^ ~~~~~
 	@ mkdir -p $(@D)
-	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
+	$(CC) $(INCLUDES) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@ echo ~~~~~ COMPILING $^ ~~~~~

@@ -7,7 +7,7 @@ conventional EFI memory for the time being unless I really need to access differ
 memory types
 */
 
-const char* EFI_MEMORY_TYPE_STRINGS[]{
+const char* EFI_MEMORY_TYPE_STRINGS[] {
     "EfiReservedMemoryType",
     "EfiLoaderCode",
     "EfiLoaderData",

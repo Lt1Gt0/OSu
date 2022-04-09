@@ -1,6 +1,7 @@
-#include "kbScancodeTranslation.h"
+#include "userinput/kbScancodeTranslation.h"
 
-namespace QWERTYKeyboard{
+namespace QWERTYKeyboard
+{
     const char ASCIITable[] = {
         0x0, 0x0, '1', '2',
         '3', '4', '5', '6',
@@ -19,9 +20,10 @@ namespace QWERTYKeyboard{
         0x0, ' '
     };
 
-    char Translate(uint8_t scancode, bool uppercase){
-        if(scancode > 58) 
-            return 0; // longer than array
+    char Translate(uint8_t scancode, bool uppercase)
+    {
+        if(scancode > 58) // Longet than array
+            return 0;
         
         if(uppercase) 
             return ASCIITable[scancode] - 32;

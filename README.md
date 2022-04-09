@@ -18,7 +18,7 @@ __Don't expect this OS to do anything for a long while__
 
 ## Disclaimer
 
-  **There is no correlation between this OS and the development team behind the game OSU!**
+  __There is no correlation between this OS and the development team behind the game OSU!__
 
   As a restatment from the beginning I am not a professional at OS Development by any means. Don't expect this OS to do anything for a long while
 
@@ -46,6 +46,7 @@ To my kowledge this should work outside of QEMU as in real hardware, I have yet 
 - UEFI bootloader
 - PCI
 - Simple heap
+- PIT
 
 ## Branch Structures
 
@@ -57,7 +58,7 @@ Master branch of the repository is the now the UEFI branch for the forseen futur
 
 To run the OS.bin file in the release I would reccomend running the `OSu.img` file through qemu
 
-**[Qemu Download Page](https://www.qemu.org/download/)**
+__[Qemu Download Page](https://www.qemu.org/download/)__
 
 - build-essentials
 - mtools (4.0.27)
@@ -91,18 +92,19 @@ If for some reason qemu doesn't work, go to the [Qemu Download Page](https://www
 Assuming QEMU is installed properly and you do have the OSu.img. In the same directory where the .img file is saved, run the command
 
 ``` bash
-qemu-system-x86_64 -drive file=$(BUILDDIR)/$(OSNAME).img -m 256M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none
+qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 256M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none
 ```
 
-If cloned from the repository itself, to build the bootloader and the kernel, navigate to the file where the repository was cloned in and enter the commands
+To build OSu from source navigate into the kernel directory and run
 
-``` bash
-cd gnu-efi/
-make bootloader
-cd ../kernel
-makek kernel
-make buildimg
-make run
+```bash
+./run.sh
+```
+
+to clean the source run
+
+```bash
+./clean.sh
 ```
 
 ## TODO
@@ -113,3 +115,4 @@ make run
 - networking capabilities
   - Unknown currently
 - [ ] Test OS on real hardware
+- [ ] AHCI
