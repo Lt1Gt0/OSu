@@ -36,6 +36,12 @@ __attribute__((interrupt)) void MouseInt_Handler(interrupt_frame* frame){
     HandlePS2Mouse(mouseData);
     PIC_EndSlave();
 }
+
+__attribute__((interrupt)) void PITInt_Handler(interrupt_frame* frame){
+    PIT::Tick();
+    PIC_EndMaster();
+}
+
 void PIC_EndMaster(){
     outb(PIC1_COMMAND, PIC_EOI);
 }
