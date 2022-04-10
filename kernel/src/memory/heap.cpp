@@ -129,9 +129,9 @@ void HeapSegHdr::CombineForward()
     if (next->next != NULL)
         next->next->last = this;
 
-    next = next->next;
-
     length += next->length + sizeof(HeapSegHdr);
+
+    next = next->next;
 }
 
 void HeapSegHdr::CombineBackward()
