@@ -6,7 +6,6 @@
 #define IDT_TA_CallGate         0b10001100
 #define IDT_TA_TrapGate         0b10001111
 
-
 struct IDTDescEntry {
     uint16_t  offset0;
     uint16_t  selector;       // Segment selector

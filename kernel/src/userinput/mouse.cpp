@@ -1,4 +1,4 @@
-#include "userinput/mouse.h"
+#include <userinput/mouse.h>
 
 uint8_t MousePointer[] = {
     0b10000000, 0b00000000, 
@@ -60,7 +60,6 @@ uint8_t MouseRead()
  * of the mouse respectively
  */
 
-
 uint8_t MouseCycle = 0;
 uint8_t MousePacket[4];
 bool MousePacketReady = false;
@@ -103,29 +102,10 @@ void ProcessMousePacket()
 
     bool xNegative, yNegative, xOverflow, yOverflow;
 
-    if (MousePacket[0] & PS2XSign) {
-        xNegative = true;
-    } else {
-        xNegative = false;
-    }
-
-    if (MousePacket[0] & PS2YSign) {
-        yNegative = true;
-    } else { 
-        yNegative = false; 
-    }
-
-    if (MousePacket[0] & PS2XOverflow) {
-        xOverflow = true;
-    } else { 
-        xOverflow = false; 
-    }
-
-    if (MousePacket[0] & PS2YOverflow) {
-        yOverflow = true;
-    } else { 
-        yOverflow = false; 
-    }
+    xNegative = (MousePacket[0] & PS2XSign);
+    yNegative = (MousePacket[0] & PS2YSign);
+    xOverflow = (MousePacket[0] & PS2XOverflow);
+    yOverflow = (MousePacket[0] & PS2YOverflow);
 
     if (!xNegative) {
         MousePosition.X += MousePacket[1];
@@ -165,11 +145,11 @@ void ProcessMousePacket()
     GlobalRenderer->DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
     
     /* No current opperations for mouse buttons so leave blank for now */
-    if (MousePacket[0] & PS2LeftButton) {}
+    // if (MousePacket[0] & PS2LeftButton) {}
     
-    if (MousePacket[0] & PS2MiddleButton) {} 
+    // if (MousePacket[0] & PS2MiddleButton) {} 
     
-    if (MousePacket[0] & PS2RightButton) {}
+    // if (MousePacket[0] & PS2RightButton) {}
     
     MousePacketReady = false;
     MousePositionOld = MousePosition;

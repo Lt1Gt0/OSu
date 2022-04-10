@@ -1,4 +1,4 @@
-#include "userinput/kbScancodeTranslation.h"
+#include <userinput/kbScancodeTranslation.h>
 
 namespace QWERTYKeyboard
 {

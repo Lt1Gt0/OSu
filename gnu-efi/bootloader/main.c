@@ -4,7 +4,7 @@
 
 typedef unsigned long long size_t ;
 
-typedef struct{
+typedef struct {
 	void* 			BaseAddress;
 	size_t			BufferSize;
 	unsigned int 	Width;
@@ -15,13 +15,13 @@ typedef struct{
 #define PSF1_MAGIC0 0x36
 #define PSF1_MAGIC1 0x04
 
-typedef struct{
+typedef struct {
 	unsigned char magic[2]; // Identifier bytes
 	unsigned char mode; // mode that the psf font is in
 	unsigned char charsize; // how large the character are in bytes
 } PSF1_HEADER;
 
-typedef struct{
+typedef struct {
 	PSF1_HEADER* 	psf1_Header;
 	void* 			glyphBuffer;
 } PSF1_FONT;
@@ -29,16 +29,19 @@ typedef struct{
 
 //Declare and initialize the frame buffer and its protocol for graphics (simple graphics)
 FrameBuffer frameBuffer;
-FrameBuffer* InitializeGOP(){
+FrameBuffer *InitializeGOP()
+{
 	EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
 	EFI_GRAPHICS_OUTPUT_PROTOCOL* gop;
 	EFI_STATUS status; //Check for failures
 
 	status = uefi_call_wrapper(BS->LocateProtocol, 3, &gopGuid, NULL, (void**)&gop);
-	if(EFI_ERROR(status)){
+	if (EFI_ERROR(status)) {
 		Print(L"Unable to Locate GOP\n\r");
 		return NULL;
-	} else { Print(L"GOP Located\n\r"); }
+	} else { 
+		Print(L"GOP Located\n\r"); 
+	}
 
 	frameBuffer.BaseAddress = (void*)gop->Mode->FrameBufferBase;
 	frameBuffer.BufferSize = gop->Mode->FrameBufferSize;
@@ -49,7 +52,8 @@ FrameBuffer* InitializeGOP(){
 	return &frameBuffer;
 }
 
-EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable){
+EFI_FILE *LoadFile(EFI_FILE *Directory, CHAR16 *Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+{
 	EFI_FILE* LoadedFile;
 
 	EFI_LOADED_IMAGE_PROTOCOL* LoadedImage;
@@ -59,17 +63,21 @@ EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EF
 	SystemTable->BootServices->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (void**)&FileSystem); //Get file system where booted from
 
 	//If the directory is null set the directory to the root of the file system
-	if(Directory == NULL) FileSystem->OpenVolume(FileSystem, &Directory);
+	if (Directory == NULL)
+		FileSystem->OpenVolume(FileSystem, &Directory);
 
 	EFI_STATUS s = Directory->Open(Directory, &LoadedFile, Path, EFI_FILE_MODE_READ, EFI_FILE_READ_ONLY);
-	if (s != EFI_SUCCESS) return NULL;
+	if (s != EFI_SUCCESS)
+		return NULL;
+	
 	return LoadedFile;
 }
 
 PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 {
 	EFI_FILE* font = LoadFile(Directory, Path, ImageHandle, SystemTable);
-	if(font == NULL) return NULL; // File doesnt not exist
+	if (font == NULL)
+		return NULL; // File doesnt not exist
 
 	PSF1_HEADER* fontHeader;
 	UINTN psf1Headersize = sizeof(PSF1_HEADER);
@@ -77,17 +85,17 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 	font->Read(font, &psf1Headersize, fontHeader); // Load header into memory
 
 	// Check for incorrect font format
-	if(fontHeader->magic[0] != PSF1_MAGIC0 || fontHeader->magic[1] != PSF1_MAGIC1){
+	if (fontHeader->magic[0] != PSF1_MAGIC0 || fontHeader->magic[1] != PSF1_MAGIC1)
 		return NULL;
-	}
+	
 
 	UINTN glyphBufferSize = fontHeader->charsize * 256; // Amount of glyph character
-	if(fontHeader->mode == 1) { //512 glyph mode
+	if (fontHeader->mode == 1) //512 glyph mode
 		glyphBufferSize = fontHeader->charsize * 512;
-	}
-
+	
 	// Define glyph buffer and read information into it
 	void* glyphBuffer;
+	
 	{
 		font->SetPosition(font, psf1Headersize);
 		SystemTable->BootServices->AllocatePool(EfiLoaderData, glyphBufferSize, (void**)&glyphBuffer); // Allocate memory for the glyph buffer
@@ -102,12 +110,17 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 }
 
 // Memory Compare function
-int memcmp(const void* aptr, const void* bptr, size_t n){
+int memcmp(const void *aptr, const void *bptr, size_t n)
+{
 	const unsigned char* a = aptr, *b = bptr;
-	for(size_t i = 0; i < n; i++){
-		if(a[i] < b[i]) return -1;
-		else if(a[i] > b[i]) return 1;
+	for (size_t i = 0; i < n; i++) {
+		if (a[i] < b[i])
+			return -1;
+			
+		else if (a[i] > b[i])
+			return 1;
 	}
+
 	return 0;
 }
 
@@ -118,27 +131,33 @@ typedef struct{
 	UINTN 					mMapSize;
 	UINTN 					mMapDescSize;
 	void* 					rsdp;
-}BootInfo;
+} BootInfo;
 
-UINTN strcmp(CHAR8* a, CHAR8* b, UINTN len){
-  for(UINTN i = 0; i < len; i++){
-    if(*a != *b) return 0;
-	a++;
-	b++;
-  }
-  return 1;
+UINTN strcmp(CHAR8 *a, CHAR8 *b, UINTN len)
+{
+	for (UINTN i = 0; i < len; i++) {
+		if (*a != *b)
+			return 0;
+
+		a++;
+		b++;
+	}
+	return 1;
 }
 
-EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
+EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+{
 	InitializeLib(ImageHandle, SystemTable); //Set up the UEFI environment commands
 	Print(L"Bootloader Initialized\n\r");
 
 	EFI_FILE* Kernel = LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable); // Load file 
-	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL){
+	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL)
 		Print(L"Could Not Load Kernel \n\r");
-	} else { Print(L"Kernel Loaded Successfully\n\r"); }
+	else 
+		Print(L"Kernel Loaded Successfully\n\r"); 
 
 	Elf64_Ehdr header; // Create ELF Header
+	
 	{
 		UINTN FileInfoSize;
 		EFI_FILE_INFO* FileInfo;
@@ -166,6 +185,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	}
 
 	Elf64_Phdr* phdrs;
+	
 	{
 		Kernel->SetPosition(Kernel, header.e_phoff); // Set offset in bytes when read
 		UINTN size = header.e_phnum * header.e_phentsize; // Program header num * Program header entry size
@@ -180,15 +200,15 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 		phdr = (Elf64_Phdr*)((char*)phdr + header.e_phentsize)
 	)
 	{
-		switch(phdr->p_type){
-			case PT_LOAD:
+		switch (phdr->p_type) {
+		case PT_LOAD:
 			{
-				int pages = (phdr->p_memsz + 0x1000 - 1) / 0x1000; //Get memory size and round up
+				int pages = (phdr->p_memsz + 0x1000 - 1) / 0x1000; // Get memory size and round up
 				Elf64_Addr segment = phdr->p_paddr;
 				SystemTable->BootServices->AllocatePages(AllocateAddress, EfiLoaderData, pages, &segment);
 				Kernel->SetPosition(Kernel, phdr->p_offset);
 				UINTN size = phdr->p_filesz;
-				Kernel->Read(Kernel, &size, (void*)segment);
+				Kernel->Read(Kernel, &size, (void *)segment);
 				break;
 			}
 		}
@@ -197,11 +217,11 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	
 	// Load the font file into memory
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
-	if(newFont == NULL){
+	if(newFont == NULL)
 		Print(L"Font is not valid or not found\n\r");
-	} else {
+	else 
 		Print(L"Font Found. Char size = %d\r\n", newFont->psf1_Header->charsize);
-	}
+	
 
 	FrameBuffer* newBuffer = InitializeGOP();
 
@@ -217,24 +237,24 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	UINTN MapSize, MapKey; //MapSize - Complete size of the map in bytes. MapKey - Needed for UEFI
 	UINTN DescriptorSize; //Size of descriptor entries
 	UINT32 DescriptorVersion;
+	
 	{
 		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
 		SystemTable->BootServices->AllocatePool(EfiLoaderData, MapSize, (void**)&Map);
 		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
 	}
   
-  EFI_CONFIGURATION_TABLE* configTable = SystemTable->ConfigurationTable;
-  void* rsdp = NULL;
-  EFI_GUID Acpi2TableGuid = ACPI_20_TABLE_GUID;
+	EFI_CONFIGURATION_TABLE* configTable = SystemTable->ConfigurationTable;
+	void* rsdp = NULL;
+	EFI_GUID Acpi2TableGuid = ACPI_20_TABLE_GUID;
 
-  for(UINTN index = 0; index < SystemTable->NumberOfTableEntries; index++){
-    if (CompareGuid(&configTable[index].VendorGuid, &Acpi2TableGuid)){
-      if(strcmp((CHAR8*)"RSD PTR ", (CHAR8*)configTable->VendorTable, 8)){
-        rsdp = (void*)configTable->VendorTable;
-      }
-    }
-    configTable++;
-  }
+	for (UINTN index = 0; index < SystemTable->NumberOfTableEntries; index++) {
+	    if (CompareGuid(&configTable[index].VendorGuid, &Acpi2TableGuid)) {
+	    	if (strcmp((CHAR8*)"RSD PTR ", (CHAR8*)configTable->VendorTable, 8))
+    			rsdp = (void*)configTable->VendorTable;
+    	}
+    	configTable++;
+  	}
 
 	void(*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void (*)(BootInfo*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
 

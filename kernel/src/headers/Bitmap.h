@@ -16,4 +16,5 @@ class Bitmap
          * @param value The value to set at the given index
          */
         bool Set(uint64_t index, bool value);
+        bool Get(uint64_t index);
 };

@@ -1,7 +1,7 @@
 #pragma once
-#include "math.h"
-#include "FrameBuffer.h"
-#include "SimpleFonts.h"
+#include <math.h>
+#include <FrameBuffer.h>
+#include <SimpleFonts.h>
 #include <stdint.h>
 
 class BasicRenderer 
@@ -22,7 +22,8 @@ class BasicRenderer
          * 
          * @param str char* string value
          */
-        void Print(const char* str);
+        void Print(const char* str, uint32_t color = 0xFFFFFFFF);
+        void PrintLine(const char* str, uint32_t color = 0xFFFFFFFF);
 
         /**
          * @brief Print a single char value to the render buffer

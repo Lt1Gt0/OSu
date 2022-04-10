@@ -1,4 +1,5 @@
-#include "pci.h"
+#include <pci.h>
+#include <ahci/ahci.h>
 
 namespace PCI
 {
@@ -10,12 +11,9 @@ namespace PCI
 
         PCIDeviceHeader* pciDeviceHeader = (PCIDeviceHeader*)functionAddress;
         
-        if (pciDeviceHeader->DeviceID == 0)
+        if (pciDeviceHeader->DeviceID == 0 || pciDeviceHeader->DeviceID == 0xFFFF)
             return;
         
-        if (pciDeviceHeader->DeviceID == 0xFFFF)
-            return;
-
         GlobalRenderer->Print(GetVendorName(pciDeviceHeader->VendorID));
         GlobalRenderer->Print(" | ");
         GlobalRenderer->Print(GetDeviceName(pciDeviceHeader->VendorID, pciDeviceHeader->DeviceID));
@@ -26,6 +24,17 @@ namespace PCI
         GlobalRenderer->Print(" | ");
         GlobalRenderer->Print(GetProgIFName(pciDeviceHeader->Class, pciDeviceHeader->Subclass, pciDeviceHeader->ProgIF));
         GlobalRenderer->Next();
+
+        switch (pciDeviceHeader->Class) {
+        case 0x01: // Mass Storage Controller
+            switch (pciDeviceHeader->Subclass) {
+            case 0x06: // Serial ATA
+                switch (pciDeviceHeader->ProgIF) {
+                case 0x01: // AHCI 1.0 Device
+                    new AHCI::AHCIDriver(pciDeviceHeader);
+                }
+            }
+        }
     }
 
     void EnumerateDevice(uint64_t busAddress, uint64_t device)
@@ -36,12 +45,9 @@ namespace PCI
 
         PCIDeviceHeader* pciDeviceHeader = (PCIDeviceHeader*)deviceAddress;
         
-        if (pciDeviceHeader->DeviceID == 0)
+        if (pciDeviceHeader->DeviceID == 0 || pciDeviceHeader->DeviceID == 0xFFFF)
             return;
         
-        if (pciDeviceHeader->DeviceID == 0xFFFF)
-            return;
-
         for (uint64_t function = 0; function < 8; function++) {
             EnumerateFunction(deviceAddress, function);
         }
@@ -55,10 +61,7 @@ namespace PCI
 
         PCIDeviceHeader* pciDeviceHeader = (PCIDeviceHeader*)busAddress;
 
-        if (pciDeviceHeader->DeviceID == 0)
-            return;
-
-        if (pciDeviceHeader->DeviceID == 0xFFFF)
+        if (pciDeviceHeader->DeviceID == 0 || pciDeviceHeader->DeviceID == 0xFFFF)
             return;
 
         for (uint64_t device = 0; device < 32; device++) {
@@ -68,7 +71,7 @@ namespace PCI
 
     void EnumeratePCI(ACPI::MCFGHeader *mcfg)
     {
-        //Amount of device configs avaliable
+        // Amount of device configs avaliable
         int entries = ((mcfg->Header.Length) - sizeof(ACPI::MCFGHeader)) / sizeof(ACPI::DeviceConfig);
         for (int t = 0; t < entries; t++) {
             ACPI::DeviceConfig* newDeviceConfig = (ACPI::DeviceConfig*)((uint64_t)mcfg + sizeof(ACPI::MCFGHeader)) + (sizeof(ACPI::DeviceConfig) * t);

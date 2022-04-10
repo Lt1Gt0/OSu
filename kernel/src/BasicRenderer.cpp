@@ -1,4 +1,4 @@
-#include "BasicRenderer.h"
+#include <BasicRenderer.h>
 
 BasicRenderer* GlobalRenderer;
 
@@ -62,8 +62,9 @@ void BasicRenderer::Next()
     CursorPosition.Y += 16;
 }
 
-void BasicRenderer::Print(const char* str)
+void BasicRenderer::Print(const char* str, uint32_t color)
 {
+    Color = color;
     char* chr = (char*)str;
     while (*chr != 0) {
         PutChar(*chr, CursorPosition.X, CursorPosition.Y);
@@ -76,6 +77,13 @@ void BasicRenderer::Print(const char* str)
 
         chr++;
     }
+    Color = 0xFFFFFFFF;
+}
+
+void BasicRenderer::PrintLine(const char* str, uint32_t color)
+{
+    Print(str, color);
+    Next();
 }
 
 void BasicRenderer::PutChar(char chr, unsigned int xOff, unsigned int yOff)
@@ -135,9 +143,8 @@ void BasicRenderer::ClearMouseCursor(uint8_t *mouseCursor, Point position)
             int byte = bit / 8;
 
             if ((mouseCursor[byte] & (0b10000000 >> (x % 8)))) {
-                if (GetPix(position.X + x, position.Y + y) == MouseCursorBufferAfter[x + y * 16]) {
-                    PutPix(position.X + x, position.Y + y, MouseCursorBuffer[x + y * 16]);
-                }
+                if (GetPix(position.X + x, position.Y + y) == MouseCursorBufferAfter[x + y * 16]) 
+                    PutPix(position.X + x, position.Y + y, MouseCursorBuffer[x + y * 16]); 
             }
         }
     }

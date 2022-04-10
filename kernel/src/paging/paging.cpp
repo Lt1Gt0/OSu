@@ -1,12 +1,11 @@
-#include "paging/paging.h"
+#include <paging/paging.h>
 
 void PageDirectoryEntry::SetFlag(PT_Flag flag, bool enabled)
 {
     uint64_t bitSelector = (uint64_t)1 << flag;
     Value &= ~bitSelector;
-    if (enabled) {
+    if (enabled)
         Value |= bitSelector;
-    }
 }
 
 bool PageDirectoryEntry::GetFlag(PT_Flag flag)

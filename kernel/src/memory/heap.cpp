@@ -1,4 +1,4 @@
-#include "memory/heap.h"
+#include <memory/heap.h>
 
 void* heapStart;
 void* heapEnd;
@@ -42,11 +42,13 @@ void *malloc(size_t size)
                 currentSeg->free = false;
                 return (void*)((uint64_t)currentSeg + sizeof(HeapSegHdr));
             }
+
             if (currentSeg->length == size) {
                 currentSeg->free = false;
                 return (void*)((uint64_t)currentSeg + sizeof(HeapSegHdr));
             }
         }
+
         if (currentSeg->next == NULL) 
             break;
 
@@ -124,9 +126,10 @@ void HeapSegHdr::CombineForward()
     if (next == LastHdr)
         LastHdr = this;
 
-    if (next->next != NULL) {
+    if (next->next != NULL)
         next->next->last = this;
-    }
+
+    next = next->next;
 
     length += next->length + sizeof(HeapSegHdr);
 }

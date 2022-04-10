@@ -1,4 +1,4 @@
-#include "paging/PageFrameAllocator.h"
+#include <paging/PageFrameAllocator.h>
 
 uint64_t freeMemory; // Free memory of the entire system
 uint64_t reservedMemory; // Memory reserved by ACPI tables, etc
@@ -42,9 +42,9 @@ void PageFrameAllocator::ReadEFIMemoryMap(EFI_MEMORY_DESCRIPTOR *mMap, size_t mM
 
     for (int i = 0; i < mMapEntries; i++) {
         EFI_MEMORY_DESCRIPTOR* desc = (EFI_MEMORY_DESCRIPTOR*)((uint64_t)mMap + (i * mMapDescSize));
-        if (desc->type = 7) { // efiConventionalMemory
+
+        if (desc->type = 7) // efiConventionalMemory
             UnreservePages(desc->physAddr, desc->numPages);
-        }
     }
 
     ReservePages(0, 0x100); // Reserve 0->0x100000 for BIOS
@@ -55,6 +55,7 @@ void PageFrameAllocator::InitBitmap(size_t bitmapSize, void *bufferAddress)
 {
     PageBitmap.Size = bitmapSize;
     PageBitmap.Buffer = (uint8_t*)bufferAddress;
+    
     for (int i = 0; i < bitmapSize; i++) {
         *(uint8_t*)(PageBitmap.Buffer + i)  = 0;
     }

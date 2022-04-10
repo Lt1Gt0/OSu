@@ -1,10 +1,10 @@
 #pragma once
-#include "BasicRenderer.h"
-#include "panic.h"
-#include "IO.h"
-#include "userinput/keyboard.h"
-#include "userinput/mouse.h"
-#include "scheduling/pit/pit.h"
+#include <BasicRenderer.h>
+#include <panic.h>
+#include <IO.h>
+#include <userinput/keyboard.h>
+#include <userinput/mouse.h>
+#include <scheduling/pit/pit.h>
 
 #define PIC1_COMMAND  0x20 // IO base address for the mater PIC
 #define PIC1_DATA     0x21 // IO base address for the master PIC data

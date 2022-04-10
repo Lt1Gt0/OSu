@@ -1,6 +1,11 @@
-#include "Bitmap.h"
+#include <Bitmap.h>
 
 bool Bitmap::operator[](uint64_t index)
+{
+    return Get(index);
+}
+
+bool Bitmap::Get(uint64_t index)
 {
     if (index > Size * 8)
         return false; // Prevent buffer overflow

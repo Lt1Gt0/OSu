@@ -8,7 +8,7 @@ CC = gcc
 ASMC = nasm
 LD = ld
 
-CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone $(INCLUDES)
+CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions $(INCLUDES)
 ASMFLAGS = 
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
 

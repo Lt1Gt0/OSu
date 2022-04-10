@@ -1,4 +1,4 @@
-#include "panic.h"
+#include <panic.h>
 
 void Panic(const char *panicMessage)
 {
@@ -10,10 +10,9 @@ void Panic(const char *panicMessage)
     GlobalRenderer->Clear();
     GlobalRenderer->CursorPosition = {0, 0};
     GlobalRenderer->Color = 0;
-    GlobalRenderer->Print("Kernel Panic");
+    GlobalRenderer->PrintLine("Kernel Panic");
     
     GlobalRenderer->Next();
-    GlobalRenderer->Next();
 
-    GlobalRenderer->Print(panicMessage);
+    GlobalRenderer->PrintLine(panicMessage);
 }

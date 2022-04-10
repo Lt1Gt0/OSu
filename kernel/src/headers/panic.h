@@ -1,4 +1,4 @@
 #pragma once
-#include "BasicRenderer.h"
+#include <BasicRenderer.h>
 
 void Panic(const char* panicMessage);
