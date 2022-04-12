@@ -27,6 +27,7 @@ struct BootInfo {
 	uint64_t 				mMapSize;
 	uint64_t 				mMapDescSize;
   	ACPI::RSDP2* 			rsdp;
+	void* 					osulogo;
 };
 
 struct KernelInfo {

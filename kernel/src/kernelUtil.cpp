@@ -85,11 +85,21 @@ KernelInfo InitializeKernel(BootInfo *bootInfo)
     gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
     LoadGDT(&gdtDescriptor);
     GlobalRenderer->PrintLine("Loaded GDT");
-
+     
     PrepareMemory(bootInfo);
     memset(bootInfo->frameBuffer->BaseAddress, 0, bootInfo->frameBuffer->BufferSize);
     InitializeHeap((void*)0x0000100000000000, 0x10);
     GlobalRenderer->PrintLine("Initialized Memory");
+
+    GlobalRenderer->Print("Osu Logo found: 0x");
+    GlobalRenderer->PrintLine(to_hstring((uint64_t)bootInfo->osulogo));
+    
+    GlobalRenderer->Print("Sizeof GDTEntry: ", 0xFFFF00FF);
+    GlobalRenderer->PrintLine(to_hstring((uint16_t)sizeof(GDTEntry)), 0xFFFF00FF);
+    GlobalRenderer->Print("Sizeof GDTDescriptor: ", 0xFFFF00FF);
+    GlobalRenderer->PrintLine(to_hstring((uint16_t)sizeof(GDTDescriptor)), 0xFFFF00FF);
+    GlobalRenderer->Print("Sizeof GDT: ", 0xFFFF00FF);
+    GlobalRenderer->PrintLine(to_hstring((uint16_t)sizeof(GDT)), 0xFFFF00FF);
 
     PrepareInterrupts();
     GlobalRenderer->PrintLine("Interrupts Prepared"); 

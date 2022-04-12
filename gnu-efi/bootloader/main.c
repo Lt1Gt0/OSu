@@ -1,31 +1,24 @@
 #include <efi.h>
 #include <efilib.h>
 #include <elf.h>
+#include <efiapi.h>
+#include "structs.h"
 
 typedef unsigned long long size_t ;
 
-typedef struct {
-	void* 			BaseAddress;
-	size_t			BufferSize;
-	unsigned int 	Width;
-	unsigned int 	Height;
-	unsigned int 	PixelsPerScanLine;
-} FrameBuffer;
+uint64_t FileSize(EFI_FILE_HANDLE FileHandle)
+{
+	/*File Information structure */
+	uint64_t size;
+	EFI_FILE_INFO* fileInfo;
 
-#define PSF1_MAGIC0 0x36
-#define PSF1_MAGIC1 0x04
+	/* Get the size of the file */
+	fileInfo = LibFileInfo(FileHandle);
+	size = fileInfo->FileSize;
+	FreePool(fileInfo);
 
-typedef struct {
-	unsigned char magic[2]; // Identifier bytes
-	unsigned char mode; // mode that the psf font is in
-	unsigned char charsize; // how large the character are in bytes
-} PSF1_HEADER;
-
-typedef struct {
-	PSF1_HEADER* 	psf1_Header;
-	void* 			glyphBuffer;
-} PSF1_FONT;
-
+	return size; 
+}
 
 //Declare and initialize the frame buffer and its protocol for graphics (simple graphics)
 FrameBuffer frameBuffer;
@@ -52,6 +45,20 @@ FrameBuffer *InitializeGOP()
 	return &frameBuffer;
 }
 
+EFI_FILE_HANDLE GetVolume(EFI_HANDLE image)
+{
+	// Instead of using IOVolume this function will just use LibOpenRoot instead
+
+	EFI_LOADED_IMAGE* loadedImage = NULL;
+	EFI_GUID lipGUID = EFI_LOADED_IMAGE_PROTOCOL_GUID;
+
+	uefi_call_wrapper(BS->HandleProtocol, 3, image, &lipGUID, (void**)&loadedImage);
+
+	// Get volume handle
+	return LibOpenRoot(loadedImage->DeviceHandle);
+
+}
+
 EFI_FILE *LoadFile(EFI_FILE *Directory, CHAR16 *Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 {
 	EFI_FILE* LoadedFile;
@@ -71,6 +78,21 @@ EFI_FILE *LoadFile(EFI_FILE *Directory, CHAR16 *Path, EFI_HANDLE ImageHandle, EF
 		return NULL;
 	
 	return LoadedFile;
+}
+
+void* LoadRawImageFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
+{
+	EFI_FILE_HANDLE ImageVolume = GetVolume(ImageHandle);
+	EFI_FILE_HANDLE fileHandle;
+
+	uefi_call_wrapper(ImageVolume->Open, 5, ImageVolume, &fileHandle, Path, EFI_FILE_MODE_READ, EFI_FILE_READ_ONLY | EFI_FILE_HIDDEN | EFI_FILE_SYSTEM);
+
+	uint64_t size = FileSize(fileHandle);
+	void* contents = AllocateZeroPool(size);
+
+	uefi_call_wrapper(fileHandle->Read, 3, fileHandle, &size, contents);
+
+	return contents;
 }
 
 PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
@@ -124,15 +146,6 @@ int memcmp(const void *aptr, const void *bptr, size_t n)
 	return 0;
 }
 
-typedef struct{
-	FrameBuffer* 			frameBuffer;
-	PSF1_FONT* 				psf1_font;
-	EFI_MEMORY_DESCRIPTOR* 	mMap;
-	UINTN 					mMapSize;
-	UINTN 					mMapDescSize;
-	void* 					rsdp;
-} BootInfo;
-
 UINTN strcmp(CHAR8 *a, CHAR8 *b, UINTN len)
 {
 	for (UINTN i = 0; i < len; i++) {
@@ -168,18 +181,25 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 		UINTN size = sizeof(header);
 		Kernel->Read(Kernel, &size, &header); // Read amount of bytes in size from the header
 	}
+	
+	void* osulogo = LoadRawImageFile(NULL, L"osulogo.raw", ImageHandle, SystemTable);
+
+	if (!osulogo) {
+		Print(L"Error Loading OSU Image");
+	} else {
+		Print(L"Loaded OSU Image successfully");
+	}
 
 	// Check if kernel header is correct
-	if(
-		memcmp(&header.e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0 ||
+	if (memcmp(&header.e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0 ||
 		header.e_ident[EI_CLASS] != ELFCLASS64 ||
 		header.e_ident[EI_DATA] != ELFDATA2LSB ||
 		header.e_type != ET_EXEC ||
 		header.e_machine != EM_X86_64 ||
-		header.e_version != EV_CURRENT
-	)
-	{
+		header.e_version != EV_CURRENT) {
+
 		Print(L"Kernel format is bad\n\r");
+		return EFI_ABORTED;
 	} else {
 		Print(L"Kernel header successfully verified\n\r");
 	}
@@ -198,8 +218,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 		Elf64_Phdr* phdr = phdrs;
 		(char*)phdr < (char*)phdrs + header.e_phnum * header.e_phentsize;
 		phdr = (Elf64_Phdr*)((char*)phdr + header.e_phentsize)
-	)
-	{
+	) {
 		switch (phdr->p_type) {
 		case PT_LOAD:
 			{
@@ -217,16 +236,17 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	
 	// Load the font file into memory
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
-	if(newFont == NULL)
+	if (newFont == NULL) {
 		Print(L"Font is not valid or not found\n\r");
-	else 
+		return EFI_LOAD_ERROR;
+	} else { 
 		Print(L"Font Found. Char size = %d\r\n", newFont->psf1_Header->charsize);
-	
+	}
 
 	FrameBuffer* newBuffer = InitializeGOP();
 
 	//Print out the base, size, width, height, and pixels per scan line in GOP
-	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelsPerScanLine: %d\n\r\n\r", 
+	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelsPerScanLine: %d\n\r", 
 	newBuffer->BaseAddress, 
 	newBuffer->BufferSize,
 	newBuffer->Width,
@@ -266,6 +286,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	bootInfo.mMapSize = MapSize;
 	bootInfo.mMapDescSize = DescriptorSize;
 	bootInfo.rsdp = rsdp;
+	bootInfo.osulogo = osulogo;
 
 	// Exit the boot services
 	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey); //Exit boot services

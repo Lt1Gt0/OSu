@@ -1,6 +1,6 @@
 [bits 64]
 LoadGDT:
-    lgdt[rdi]       ; RDI register will contain initial parameter
+    lgdt[rdi]           ; RDI register will contain initial parameter
     mov     ax, 0x10    ; Selector for kernel data segment
     mov     ds, ax
     mov     es, ax

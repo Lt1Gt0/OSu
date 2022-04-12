@@ -8,7 +8,7 @@ CC = gcc
 ASMC = nasm
 LD = ld
 
-CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions $(INCLUDES)
+CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -fno-stack-protector $(INCLUDES)
 ASMFLAGS = 
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
 
@@ -63,6 +63,7 @@ buildimg:
 	mcopy -i $(BUILDDIR)/$(OSNAME).img startup.nsh ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
+	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/osulogo.raw ::
 
 
 run:

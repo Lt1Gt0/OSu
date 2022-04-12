@@ -151,15 +151,15 @@ namespace AHCI
     class Port
     {
         public:
-            HBAPort* hbaPort;
-            PortType portType;
-            uint8_t* buffer;
-            uint8_t portNumber;
+            HBAPort*    hbaPort;
+            PortType    portType;
+            uint8_t*    buffer;
+            uint8_t     portNumber;
 
-            void Configure();
-            void StartCMD();
-            void StopCMD();
-            bool Read(uint64_t sector, uint32_t sectorCount, void* buffer);
+            void        Configure();
+            void        StartCMD();
+            void        StopCMD();
+            bool        Read(uint64_t sector, uint32_t sectorCount, void* buffer);
     };
 
     class AHCIDriver
