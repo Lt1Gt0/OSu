@@ -1,0 +1,84 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/simonk/Documents/github/OSu/kernel'
+echo ~~~~~ COMPILING src/BasicRenderer.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/BasicRenderer.cpp -o lib/BasicRenderer.o
+echo ~~~~~ COMPILING src/Bitmap.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/Bitmap.cpp -o lib/Bitmap.o
+echo ~~~~~ COMPILING src/IO.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/IO.cpp -o lib/IO.o
+echo ~~~~~ COMPILING src/Kernel.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/Kernel.cpp -o lib/Kernel.o
+echo ~~~~~ COMPILING src/Memory.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/Memory.cpp -o lib/Memory.o
+echo ~~~~~ COMPILING src/acpi.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/acpi.cpp -o lib/acpi.o
+echo ~~~~~ COMPILING src/ahci/ahci.cpp ~~~~~
+mkdir -p lib/ahci
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/ahci/ahci.cpp -o lib/ahci/ahci.o
+echo ~~~~~ COMPILING src/cstr.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/cstr.cpp -o lib/cstr.o
+echo ~~~~~ COMPILING src/efiMemory.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/efiMemory.cpp -o lib/efiMemory.o
+echo ~~~~~ COMPILING src/gdt/gdt.cpp ~~~~~
+mkdir -p lib/gdt
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/gdt/gdt.cpp -o lib/gdt/gdt.o
+echo ~~~~~ COMPILING src/interrupts/IDT.cpp ~~~~~
+mkdir -p lib/interrupts
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/interrupts/IDT.cpp -o lib/interrupts/IDT.o
+echo ~~~~~ COMPILING src/interrupts/interrupts.cpp ~~~~~
+mkdir -p lib/interrupts
+gcc -Isrc/headers -mno-red-zone -mgeneral-regs-only -ffreestanding -c src/interrupts/interrupts.cpp -o lib/interrupts/interrupts.o
+echo ~~~~~ COMPILING src/kernelUtil.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/kernelUtil.cpp -o lib/kernelUtil.o
+echo ~~~~~ COMPILING src/memory/heap.cpp ~~~~~
+mkdir -p lib/memory
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/memory/heap.cpp -o lib/memory/heap.o
+echo ~~~~~ COMPILING src/paging/PageFrameAllocator.cpp ~~~~~
+mkdir -p lib/paging
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/paging/PageFrameAllocator.cpp -o lib/paging/PageFrameAllocator.o
+echo ~~~~~ COMPILING src/paging/PageMapIndexer.cpp ~~~~~
+mkdir -p lib/paging
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/paging/PageMapIndexer.cpp -o lib/paging/PageMapIndexer.o
+echo ~~~~~ COMPILING src/paging/PageTableManager.cpp ~~~~~
+mkdir -p lib/paging
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/paging/PageTableManager.cpp -o lib/paging/PageTableManager.o
+echo ~~~~~ COMPILING src/paging/paging.cpp ~~~~~
+mkdir -p lib/paging
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/paging/paging.cpp -o lib/paging/paging.o
+echo ~~~~~ COMPILING src/panic.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/panic.cpp -o lib/panic.o
+echo ~~~~~ COMPILING src/pci.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/pci.cpp -o lib/pci.o
+echo ~~~~~ COMPILING src/pciDescriptors.cpp ~~~~~
+mkdir -p lib
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/pciDescriptors.cpp -o lib/pciDescriptors.o
+echo ~~~~~ COMPILING src/scheduling/pit/pit.cpp ~~~~~
+mkdir -p lib/scheduling/pit
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/scheduling/pit/pit.cpp -o lib/scheduling/pit/pit.o
+echo ~~~~~ COMPILING src/userinput/kbScancodeTranslation.cpp ~~~~~
+mkdir -p lib/userinput
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/userinput/kbScancodeTranslation.cpp -o lib/userinput/kbScancodeTranslation.o
+echo ~~~~~ COMPILING src/userinput/keyboard.cpp ~~~~~
+mkdir -p lib/userinput
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/userinput/keyboard.cpp -o lib/userinput/keyboard.o
+echo ~~~~~ COMPILING src/userinput/mouse.cpp ~~~~~
+mkdir -p lib/userinput
+gcc -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -Isrc/headers -Isrc/headers -c src/userinput/mouse.cpp -o lib/userinput/mouse.o
+echo ~~~~~ COMPILING src/gdt/gdt.asm ~~~~~
+mkdir -p lib/gdt
+nasm  src/gdt/gdt.asm -f elf64 -o lib/gdt/gdt_asm.o
+echo ~~~~~ LINKING ~~~~~
+ld -T kernel.ld -static -Bsymbolic -nostdlib -o bin/kernel.elf  lib/BasicRenderer.o  lib/Bitmap.o  lib/IO.o  lib/Kernel.o  lib/Memory.o  lib/acpi.o  lib/ahci/ahci.o  lib/cstr.o  lib/efiMemory.o  lib/gdt/gdt.o  lib/interrupts/IDT.o  lib/interrupts/interrupts.o  lib/kernelUtil.o  lib/memory/heap.o  lib/paging/PageFrameAllocator.o  lib/paging/PageMapIndexer.o  lib/paging/PageTableManager.o  lib/paging/paging.o  lib/panic.o  lib/pci.o  lib/pciDescriptors.o  lib/scheduling/pit/pit.o  lib/userinput/kbScancodeTranslation.o  lib/userinput/keyboard.o  lib/userinput/mouse.o  lib/gdt/gdt_asm.o
+make: Leaving directory '/home/simonk/Documents/github/OSu/kernel'
+ 
