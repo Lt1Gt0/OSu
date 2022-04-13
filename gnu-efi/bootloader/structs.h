@@ -39,8 +39,4 @@ typedef struct {
 	void* 					osulogo;
 } BootInfo;
 
-
-
-
-
 #endif // __STRUCTS_H

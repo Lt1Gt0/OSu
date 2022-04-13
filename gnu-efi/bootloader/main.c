@@ -6,10 +6,10 @@
 
 typedef unsigned long long size_t ;
 
-uint64_t FileSize(EFI_FILE_HANDLE FileHandle)
+UINTN FileSize(EFI_FILE_HANDLE FileHandle)
 {
 	/*File Information structure */
-	uint64_t size;
+	UINTN size;
 	EFI_FILE_INFO* fileInfo;
 
 	/* Get the size of the file */
@@ -87,7 +87,7 @@ void* LoadRawImageFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle
 
 	uefi_call_wrapper(ImageVolume->Open, 5, ImageVolume, &fileHandle, Path, EFI_FILE_MODE_READ, EFI_FILE_READ_ONLY | EFI_FILE_HIDDEN | EFI_FILE_SYSTEM);
 
-	uint64_t size = FileSize(fileHandle);
+	UINTN size = FileSize(fileHandle);
 	void* contents = AllocateZeroPool(size);
 
 	uefi_call_wrapper(fileHandle->Read, 3, fileHandle, &size, contents);
@@ -164,10 +164,12 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	Print(L"Bootloader Initialized\n\r");
 
 	EFI_FILE* Kernel = LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable); // Load file 
-	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL)
+	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL) {
 		Print(L"Could Not Load Kernel \n\r");
-	else 
+		return EFI_LOAD_ERROR;
+	} else { 
 		Print(L"Kernel Loaded Successfully\n\r"); 
+	}
 
 	Elf64_Ehdr header; // Create ELF Header
 	
@@ -184,11 +186,11 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	
 	void* osulogo = LoadRawImageFile(NULL, L"osulogo.raw", ImageHandle, SystemTable);
 
-	if (!osulogo) {
+	// Because the OSU logo isn't a vital part of booting it won't return an error if not found
+	if (!osulogo)
 		Print(L"Error Loading OSU Image");
-	} else {
+	else 
 		Print(L"Loaded OSU Image successfully");
-	}
 
 	// Check if kernel header is correct
 	if (memcmp(&header.e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0 ||
@@ -214,7 +216,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	}
 
 	// Go through each program header and load their binary information
-	for(
+	for (
 		Elf64_Phdr* phdr = phdrs;
 		(char*)phdr < (char*)phdrs + header.e_phnum * header.e_phentsize;
 		phdr = (Elf64_Phdr*)((char*)phdr + header.e_phentsize)
