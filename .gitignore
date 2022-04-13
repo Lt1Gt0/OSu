@@ -7,3 +7,5 @@ gnu-efi/x86_64/lib/
 
 .vs		
 .user_misc 	
+/.vs
+/kernel/clean
