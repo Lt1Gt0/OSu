@@ -1,7 +1,8 @@
 #pragma once
-#include "../IO.h"
-#include "../math.h"
-#include "../BasicRenderer.h"
+#include <IO.h>
+#include <math.h>
+#include <BasicRenderer.h>
+#include <globals.h>
 
 /* IO PORTS FOR MOUSE COMM 
  * 0x60 (after Initialize of mouse) -  

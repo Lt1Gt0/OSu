@@ -1,4 +1,5 @@
 #pragma once
+#include <globals.h>
 #include <BasicRenderer.h>
 #include <panic.h>
 #include <IO.h>

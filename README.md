@@ -81,7 +81,7 @@ __[Qemu Download Page](https://www.qemu.org/download/)__
 - __Arch Installation__
   
   ```bash
-  sudo pacman -S base-devel nasm g++ make 
+  sudo pacman -S base-devel qemu nasm g++ make 
   ```
 
 The mtools installation should work fine on ubuntu 20.04 LTS

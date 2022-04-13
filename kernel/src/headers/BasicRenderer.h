@@ -1,6 +1,7 @@
 #pragma once
 #include <math.h>
 #include <FrameBuffer.h>
+#include <globals.h>
 #include <SimpleFonts.h>
 #include <stdint.h>
 
@@ -80,4 +81,4 @@ class BasicRenderer
         void DrawOverlayMouseCursor(uint8_t* MouseCursor, Point position, uint32_t color);
 };
 
-extern BasicRenderer* GlobalRenderer;
+extern BasicRenderer GlobalRenderer;

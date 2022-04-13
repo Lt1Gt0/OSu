@@ -5,6 +5,7 @@
 #include <paging/PageTableManager.h>
 #include <memory/heap.h>
 #include <paging/PageFrameAllocator.h>
+#include <globals.h>
 
 namespace AHCI
 {

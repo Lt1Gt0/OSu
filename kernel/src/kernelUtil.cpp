@@ -69,9 +69,9 @@ void PrepareACPI(BootInfo *bootInfo)
     ACPI::SDTHeader* xsdt = (ACPI::SDTHeader*)(bootInfo->rsdp->XSDTAddress);
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
 
-    GlobalRenderer->PrintLine("---- Enumerating PCI Devices ----");
+    GlobalRenderer.PrintLine("---- Enumerating PCI Devices ----");
     PCI::EnumeratePCI(mcfg);
-    GlobalRenderer->PrintLine("---------------------------------");
+    GlobalRenderer.PrintLine("---------------------------------");
 }
 
 void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff = 0)
@@ -79,41 +79,39 @@ void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff 
     uint32_t* pixel = (uint32_t*)bootinfo->osulogo;
     for (unsigned int y = 0; y < 256; y++) {
         for (unsigned int x = 0; x < 256; x++) {
-            GlobalRenderer->PutPix(x + xOff, y + yOff, *pixel);
+            GlobalRenderer.PutPix(x + xOff, y + yOff, *pixel);
             pixel++;
         }
     }
 }
 
-BasicRenderer r = BasicRenderer(NULL, NULL);
 KernelInfo InitializeKernel(BootInfo *bootInfo)
 {
-    r = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
-    GlobalRenderer = &r;
-    
+    GlobalRenderer = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
+
     GDTDescriptor gdtDescriptor;
     gdtDescriptor.Size = sizeof(GDT) - 1;
     gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
     LoadGDT(&gdtDescriptor);
-    GlobalRenderer->PrintLine("Loaded GDT");
+    GlobalRenderer.PrintLine("Loaded GDT");
      
     PrepareMemory(bootInfo);
     memset(bootInfo->frameBuffer->BaseAddress, 0, bootInfo->frameBuffer->BufferSize);
     InitializeHeap((void*)0x0000100000000000, 0x10);
-    GlobalRenderer->PrintLine("Initialized Memory");
+    GlobalRenderer.PrintLine("Initialized Memory");
 
     PrepareInterrupts();
-    GlobalRenderer->PrintLine("Interrupts Prepared"); 
+    GlobalRenderer.PrintLine("Interrupts Prepared"); 
 
     InitPS2Mouse(); 
-    GlobalRenderer->PrintLine("Mouse Prepared"); 
+    GlobalRenderer.PrintLine("Mouse Prepared"); 
 
     PrepareACPI(bootInfo);
-    GlobalRenderer->PrintLine("ACPI Prepared"); 
+    GlobalRenderer.PrintLine("ACPI Prepared"); 
 
     outb(PIC1_DATA, 0b11111000);
     outb(PIC2_DATA, 0b11101111);
-    GlobalRenderer->PrintLine("Set PIC Data"); 
+    GlobalRenderer.PrintLine("Set PIC Data"); 
 
     PIT::SetDivisor(65535);
 

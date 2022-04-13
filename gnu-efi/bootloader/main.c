@@ -188,9 +188,9 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 
 	// Because the OSU logo isn't a vital part of booting it won't return an error if not found
 	if (!osulogo)
-		Print(L"Error Loading OSU Image");
+		Print(L"Error Loading OSU Image\n\r");
 	else 
-		Print(L"Loaded OSU Image successfully");
+		Print(L"Loaded OSU Image successfully\n\r");
 
 	// Check if kernel header is correct
 	if (memcmp(&header.e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0 ||

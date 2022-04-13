@@ -14,16 +14,16 @@ namespace PCI
         if (pciDeviceHeader->DeviceID == 0 || pciDeviceHeader->DeviceID == 0xFFFF)
             return;
         
-        GlobalRenderer->Print(GetVendorName(pciDeviceHeader->VendorID));
-        GlobalRenderer->Print(" | ");
-        GlobalRenderer->Print(GetDeviceName(pciDeviceHeader->VendorID, pciDeviceHeader->DeviceID));
-        GlobalRenderer->Print(" | ");
-        GlobalRenderer->Print(DeviceClasses[pciDeviceHeader->Class]);
-        GlobalRenderer->Print(" | ");
-        GlobalRenderer->Print(GetSubclassName(pciDeviceHeader->Class, pciDeviceHeader->Subclass));
-        GlobalRenderer->Print(" | ");
-        GlobalRenderer->Print(GetProgIFName(pciDeviceHeader->Class, pciDeviceHeader->Subclass, pciDeviceHeader->ProgIF));
-        GlobalRenderer->Next();
+        GlobalRenderer.Print(GetVendorName(pciDeviceHeader->VendorID));
+        GlobalRenderer.Print(" | ");
+        GlobalRenderer.Print(GetDeviceName(pciDeviceHeader->VendorID, pciDeviceHeader->DeviceID));
+        GlobalRenderer.Print(" | ");
+        GlobalRenderer.Print(DeviceClasses[pciDeviceHeader->Class]);
+        GlobalRenderer.Print(" | ");
+        GlobalRenderer.Print(GetSubclassName(pciDeviceHeader->Class, pciDeviceHeader->Subclass));
+        GlobalRenderer.Print(" | ");
+        GlobalRenderer.Print(GetProgIFName(pciDeviceHeader->Class, pciDeviceHeader->Subclass, pciDeviceHeader->ProgIF));
+        GlobalRenderer.Next();
 
         switch (pciDeviceHeader->Class) {
         case 0x01: // Mass Storage Controller

@@ -132,17 +132,17 @@ void ProcessMousePacket()
     if (MousePosition.X < 0) 
         MousePosition.X = 0;
 
-    if (MousePosition.X > GlobalRenderer->TargetFrameBuffer->Width-1) 
-        MousePosition.X = GlobalRenderer->TargetFrameBuffer->Width-1;
+    if (MousePosition.X > GlobalRenderer.TargetFrameBuffer->Width-1) 
+        MousePosition.X = GlobalRenderer.TargetFrameBuffer->Width-1;
 
     if (MousePosition.Y < 0) 
         MousePosition.Y = 0;
 
-    if (MousePosition.Y > GlobalRenderer->TargetFrameBuffer->Height-1) 
-        MousePosition.Y = GlobalRenderer->TargetFrameBuffer->Height-1;
+    if (MousePosition.Y > GlobalRenderer.TargetFrameBuffer->Height-1) 
+        MousePosition.Y = GlobalRenderer.TargetFrameBuffer->Height-1;
     
-    GlobalRenderer->ClearMouseCursor(MousePointer, MousePositionOld);
-    GlobalRenderer->DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
+    GlobalRenderer.ClearMouseCursor(MousePointer, MousePositionOld);
+    GlobalRenderer.DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
     
     /* No current opperations for mouse buttons so leave blank for now */
     // if (MousePacket[0] & PS2LeftButton) {}

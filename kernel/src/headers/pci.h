@@ -3,6 +3,7 @@
 #include <acpi.h>
 #include <paging/PageTableManager.h>
 #include <BasicRenderer.h>
+#include <globals.h>
 #include <cstr.h>
 #include <memory/heap.h>
 

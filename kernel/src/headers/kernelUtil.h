@@ -1,15 +1,15 @@
 #pragma once
 
 #include <stddef.h>
-#include "BasicRenderer.h"
-#include "cstr.h"
-#include "efiMemory.h"
-#include "memory.h"
-#include "Bitmap.h"
-#include "paging/PageFrameAllocator.h"
-#include "paging/PageMapIndexer.h"
-#include "paging/paging.h"
-#include "paging/PageTableManager.h"
+#include <globals.h>
+#include <cstr.h>
+#include <efiMemory.h>
+#include <memory.h>
+#include <Bitmap.h>
+#include <paging/PageFrameAllocator.h>
+#include <paging/PageMapIndexer.h>
+#include <paging/paging.h>
+#include <paging/PageTableManager.h>
 #include <userinput/mouse.h>
 #include <gdt/gdt.h>
 #include <interrupts/IDT.h>
