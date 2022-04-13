@@ -74,6 +74,17 @@ void PrepareACPI(BootInfo *bootInfo)
     GlobalRenderer->PrintLine("---------------------------------");
 }
 
+void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff = 0)
+{
+    uint32_t* pixel = (uint32_t*)bootinfo->osulogo;
+    for (unsigned int y = 0; y < 256; y++) {
+        for (unsigned int x = 0; x < 256; x++) {
+            GlobalRenderer->PutPix(x + xOff, y + yOff, *pixel);
+            pixel++;
+        }
+    }
+}
+
 BasicRenderer r = BasicRenderer(NULL, NULL);
 KernelInfo InitializeKernel(BootInfo *bootInfo)
 {
@@ -91,16 +102,6 @@ KernelInfo InitializeKernel(BootInfo *bootInfo)
     InitializeHeap((void*)0x0000100000000000, 0x10);
     GlobalRenderer->PrintLine("Initialized Memory");
 
-    GlobalRenderer->Print("Osu Logo found: 0x");
-    GlobalRenderer->PrintLine(to_hstring((uint64_t)bootInfo->osulogo));
-    
-    GlobalRenderer->Print("Sizeof GDTEntry: ", 0xFFFF00FF);
-    GlobalRenderer->PrintLine(to_hstring((uint16_t)sizeof(GDTEntry)), 0xFFFF00FF);
-    GlobalRenderer->Print("Sizeof GDTDescriptor: ", 0xFFFF00FF);
-    GlobalRenderer->PrintLine(to_hstring((uint16_t)sizeof(GDTDescriptor)), 0xFFFF00FF);
-    GlobalRenderer->Print("Sizeof GDT: ", 0xFFFF00FF);
-    GlobalRenderer->PrintLine(to_hstring((uint16_t)sizeof(GDT)), 0xFFFF00FF);
-
     PrepareInterrupts();
     GlobalRenderer->PrintLine("Interrupts Prepared"); 
 
@@ -115,6 +116,8 @@ KernelInfo InitializeKernel(BootInfo *bootInfo)
     GlobalRenderer->PrintLine("Set PIC Data"); 
 
     PIT::SetDivisor(65535);
+
+    DrawBootImage(bootInfo, 727, 727);
 
     asm("sti");
 
