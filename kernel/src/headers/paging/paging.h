@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _PAGING_H
+#define _PAGING_H
+
 #include <stdint.h>
 
 enum PT_Flag {
@@ -26,3 +29,5 @@ struct PageDirectoryEntry {
 struct PageTable {
     PageDirectoryEntry entries [512];
 } __attribute__((aligned(0x1000))); // align the page table
+
+#endif // _PAGING_H

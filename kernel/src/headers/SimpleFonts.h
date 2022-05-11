@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _SIMPLE_FONTS_H
+#define _SIMPLE_FONTS_H
 
 struct PSF1_HEADER {
 	unsigned char magic[2]; // Identifier bytes
@@ -10,3 +12,5 @@ struct PSF1_FONT {
 	PSF1_HEADER* 	psf1_Header;
 	void* 			glyphBuffer;
 };
+
+#endif // _SIMPLE_FONTS_H

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _ACPI_H
+#define _ACPI_H
+
 #include <stdint.h>
 
 namespace ACPI
@@ -42,3 +45,5 @@ namespace ACPI
 
     void* FindTable(SDTHeader* sdtHeader, char* signature);
 }
+
+#endif // _ACPI_H

@@ -1,5 +1,11 @@
 #include <ahci/ahci.h>
 
+#include <BasicRenderer.h>
+#include <paging/PageTableManager.h>
+#include <memory/heap.h>
+#include <paging/PageFrameAllocator.h>
+#include <memory.h>
+
 namespace AHCI 
 {
     PortType CheckPortType(HBAPort* port)

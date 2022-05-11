@@ -1,5 +1,7 @@
 #include <scheduling/pit/pit.h>
 
+#include <IO.h>
+
 namespace PIT
 {
     double TimeSinceBoot = 0;

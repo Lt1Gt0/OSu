@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _IDT_H
+#define _IDT_H
+
 #include <stdint.h>
 
 /*** Common Gates ***/
@@ -22,3 +25,5 @@ struct IDTR {
     uint16_t  Limit;
     uint64_t  Offset;
 } __attribute__((packed));
+
+#endif // _IDT_H

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _FRAME_BUFFER_H
+#define _FRAME_BUFFER_H
+
 #include <stddef.h>
 
 struct FrameBuffer {
@@ -8,3 +11,5 @@ struct FrameBuffer {
 	unsigned int 	Height;
 	unsigned int 	PixelsPerScanLine;
 };
+
+#endif // _FRAME_BUFFER_H

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _PCI_H
+#define _PCI_H
+
 #include <stdint.h>
 #include <acpi.h>
 #include <paging/PageTableManager.h>
@@ -54,3 +57,5 @@ namespace PCI
     const char* GetSubclassName(uint8_t classCode, uint8_t subclassCode);
     const char* GetProgIFName(uint8_t classCode, uint8_t subclassCode, uint8_t progIF);
 }
+
+#endif // _PCI_H

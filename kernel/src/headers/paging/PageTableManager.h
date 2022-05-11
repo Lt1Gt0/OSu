@@ -1,9 +1,8 @@
 #pragma once
+#ifndef _PAGE_TABLE_MANAGER_H
+#define _PAGE_TABLE_MANAGER_H
+
 #include <paging/paging.h>
-#include <paging/PageMapIndexer.h>
-#include <paging/PageFrameAllocator.h>
-#include <memory.h>
-#include <stdint.h>
 
 class PageTableManager
 {
@@ -22,3 +21,5 @@ class PageTableManager
 };
 
 extern PageTableManager g_PageTableManager;
+
+#endif // _PAGE_TABLE_MANAGER_H

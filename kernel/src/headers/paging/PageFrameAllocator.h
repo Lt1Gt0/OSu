@@ -1,8 +1,11 @@
 #pragma once
+#ifndef _PAGE_FRAME_ALLOCATOR_H
+#define _PAGE_FRAME_ALLOCATOR_H
+
 #include <efiMemory.h>
 #include <stdint.h>
 #include <Bitmap.h>
-#include <memory.h>
+// #include <memory.h>
 
 class PageFrameAllocator
 {
@@ -34,3 +37,5 @@ class PageFrameAllocator
 };
 
 extern PageFrameAllocator GlobalAllocator;
+
+#endif // _PAGE_FRAME_ALLOCATOR_H

@@ -1,5 +1,12 @@
 #include <interrupts/interrupts.h>
 
+#include <BasicRenderer.h>
+#include <panic.h>
+#include <IO.h>
+#include <userinput/keyboard.h>
+#include <userinput/mouse.h>
+#include <scheduling/pit/pit.h>
+
 /*** EXCEPTIONS ***/
 
 /* Should mainly occur when the page table/directory is not in phsycial memory */

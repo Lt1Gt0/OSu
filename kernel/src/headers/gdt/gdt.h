@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _GDT_H
+#define _GDT_H
+
 #include <stdint.h>
 
 struct GDTDescriptor {
@@ -27,3 +30,5 @@ __attribute__((aligned(0x1000)));
 
 extern "C" GDT DefaultGDT;
 extern "C" void LoadGDT(GDTDescriptor* gdtDescriptor);
+
+#endif // _GDT_H

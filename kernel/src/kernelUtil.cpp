@@ -1,5 +1,13 @@
 #include <kernelUtil.h>
 
+#include <memory.h>
+#include <paging/PageFrameAllocator.h>
+#include <userinput/mouse.h>
+#include <gdt/gdt.h>
+#include <interrupts/IDT.h>
+#include <interrupts/interrupts.h>
+#include <scheduling/pit/pit.h>
+
 KernelInfo kernelInfo;
 void PrepareMemory(BootInfo *bootInfo)
 {

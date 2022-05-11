@@ -1,5 +1,10 @@
 #include <paging/PageTableManager.h>
 
+#include <paging/PageMapIndexer.h>
+#include <paging/PageFrameAllocator.h>
+#include <memory.h>
+#include <stdint.h>
+
 PageTableManager g_PageTableManager = NULL;
 
 PageTableManager::PageTableManager(PageTable *PML4Address)

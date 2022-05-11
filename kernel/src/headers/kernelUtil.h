@@ -1,24 +1,13 @@
 #pragma once
+#ifndef _KERNEL_UTIL_H
+#define _KERNEL_UTIL_H
 
-#include <stddef.h>
-#include <globals.h>
-#include <cstr.h>
+#include <stdint.h>
+#include <FrameBuffer.h>
+#include <SimpleFonts.h>
+#include <ahci/ahci.h>
 #include <efiMemory.h>
-#include <memory.h>
-#include <Bitmap.h>
-#include <paging/PageFrameAllocator.h>
-#include <paging/PageMapIndexer.h>
-#include <paging/paging.h>
 #include <paging/PageTableManager.h>
-#include <userinput/mouse.h>
-#include <gdt/gdt.h>
-#include <interrupts/IDT.h>
-#include <interrupts/interrupts.h>
-#include <IO.h>
-#include <pci.h>
-#include <acpi.h>
-#include <memory/heap.h>
-#include <scheduling/pit/pit.h>
 
 struct BootInfo {
 	FrameBuffer* 			frameBuffer;
@@ -38,3 +27,5 @@ extern "C" uint64_t _KernelStart;
 extern "C" uint64_t _KernelEnd;
 
 KernelInfo InitializeKernel(BootInfo* bootInfo);
+
+#endif // _KERNEL_UTIL_H

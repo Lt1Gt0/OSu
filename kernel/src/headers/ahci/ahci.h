@@ -1,11 +1,9 @@
 #pragma once
+#ifndef _AHCI_H
+#define _AHCI_H
+
 #include <stdint.h>
 #include <pci.h>
-#include <BasicRenderer.h>
-#include <paging/PageTableManager.h>
-#include <memory/heap.h>
-#include <paging/PageFrameAllocator.h>
-#include <globals.h>
 
 namespace AHCI
 {
@@ -178,3 +176,5 @@ namespace AHCI
             uint8_t portCount;
     };
 }
+
+#endif // _ACHI_H

@@ -1,5 +1,7 @@
 #include <paging/PageFrameAllocator.h>
 
+#include <memory.h>
+
 uint64_t freeMemory; // Free memory of the entire system
 uint64_t reservedMemory; // Memory reserved by ACPI tables, etc
 uint64_t usedMemory; // self explanitory

@@ -1,5 +1,9 @@
 #include <memory/heap.h>
 
+#include <stdint.h> // Might not need to include stdint in the future
+#include <paging/PageTableManager.h>
+#include <paging/PageFrameAllocator.h>
+
 void* heapStart;
 void* heapEnd;
 HeapSegHdr* LastHdr;

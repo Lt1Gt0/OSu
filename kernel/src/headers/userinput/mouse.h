@@ -1,8 +1,10 @@
 #pragma once
+#ifndef _MOUSE_H
+#define _MOUSE_H
+
 #include <IO.h>
 #include <math.h>
 #include <BasicRenderer.h>
-#include <globals.h>
 
 /* IO PORTS FOR MOUSE COMM 
  * 0x60 (after Initialize of mouse) -  
@@ -35,3 +37,5 @@ void ProcessMousePacket();
 
 extern uint8_t MousePointer[];
 extern Point MousePosition;
+
+#endif // _MOUSE_H

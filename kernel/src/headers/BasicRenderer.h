@@ -1,7 +1,9 @@
 #pragma once
+#ifndef _BASIC_RENDERER_H
+#define _BASIC_RENDERER_H
+
 #include <math.h>
 #include <FrameBuffer.h>
-#include <globals.h>
 #include <SimpleFonts.h>
 #include <stdint.h>
 
@@ -52,7 +54,10 @@ class BasicRenderer
     
         /**
          * @brief Clear the mouse cursoe from the frame buffer
-         *
+         *e
+#include <stdint.h>
+
+
          * @param mouseCursor Pointer to a mouse  
          * @param position Position of mouse
          */
@@ -82,3 +87,5 @@ class BasicRenderer
 };
 
 extern BasicRenderer GlobalRenderer;
+
+#endif // _BASIC_RENDERER_H

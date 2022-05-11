@@ -1,6 +1,8 @@
 #pragma once
+#ifndef _PIT_H
+#define _PIT_H
+
 #include <stdint.h>
-#include <IO.h>
 
 namespace PIT
 {
@@ -15,3 +17,5 @@ namespace PIT
     void SetFrequecy(uint64_t frequency);
     void Tick();
 }
+
+#endif // _PIT_H

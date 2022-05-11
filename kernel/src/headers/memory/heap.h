@@ -1,9 +1,8 @@
 #pragma once
-#include <stdint.h>
-#include <stddef.h>
+#ifndef _HEAP_H
+#define _HEAP_H
 
-#include <paging/PageTableManager.h>
-#include <paging/PageFrameAllocator.h>
+#include <stddef.h>
 
 struct HeapSegHdr {
     size_t      length;
@@ -34,3 +33,5 @@ inline void operator delete(void* p)
 {
     free(p);
 }
+
+#endif // _HEAP_H

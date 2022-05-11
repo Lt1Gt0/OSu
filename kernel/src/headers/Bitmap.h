@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _BITMAP_H
+#define _BITMAP_H
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -18,3 +21,5 @@ class Bitmap
         bool Set(uint64_t index, bool value);
         bool Get(uint64_t index);
 };
+
+#endif // _BITMAP_H

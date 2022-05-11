@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _EFI_MEMORY_H
+#define _EFI_MEMORY_H
+
 #include <stdint.h>
 
 struct EFI_MEMORY_DESCRIPTOR {
@@ -10,3 +13,5 @@ struct EFI_MEMORY_DESCRIPTOR {
 };
 
 extern const char* EFI_MEMORY_TYPE_STRINGS[];
+
+#endif // _EFI_MEMORY_H

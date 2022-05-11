@@ -1,11 +1,6 @@
 #pragma once
-#include <globals.h>
-#include <BasicRenderer.h>
-#include <panic.h>
-#include <IO.h>
-#include <userinput/keyboard.h>
-#include <userinput/mouse.h>
-#include <scheduling/pit/pit.h>
+#ifndef _INTERRUPTS_H
+#define _INTERRUPTS_H
 
 #define PIC1_COMMAND  0x20 // IO base address for the mater PIC
 #define PIC1_DATA     0x21 // IO base address for the master PIC data
@@ -28,3 +23,5 @@ __attribute__((interrupt)) void PITInt_Handler(interrupt_frame* frame);
 void RemapPIC();
 void PIC_EndMaster();
 void PIC_EndSlave();
+
+#endif // _INTERRUPTS_H

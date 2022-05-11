@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __GLOBALS_H
-#define __GLOBALS_H
+#ifndef _GLOBALS_H
+#define _GLOBALS_H
 
 // #include <BasicRenderer.h>
 // extern BasicRenderer GlobalRenderer;
