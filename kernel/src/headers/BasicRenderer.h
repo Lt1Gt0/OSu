@@ -54,10 +54,7 @@ class BasicRenderer
     
         /**
          * @brief Clear the mouse cursoe from the frame buffer
-         *e
-#include <stdint.h>
-
-
+         *
          * @param mouseCursor Pointer to a mouse  
          * @param position Position of mouse
          */

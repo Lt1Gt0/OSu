@@ -34,14 +34,14 @@ namespace AHCI
     };
 
     enum FIS_TYPE {
-        FIS_TYPE_REG_H2D    = 0x27,
-        FIS_TYPE_REG_D2H    = 0x34,
-        FIS_TYPE_DMA_ACT    = 0x39,
-        FIS_TYPE_DMA_SETUP  = 0x41,
-        FIS_TYPE_DATA       = 0x46,
-        FIS_TYPE_BIST       = 0x58,
-        FIS_TYPE_PIO_SETUP  = 0x5F,
-        FIS_TYPE_DEV_BITS   = 0xA1,
+        FIS_TYPE_REG_H2D    = 0x27, // Register FIS - host to device
+        FIS_TYPE_REG_D2H    = 0x34, // Register FIS - device to host
+        FIS_TYPE_DMA_ACT    = 0x39, // DMA activate FIS - device to host
+        FIS_TYPE_DMA_SETUP  = 0x41, // DMA setup FIS - bidirectional
+        FIS_TYPE_DATA       = 0x46, // Data FIS - bidirectional
+        FIS_TYPE_BIST       = 0x58, // BIST activate FIS - bidirectional
+        FIS_TYPE_PIO_SETUP  = 0x5F, // PIO setup FIS - device to host
+        FIS_TYPE_DEV_BITS   = 0xA1, // Set device bits FIS - device to host
     };
 
     struct HBAPort {
@@ -124,7 +124,7 @@ namespace AHCI
         
         uint8_t portMultiplier  : 4;
         uint8_t rsv0            : 3;
-        uint8_t commandControl  : 1;
+        uint8_t commandControl  : 1; // 1: Command, 0: Control
     
         uint8_t command;
         uint8_t featureLow;

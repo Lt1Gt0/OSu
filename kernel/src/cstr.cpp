@@ -1,7 +1,7 @@
 #include <cstr.h>
 
 char uintTo_StringOutput[128]; // Buffer to hold characters in
-const char *to_string(uint64_t value)
+const char* to_string(uint64_t value)
 {
     uint8_t size; // Size of the string that will be produced
     uint64_t sizeTest = value;
@@ -27,7 +27,7 @@ const char *to_string(uint64_t value)
 }
 
 char intTo_StringOutput[128]; // Buffer to hold characters in
-const char *to_string(int64_t value)
+const char* to_string(int64_t value)
 {
     uint8_t isNegative = 0;
     if (value < 0) {
@@ -60,7 +60,7 @@ const char *to_string(int64_t value)
 }
 
 char hexTo_StringOutput64[128];
-const char *to_hstring(uint64_t value)
+const char* to_hstring(uint64_t value)
 {
     uint64_t* valPtr = &value;
     uint8_t* ptr;
@@ -79,7 +79,7 @@ const char *to_hstring(uint64_t value)
 }
 
 char hexTo_StringOutput32[128];
-const char *to_hstring(uint32_t value)
+const char* to_hstring(uint32_t value)
 {
     uint32_t* valPtr = &value;
     uint8_t* ptr;
@@ -98,7 +98,7 @@ const char *to_hstring(uint32_t value)
 }
 
 char hexTo_StringOutput16[128];
-const char *to_hstring(uint16_t value)
+const char* to_hstring(uint16_t value)
 {
     uint16_t* valPtr = &value;
     uint8_t* ptr;
@@ -117,7 +117,7 @@ const char *to_hstring(uint16_t value)
 }
 
 char hexTo_StringOutput8[128];
-const char *to_hstring(uint8_t value)
+const char* to_hstring(uint8_t value)
 {
     uint8_t* valPtr = &value;
     uint8_t* ptr;
@@ -136,7 +136,7 @@ const char *to_hstring(uint8_t value)
 }
 
 char doubleTo_StringOutput[128];
-const char *to_string(double value, uint8_t decimalPlaces)
+const char* to_string(double value, uint8_t decimalPlaces)
 {
     if (decimalPlaces > 20)
         decimalPlaces = 20;
@@ -170,7 +170,7 @@ const char *to_string(double value, uint8_t decimalPlaces)
     return doubleTo_StringOutput;
 }
 
-const char *to_string(double value)
+const char* to_string(double value)
 {
     return to_string(value, 2);
 }

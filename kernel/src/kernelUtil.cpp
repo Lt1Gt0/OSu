@@ -9,7 +9,7 @@
 #include <scheduling/pit/pit.h>
 
 KernelInfo kernelInfo;
-void PrepareMemory(BootInfo *bootInfo)
+void PrepareMemory(BootInfo* bootInfo)
 {
     uint64_t mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize; // get the total map entries by dividing the size of the map by the descriptor size
 
@@ -47,7 +47,7 @@ void PrepareMemory(BootInfo *bootInfo)
 }
 
 IDTR idtr;
-void SetIDTGate(void *handler, uint8_t entryOffset, uint8_t type_attr, uint8_t selector)
+void SetIDTGate(void* handler, uint8_t entryOffset, uint8_t type_attr, uint8_t selector)
 {
     IDTDescEntry* interrupt = (IDTDescEntry*)(idtr.Offset + entryOffset * sizeof(IDTDescEntry));
     interrupt->SetOffset((uint64_t)handler);
@@ -72,7 +72,7 @@ void PrepareInterrupts()
     RemapPIC();
 }
 
-void PrepareACPI(BootInfo *bootInfo)
+void PrepareACPI(BootInfo* bootInfo)
 {
     ACPI::SDTHeader* xsdt = (ACPI::SDTHeader*)(bootInfo->rsdp->XSDTAddress);
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
@@ -93,7 +93,7 @@ void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff 
     }
 }
 
-KernelInfo InitializeKernel(BootInfo *bootInfo)
+KernelInfo InitializeKernel(BootInfo* bootInfo)
 {
     GlobalRenderer = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
 

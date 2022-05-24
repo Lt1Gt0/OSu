@@ -69,7 +69,7 @@ namespace PCI
         }
     }
 
-    void EnumeratePCI(ACPI::MCFGHeader *mcfg)
+    void EnumeratePCI(ACPI::MCFGHeader* mcfg)
     {
         // Amount of device configs avaliable
         int entries = ((mcfg->Header.Length) - sizeof(ACPI::MCFGHeader)) / sizeof(ACPI::DeviceConfig);

@@ -24,7 +24,7 @@ namespace PCI
         "Non Essential Instrumentation"
     };
 
-    const char *GetVendorName(uint16_t vendorID)
+    const char* GetVendorName(uint16_t vendorID)
     {
         switch (vendorID) {
         case 0x8086:
@@ -38,7 +38,7 @@ namespace PCI
         return to_hstring(vendorID);
     }
 
-    const char *GetDeviceName(uint16_t vendorID, uint16_t deviceID)
+    const char* GetDeviceName(uint16_t vendorID, uint16_t deviceID)
     {
         switch (vendorID) {
         case 0x8086: // Intel
@@ -62,7 +62,7 @@ namespace PCI
         return to_hstring(deviceID);
     }
 
-    const char *UnclassifiedSubclassName(uint8_t subclassCode)
+    const char* UnclassifiedSubclassName(uint8_t subclassCode)
     {
         switch (subclassCode) {
         case 0x00:
@@ -74,7 +74,7 @@ namespace PCI
         return to_hstring(subclassCode);
     }
 
-    const char *MassStorageControllerSubclassName(uint8_t subclassCode)
+    const char* MassStorageControllerSubclassName(uint8_t subclassCode)
     {
         switch (subclassCode) {
         case 0x00:
@@ -102,7 +102,7 @@ namespace PCI
         return to_hstring(subclassCode);
     }
 
-    const char *MemoryControllerSubclassName(uint8_t subclassCode)
+    const char* MemoryControllerSubclassName(uint8_t subclassCode)
     {
         switch (subclassCode) {
         case 0x0:
@@ -116,7 +116,7 @@ namespace PCI
         return to_hstring(subclassCode);
     }
 
-    const char *BridgeControllerSubclassName(uint8_t subclassCode)
+    const char* BridgeControllerSubclassName(uint8_t subclassCode)
     {
         switch (subclassCode) {
         case 0x00:
@@ -148,7 +148,7 @@ namespace PCI
         return to_hstring(subclassCode);
     }
 
-    const char *IntelligentControllerSubclassName(uint8_t subclassCode)
+    const char* IntelligentControllerSubclassName(uint8_t subclassCode)
     {
         switch (subclassCode) {
         case 0x00:
@@ -158,7 +158,7 @@ namespace PCI
         return to_hstring(subclassCode);
     }
 
-    const char *GetSubclassName(uint8_t classCode, uint8_t subclassCode)
+    const char* GetSubclassName(uint8_t classCode, uint8_t subclassCode)
     {
         switch (classCode) {
         case 0x00:
@@ -178,7 +178,7 @@ namespace PCI
         return to_hstring(subclassCode);
     }
 
-    const char *GetProgIFName(uint8_t classCode, uint8_t subclassCode, uint8_t progIF)
+    const char* GetProgIFName(uint8_t classCode, uint8_t subclassCode, uint8_t progIF)
     {
         switch (classCode) {
         case 0x00: // Unclassified

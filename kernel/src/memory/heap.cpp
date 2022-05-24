@@ -8,7 +8,7 @@ void* heapStart;
 void* heapEnd;
 HeapSegHdr* LastHdr;
 
-void InitializeHeap(void *heapAddress, size_t pageCount)
+void InitializeHeap(void* heapAddress, size_t pageCount)
 {
     void* pos = heapAddress;
 
@@ -28,7 +28,7 @@ void InitializeHeap(void *heapAddress, size_t pageCount)
     LastHdr = startSeg;
 }
 
-void *malloc(size_t size)
+void* malloc(size_t size)
 {
     if (size % 0x10 > 0) { // Check for multiple of 0x10    
         size -= (size % 0x10);
@@ -40,7 +40,9 @@ void *malloc(size_t size)
 
     HeapSegHdr* currentSeg = (HeapSegHdr*)heapStart;
     while (true) {
+        // Find free block
         if (currentSeg->free) {
+            // Mark as used
             if (currentSeg->length > size) {
                 currentSeg->Split(size);
                 currentSeg->free = false;
@@ -63,7 +65,7 @@ void *malloc(size_t size)
     return malloc(size);
 }
 
-HeapSegHdr *HeapSegHdr::Split(size_t splitLength)
+HeapSegHdr* HeapSegHdr::Split(size_t splitLength)
 {
     if (splitLength < 0x10) 
         return NULL;
@@ -87,6 +89,7 @@ HeapSegHdr *HeapSegHdr::Split(size_t splitLength)
     
     return newSplitHdr;
 }
+
 void ExpandHeap(size_t length)
 {
     if (length % 0x1000) {
@@ -111,7 +114,7 @@ void ExpandHeap(size_t length)
     newSegment->CombineBackward();
 }
 
-void free(void *address)
+void free(void* address)
 {
     HeapSegHdr* segment = (HeapSegHdr*)address - 1;
     segment->free = true;

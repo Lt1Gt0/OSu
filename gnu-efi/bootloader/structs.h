@@ -1,22 +1,14 @@
-#ifndef __STRUCTS_H
-#define __STRUCTS_H
+#ifndef _BOOT_INFO_STRUCTS_H
+#define _BOOT_INFO_STRUCTS_H
 
 #include <efi.h>
 #include <efilib.h>
-#include <elf.h>
-
-#define PSF1_MAGIC0 0x36
-#define PSF1_MAGIC1 0x04
+// #include <elf.h>
 
 typedef unsigned long long size_t ;
 
-typedef struct {
-	void* 			BaseAddress;
-	size_t			BufferSize;
-	unsigned int 	Width;
-	unsigned int 	Height;
-	unsigned int 	PixelsPerScanLine;
-} FrameBuffer;
+#define PSF1_MAGIC0 0x36
+#define PSF1_MAGIC1 0x04
 
 typedef struct {
 	unsigned char magic[2]; // Identifier bytes
@@ -30,6 +22,14 @@ typedef struct {
 } PSF1_FONT;
 
 typedef struct {
+	void* 			BaseAddress;
+	size_t			BufferSize;
+	unsigned int 	Width;
+	unsigned int 	Height;
+	unsigned int 	PixelsPerScanLine;
+} FrameBuffer;
+
+typedef struct {
 	FrameBuffer* 			frameBuffer;
 	PSF1_FONT* 				psf1_font;
 	EFI_MEMORY_DESCRIPTOR* 	mMap;
@@ -39,4 +39,4 @@ typedef struct {
 	void* 					osulogo;
 } BootInfo;
 
-#endif // __STRUCTS_H
+#endif // _BOOT_INFO_STRUCTS_H

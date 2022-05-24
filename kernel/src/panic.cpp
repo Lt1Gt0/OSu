@@ -1,6 +1,6 @@
 #include <panic.h>
 
-void Panic(const char *panicMessage)
+void Panic(const char* panicMessage)
 {
     /* Panic mode complete yet, will only show that something
      * happened but nothing that is to useful as to why it happened,

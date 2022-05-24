@@ -96,10 +96,8 @@ namespace AHCI
         hbaPort->cmdSts &= ~HBA_PxCMD_FRE;
 
         while (true) {
-            if (hbaPort->cmdSts & HBA_PxCMD_FR)
-                continue;
-
-            if (hbaPort->cmdSts & HBA_PxCMD_CR)
+            if (hbaPort->cmdSts & HBA_PxCMD_FR
+             || hbaPort->cmdSts & HBA_PxCMD_CR)
                 continue;
 
             break;
