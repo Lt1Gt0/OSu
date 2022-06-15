@@ -6,6 +6,7 @@
 #include <gdt/gdt.h>
 #include <interrupts/IDT.h>
 #include <interrupts/interrupts.h>
+#include <interrupts/PIC.h>
 #include <scheduling/pit/pit.h>
 
 KernelInfo kernelInfo;
@@ -69,7 +70,7 @@ void PrepareInterrupts()
 
     asm("lidt %0" : : "m" (idtr));  // Load IDT
 
-    RemapPIC();
+    PIC::Remap();
 }
 
 void PrepareACPI(BootInfo* bootInfo)
