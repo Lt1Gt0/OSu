@@ -12,21 +12,25 @@ void HandlerKeyboardSpecial(uint8_t scancode)
 	case CursorUp:
 		if (GlobalRenderer.CursorPosition.Y - charsizeY >= 0)
 			GlobalRenderer.CursorPosition.Y -= charsizeY;
+			
 		break;
 
 	case CursorRight:
 		if (GlobalRenderer.CursorPosition.X < GlobalRenderer.TargetFrameBuffer->Width - charsizeX)
 			GlobalRenderer.CursorPosition.X += charsizeX;
+
 		break;
 
 	case CursorLeft:
 		if (GlobalRenderer.CursorPosition.X - charsizeX >= 0)
 			GlobalRenderer.CursorPosition.X -= charsizeX;
+
 		break;
 
 	case CursorDown:
 		if (GlobalRenderer.CursorPosition.Y < GlobalRenderer.TargetFrameBuffer->Height - charsizeY)
 			GlobalRenderer.CursorPosition.Y += charsizeY;
+
 		break;
 	}
 

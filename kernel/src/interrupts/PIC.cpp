@@ -24,7 +24,7 @@ namespace PIC
          * coded as 0x20 for PIC1_DATA and 0x28 for PIC2_DATA */
         outb(PIC1_DATA, 0x20); // ICW2: Master PIC vector offset 
         io_wait();
-        outb(PIC2_DATA, 0x28); // ICW2: Slace PIC vector offset 
+        outb(PIC2_DATA, 0x28); // ICW2: Slave PIC vector offset 
         io_wait();
 
         outb(PIC1_DATA, 4); // ICW3: tell the Master PIC there is a slave PIC at IRQ2 (0000 01000)

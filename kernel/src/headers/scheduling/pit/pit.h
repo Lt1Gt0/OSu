@@ -6,6 +6,11 @@
 
 namespace PIT
 {
+    #define CHANNEL_0           0x40
+    #define CHANNEL_1           0x41
+    #define CHANNEL_2           0x42
+    #define MODE_COMMAND_REG    0x43
+
     extern double TimeSinceBoot;
     const uint64_t BaseFrequency = 1193182;
 
@@ -16,6 +21,7 @@ namespace PIT
     uint64_t GetFrequency();
     void SetFrequecy(uint64_t frequency);
     void Tick();
+    unsigned ReadCount();
 }
 
 #endif // _PIT_H

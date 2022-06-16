@@ -43,6 +43,8 @@ namespace PCI
         switch (vendorID) {
         case 0x8086: // Intel
             switch (deviceID) {
+            case 0x2415:
+                return "82801AA AC'97 Audio Controller";
             case 0x29C0:
                 return "Express DRAM Controller";
             case 0x2918:

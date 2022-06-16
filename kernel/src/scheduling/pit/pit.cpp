@@ -25,9 +25,11 @@ namespace PIT
             divisor = 100;
         
         Divisor = divisor;
-        outb(0x40, (uint8_t)(divisor & 0x00ff));
+
+        // Set the divisor for channel 0
+        outb(CHANNEL_0, (uint8_t)(divisor & 0x00ff));           // Set low byte
         io_wait();
-        outb(0x40, (uint8_t)((divisor & 0xff00) >> 8));
+        outb(CHANNEL_0, (uint8_t)((divisor & 0xff00) >> 8));    // Set high byte
     }
 
     uint64_t GetFrequency()
@@ -43,5 +45,21 @@ namespace PIT
     void Tick()
     {
         TimeSinceBoot += 1 / (double)GetFrequency();
+    }
+
+    unsigned ReadCount()
+    {
+        unsigned count = 0;
+
+        // Disable interrupts
+        asm("cli");
+
+        // al = channel in bits 6 and 7, remaning bits clear
+        outb(0x43, (uint8_t)0b0000000);
+
+        count = inb(0x40);          // Low byte
+        count |= inb(0x40) << 8;    // High byte
+
+        return count;
     }
 }
