@@ -124,7 +124,7 @@ KernelInfo InitializeKernel(BootInfo* bootInfo)
 
     PIT::SetDivisor(65535);
 
-    // DrawBootImage(bootInfo, 727, 727);
+    DrawBootImage(bootInfo, 727, 727);
 
     asm("sti");
 

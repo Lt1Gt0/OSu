@@ -2,5 +2,18 @@
 
 namespace AC97
 {
-    
+    void PlaySound()
+    {
+
+    }
+
+    void StopSound()
+    {
+
+    }
+
+    void ResumeSound()
+    {
+        
+    }
 }
