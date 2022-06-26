@@ -5,7 +5,7 @@
 #include <IO.h>
 #include <userinput/keyboard.h>
 #include <userinput/mouse.h>
-#include <scheduling/pit/pit.h>
+#include <timer/pit/pit.h>
 #include <interrupts/PIC.h>
 
 /*** EXCEPTIONS ***/

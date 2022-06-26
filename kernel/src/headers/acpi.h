@@ -43,6 +43,18 @@ namespace ACPI
         uint32_t        Reserved;
     } __attribute__((packed));
 
+    struct RecordHeader {
+        uint8_t EntryType;
+        uint8_t Length;
+    };
+
+    struct MADT {
+        SDTHeader   Header;
+
+        uint32_t    LocalAPICAddress;
+        uint32_t    Flags;
+    } __attribute__((packed));
+
     void* FindTable(SDTHeader* sdtHeader, char* signature);
 }
 

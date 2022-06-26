@@ -1,5 +1,6 @@
 #include <cstr.h>
 
+
 char uintTo_StringOutput[128]; // Buffer to hold characters in
 const char* to_string(uint64_t value)
 {
@@ -173,4 +174,19 @@ const char* to_string(double value, uint8_t decimalPlaces)
 const char* to_string(double value)
 {
     return to_string(value, 2);
+}
+
+int memcmp(const void* aptr, const void* bptr, size_t size)
+{
+    const unsigned char* a = (const unsigned char*) aptr;
+    const unsigned char* b = (const unsigned char*) bptr;
+
+    for (size_t i = 0; i < size; i++) {
+        if (a[i] < b[i])
+            return -1;
+        else if (b[i] < a[i])
+            return 1; 
+    }
+
+    return 0;
 }

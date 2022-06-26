@@ -1,9 +1,10 @@
-all: run
-run:
+all:
 	make -C gnu-efi/
 	make bootloader -C gnu-efi/
 	make kernel -C kernel/
 	make buildimg -C kernel/
+	
+run: all
 	make run -C kernel/
 
 clean: 

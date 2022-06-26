@@ -82,6 +82,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 			}
 		}
 	}
+	
 	Print(L"Kernel Loaded\n\r");
 	
 	// Load the font file into memory
