@@ -72,30 +72,8 @@ void PrepareInterrupts(BootInfo* bootInfo)
     asm("lidt %0" : : "m" (idtr));  // Load IDT
 
     PIC::Remap();
-
-    APIC::lApicIds[256] = {0};
-    APIC::numcore = 0;
-    APIC::lApicPtr = 0;
-    APIC::ioApicPtr = 0;
-
-    ACPI::SDTHeader* xsdt = (ACPI::SDTHeader*)(bootInfo->rsdp->XSDTAddress);
-    APIC::DetectCores((uint8_t*) &bootInfo->rsdp->RSDTAddress);
-
-    GlobalRenderer.Print("Cores Found: 0x");
-    GlobalRenderer.PrintLine(to_hstring(APIC::numcore));
-    GlobalRenderer.Print("IOAPIC 0x");
-    GlobalRenderer.PrintLine(to_hstring(APIC::ioApicPtr));
-    GlobalRenderer.Print("LAPIC 0x");
-    GlobalRenderer.PrintLine(to_hstring(APIC::lApicPtr));
-    GlobalRenderer.Print("Processor IDs: ");
-
-    for (int i = 0; i < APIC::numcore; i++) {
-        GlobalRenderer.Print("0x");
-        GlobalRenderer.Print(to_hstring(APIC::lApicIds[i]));
-        GlobalRenderer.Print(" ");
-    }
-
-    GlobalRenderer.Next();
+    // APIC::IA32_APIC_BASE_REG* ApicData = APIC::LoadLAPICData();
+    
 }
 
 void PrepareACPI(BootInfo* bootInfo)

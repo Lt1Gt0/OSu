@@ -1,47 +1,21 @@
 #include <interrupts/APIC.h>
 
 #include <acpi.h>
-#include <cstr.h>
+#include <paging/PageFrameAllocator.h>
 
 namespace APIC
 {
-    void DetectCores(uint8_t* rsdt)
+    IA32_APIC_BASE_REG* LoadLAPICData()
     {
-        uint8_t *ptr, *ptr2;
-        uint32_t len;
+        IA32_APIC_BASE_REG regData;
 
-        for (len = *((uint32_t*)(rsdt + 4)), ptr2 = rsdt + 36; ptr2 < rsdt + len; ptr2 += (rsdt[0] == 'X') ? 8 : 4) {
-            ptr = (uint8_t*)(uintptr_t)((rsdt[0] == 'X') ? *((uint64_t*)ptr2) : *((uint32_t*)ptr2));
+        __asm__("xor %rcx, %rcx");
+        __asm__("mov $0x1B, %rcx");
+        __asm__("rdmsr" : : "g" (regData));
+        
+        uint64_t baseAddr = (uint64_t)regData.BaseAddress;
+        GlobalAllocator.LockPage((void*)baseAddr); 
 
-            if (!memcmp(ptr, "APIC", 4)) {
-                // MADT is found
-                lApicPtr = (uint64_t)(*((uint32_t*)(ptr + 0x24)));
-                ptr2 = ptr + *((uint32_t*)(ptr + 4));
-
-                // Iterate on variable length records
-                for (ptr += 44; ptr < ptr2; ptr += ptr[1]) {
-                    switch (ptr[0]) {
-                    case 0:
-                        if (ptr[4] & 0x01)
-                            lApicIds[numcore++] = ptr[3];
-                            break;
-                    case 1:
-                        ioApicPtr = (uint64_t)*((uint32_t*)(ptr + 4));
-                        break;
-                    case 5:
-                        lApicPtr = *((uint64_t*)(ptr + 4));
-                        break;
-                    }
-                }
-                
-                break;
-            }
-        }
-    }
-    
-    void LoadHeader()
-    {
-        ACPI::SDTHeader* madtHeader;
-        ACPI::MADT* madt = (ACPI::MADT*) ACPI::FindTable(madtHeader, (char*)"APIC");
+        return &regData;
     }
 }
