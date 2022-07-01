@@ -17,6 +17,8 @@ namespace PIC
     void Remap();
     void EndMaster();
     void EndSlave();
+
+    void Disable();
 }
 
 #endif // _PIC_H

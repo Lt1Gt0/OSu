@@ -7,6 +7,9 @@ all:
 run: all
 	make run -C kernel/
 
+debug: all
+	make debug -C kernel/
+
 clean: 
 	@rm kernel/lib/ -rf
 	make clean -C gnu-efi/

@@ -7,7 +7,7 @@
 #include <interrupts/IDT.h>
 #include <interrupts/interrupts.h>
 #include <interrupts/PIC.h>
-#include <interrupts/APIC.h>
+#include <interrupts/LAPIC.h>
 #include <timer/pit/pit.h>
 
 KernelInfo kernelInfo;
@@ -71,9 +71,13 @@ void PrepareInterrupts(BootInfo* bootInfo)
 
     asm("lidt %0" : : "m" (idtr));  // Load IDT
 
-    PIC::Remap();
-    // APIC::IA32_APIC_BASE_REG* ApicData = APIC::LoadLAPICData();
-    
+    // PIC::Remap();
+    PIC::Disable();
+
+    uintptr_t base = LAPIC::GetBase();
+    GlobalRenderer.Print("Base: 0x");
+    GlobalRenderer.PrintLine(to_hstring((uint32_t)base));
+    // LAPIC::Detect();
 }
 
 void PrepareACPI(BootInfo* bootInfo)
@@ -121,9 +125,9 @@ KernelInfo InitializeKernel(BootInfo* bootInfo)
     PrepareACPI(bootInfo);
     GlobalRenderer.PrintLine("ACPI Prepared"); 
 
-    outb(PIC1_DATA, 0b11111000);
-    outb(PIC2_DATA, 0b11101111);
-    GlobalRenderer.PrintLine("Set PIC Data"); 
+    // outb(PIC1_DATA, 0b11111000);
+    // outb(PIC2_DATA, 0b11101111);
+    // GlobalRenderer.PrintLine("Set PIC Data"); 
 
     PIT::SetDivisor(65535);
 

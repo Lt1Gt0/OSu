@@ -105,7 +105,7 @@ If for some reason qemu doesn't work (I've noticed this to be an issue with debi
 Assuming QEMU is installed properly and you do have the OSu.img. In the same directory where the .img file is saved, run the command (This might not be 100% accurate because I forget to update this with the build, to ensure you are running the correct qemu command you can open the repository under `kernel` and look at the last line of the makefile)
 
 ``` bash
-qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 256M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none
+qemu-system-x86_64 -machine q35 -device ac97 -drive file=$(BUILDDIR)/$(OSNAME).img -m 256M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none
 ```
 
 To build and Run OSu from in qemu from source run
@@ -135,3 +135,4 @@ make clean
   - [ ] Context Switching
 - [ ] File Storage (beatmaps need to be stored somehow)
 - [ ] Debugging
+- [ ] Local/IO APIC

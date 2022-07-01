@@ -25,8 +25,8 @@ class BasicRenderer
          * 
          * @param str char* string value
          */
-        void Print(const char* str, uint32_t color = 0xFFFFFFFF);
-        void PrintLine(const char* str, uint32_t color = 0xFFFFFFFF);
+        void Print(const char* str);
+        void PrintLine(const char* str);
 
         /**
          * @brief Print a single char value to the render buffer

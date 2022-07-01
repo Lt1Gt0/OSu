@@ -62,13 +62,12 @@ void BasicRenderer::Next()
     CursorPosition.Y += 16;
 }
 
-void BasicRenderer::Print(const char* str, uint32_t color)
+void BasicRenderer::Print(const char* str)
 {
-    Color = color;
     char* chr = (char*)str;
     while (*chr != 0) {
         PutChar(*chr, CursorPosition.X, CursorPosition.Y);
-        CursorPosition.X+=8;
+        CursorPosition.X += 8;
 
         if (CursorPosition.X + 8 > TargetFrameBuffer->Width) {
             CursorPosition.X = 0;
@@ -80,9 +79,9 @@ void BasicRenderer::Print(const char* str, uint32_t color)
     Color = 0xFFFFFFFF;
 }
 
-void BasicRenderer::PrintLine(const char* str, uint32_t color)
+void BasicRenderer::PrintLine(const char* str)
 {
-    Print(str, color);
+    Print(str);
     Next();
 }
 

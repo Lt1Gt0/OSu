@@ -53,4 +53,28 @@ namespace PIC
         outb(PIC2_COMMAND, PIC_EOI);
         outb(PIC1_COMMAND, PIC_EOI);
     }
+
+    void Disable()
+    {
+        /* Set ICW1 */
+        outb(PIC1_COMMAND, 0x11);
+        outb(PIC2_COMMAND, 0x11);
+
+        /* Set ICW2 (IRQ base offsets) */
+        outb(PIC1_DATA, 0xE0);
+        outb(PIC2_DATA, 0xE8);
+
+        /* Set ICW3 */
+        outb(PIC1_DATA, 0x04);
+        outb(PIC2_DATA, 0x02);
+
+        /* Set ICW4 */
+        outb(PIC1_DATA, ICW1_ICW4);
+        outb(PIC2_DATA, ICW1_ICW4);
+
+        /* Set OCW1 (interrupt masks) */
+        outb(PIC1_DATA, 0xFF);
+        outb(PIC2_DATA, 0xFF);
+
+    }
 }
