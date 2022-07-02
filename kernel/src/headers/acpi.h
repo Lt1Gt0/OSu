@@ -18,7 +18,7 @@ namespace ACPI
         uint8_t         Reserved[3];
     } __attribute__((packed));
 
-    struct SDTHeader {
+    struct XSDTHeader {
         unsigned char   Signature[4];
         uint32_t        Length;
         uint8_t         Revision;
@@ -31,7 +31,7 @@ namespace ACPI
     } __attribute__((packed));
 
     struct MCFGHeader {
-        SDTHeader       Header;
+        XSDTHeader       Header;
         uint64_t        Reserved;
     } __attribute__((packed));
 
@@ -48,14 +48,13 @@ namespace ACPI
         uint8_t Length;
     };
 
-    struct MADT {
-        SDTHeader   Header;
-
+    struct MADTHeader {
+        XSDTHeader  Header;
         uint32_t    LocalAPICAddress;
         uint32_t    Flags;
     } __attribute__((packed));
 
-    void* FindTable(SDTHeader* sdtHeader, char* signature);
+    void* FindTable(XSDTHeader* XSDTHeader, char* signature);
 }
 
 #endif // _ACPI_H

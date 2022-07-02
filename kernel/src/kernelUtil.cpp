@@ -72,17 +72,12 @@ void PrepareInterrupts(BootInfo* bootInfo)
     asm("lidt %0" : : "m" (idtr));  // Load IDT
 
     // PIC::Remap();
-    PIC::Disable();
-
-    uintptr_t base = LAPIC::GetBase();
-    GlobalRenderer.Print("Base: 0x");
-    GlobalRenderer.PrintLine(to_hstring((uint32_t)base));
-    // LAPIC::Detect();
+    LAPIC::Enable(bootInfo);
 }
 
 void PrepareACPI(BootInfo* bootInfo)
 {
-    ACPI::SDTHeader* xsdt = (ACPI::SDTHeader*)(bootInfo->rsdp->XSDTAddress);
+    ACPI::XSDTHeader* xsdt = (ACPI::XSDTHeader*)(bootInfo->rsdp->XSDTAddress);
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
 
     GlobalRenderer.PrintLine("---- Enumerating PCI Devices ----");

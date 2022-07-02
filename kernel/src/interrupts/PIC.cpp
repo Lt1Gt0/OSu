@@ -75,6 +75,5 @@ namespace PIC
         /* Set OCW1 (interrupt masks) */
         outb(PIC1_DATA, 0xFF);
         outb(PIC2_DATA, 0xFF);
-
     }
 }

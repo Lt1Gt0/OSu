@@ -2,19 +2,19 @@
 
 namespace ACPI
 {
-    void* FindTable(SDTHeader* sdtHeader, char* signature)
+    void* FindTable(XSDTHeader* XSDTHeader, char* signature)
     {
         //Amount of entries in the xsdt
-        int entries = (sdtHeader->Length - sizeof(ACPI::SDTHeader)) / 8;
+        int entries = (XSDTHeader->Length - sizeof(ACPI::XSDTHeader)) / 8;
 
         for (int t = 0; t < entries; t++) {
-            ACPI::SDTHeader* newSDTHeader = (ACPI::SDTHeader*)*(uint64_t*)((uint64_t)sdtHeader + sizeof(ACPI::SDTHeader) + (t * 8));
+            ACPI::XSDTHeader* newXSDTHeader = (ACPI::XSDTHeader*)*(uint64_t*)((uint64_t)XSDTHeader + sizeof(ACPI::XSDTHeader) + (t * 8));
             for (int i = 0; i < 4; i++) {
-                if (newSDTHeader->Signature[i] != signature[i])
+                if (newXSDTHeader->Signature[i] != signature[i])
                     break;
 
                 if (i == 3)
-                    return newSDTHeader;
+                    return newXSDTHeader;
             }
         }
         
