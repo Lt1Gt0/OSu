@@ -2,7 +2,7 @@
 #ifndef _HEAP_H
 #define _HEAP_H
 
-#include <stddef.h>
+#include <types.h>
 
 struct HeapSegHdr {
     size_t      length;
@@ -30,6 +30,11 @@ inline void* operator new[](size_t size)
 }
 
 inline void operator delete(void* p)
+{
+    free(p);
+}
+
+inline void operator delete[](void* p)
 {
     free(p);
 }

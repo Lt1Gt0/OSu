@@ -2,20 +2,20 @@
 #ifndef _GDT_H
 #define _GDT_H
 
-#include <stdint.h>
+#include <types.h>
 
 struct GDTDescriptor {
-     uint16_t Size;
-     uint64_t Offset;
+     uint16 Size;
+     uint64 Offset;
 }__attribute__((packed));
 
 struct GDTEntry {
-     uint16_t Limit0;
-     uint16_t Base0;
-     uint8_t  Base1;
-     uint8_t  AccessByte;
-     uint8_t  Limit1_Flags;
-     uint8_t  Base2;
+     uint16 Limit0;
+     uint16 Base0;
+     uint8  Base1;
+     uint8  AccessByte;
+     uint8  Limit1_Flags;
+     uint8  Base2;
 }__attribute__((packed));
 
 struct GDT {

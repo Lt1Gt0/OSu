@@ -20,7 +20,7 @@ namespace QWERTYKeyboard
         0x0, ' '
     };
 
-    char Translate(uint8_t scancode, bool uppercase)
+    char Translate(uint8 scancode, bool uppercase)
     {
         if(scancode > 58) // Longet than array
             return 0;

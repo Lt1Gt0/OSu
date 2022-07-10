@@ -4,22 +4,17 @@
 
 #include <paging/paging.h>
 
-class PageTableManager
+namespace PageTableManager
 {
-    public:
-        PageTable* PML4;
-
-        PageTableManager(PageTable* PML4Address);
-
-        /**
-         * @brief Map a physical memory address to a virtual memory address
-         * 
-         * @param virtualMemory 
-         * @param physicalMemory 
-         */
-        void MapMemory(void* virtualMemory, void* physicalMemory);
+    void PageTableManager(PageTable* PML4Address);
+    
+    /**
+     * @brief Map a physical memory address to a virtual memory address
+     * 
+     * @param virtualMemory 
+     * @param physicalMemory 
+     */
+    void MapMemory(void* virtualMemory, void* physicalMemory);
 };
-
-extern PageTableManager g_PageTableManager;
 
 #endif // _PAGE_TABLE_MANAGER_H

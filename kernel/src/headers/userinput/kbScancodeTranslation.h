@@ -1,8 +1,8 @@
 #pragma once
-#ifndef _KB_SCANCODE_TRANSLATION_H
-#define _KB_SCANCODE_TRANSLATION_H
+#ifndef _KB_SCANCODERANSLATION_H
+#define _KB_SCANCODERANSLATION_H
 
-#include <stdint.h>
+#include <types.h>
 
 namespace QWERTYKeyboard
 {
@@ -19,7 +19,7 @@ namespace QWERTYKeyboard
 	#define CursorDown	0x50
 
     extern const char ASCIITable[];
-    char Translate(uint8_t scancode, bool uppercase);
+    char Translate(uint8 scancode, bool uppercase);
 }
 
-#endif // _KB_SCANCODE_TRANSLATION_H
+#endif // _KB_SCANCODERANSLATION_H

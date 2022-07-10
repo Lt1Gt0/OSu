@@ -5,7 +5,7 @@ namespace PIC
 {
     void Remap()
     {
-        uint8_t a1, a2;
+        uint8 a1, a2;
    
         /* Save masks */
         a1 = inb(PIC1_DATA);

@@ -1,6 +1,5 @@
 #include <memory/heap.h>
 
-#include <stdint.h> // Might not need to include stdint in the future
 #include <paging/PageTableManager.h>
 #include <paging/PageFrameAllocator.h>
 
@@ -13,17 +12,17 @@ void InitializeHeap(void* heapAddress, size_t pageCount)
     void* pos = heapAddress;
 
     for (size_t i = 0; i < pageCount; i++) {
-        g_PageTableManager.MapMemory(pos, GlobalAllocator.RequestPage());
-        pos = (void*)((size_t)pos + 0x1000);
+        PageTableManager::MapMemory(pos, GlobalAllocator.RequestPage());
+        pos = (void*)((size_t)pos + PAGESIZE);
     }
 
-    size_t heapLength = pageCount * 0x1000;
+    size_t heapLength = pageCount * PAGESIZE;
     heapStart = heapAddress;
     heapEnd = (void*)((size_t)heapStart + heapLength);
     HeapSegHdr* startSeg = (HeapSegHdr*)heapAddress;
     startSeg->length = heapLength - sizeof(HeapSegHdr);
-    startSeg->next = NULL;
-    startSeg->last = NULL;
+    startSeg->next = nullptr;
+    startSeg->last = nullptr;
     startSeg->free = true;
     LastHdr = startSeg;
 }
@@ -36,7 +35,7 @@ void* malloc(size_t size)
     }
 
     if (size == 0) 
-        return NULL;
+        return nullptr;
 
     HeapSegHdr* currentSeg = (HeapSegHdr*)heapStart;
     while (true) {
@@ -46,16 +45,16 @@ void* malloc(size_t size)
             if (currentSeg->length > size) {
                 currentSeg->Split(size);
                 currentSeg->free = false;
-                return (void*)((uint64_t)currentSeg + sizeof(HeapSegHdr));
+                return (void*)((uint64)currentSeg + sizeof(HeapSegHdr));
             }
 
             if (currentSeg->length == size) {
                 currentSeg->free = false;
-                return (void*)((uint64_t)currentSeg + sizeof(HeapSegHdr));
+                return (void*)((uint64)currentSeg + sizeof(HeapSegHdr));
             }
         }
 
-        if (currentSeg->next == NULL) 
+        if (currentSeg->next == nullptr) 
             break;
 
         currentSeg = currentSeg->next;
@@ -68,12 +67,12 @@ void* malloc(size_t size)
 HeapSegHdr* HeapSegHdr::Split(size_t splitLength)
 {
     if (splitLength < 0x10) 
-        return NULL;
+        return nullptr;
 
-    int64_t splitSegLength = length - splitLength - (sizeof(HeapSegHdr));
+    int64 splitSegLength = length - splitLength - (sizeof(HeapSegHdr));
     
     if (splitSegLength < 0x10) 
-        return NULL;
+        return nullptr;
 
     HeapSegHdr* newSplitHdr = (HeapSegHdr*)((size_t)this + splitLength + sizeof(HeapSegHdr));
     next->last = newSplitHdr; // set the next segment's last segment to new segment
@@ -92,24 +91,24 @@ HeapSegHdr* HeapSegHdr::Split(size_t splitLength)
 
 void ExpandHeap(size_t length)
 {
-    if (length % 0x1000) {
-        length -= length % 0x1000;
-        length += 0x1000;
+    if (length % PAGESIZE) {
+        length -= length % PAGESIZE;
+        length += PAGESIZE;
     }
 
-    size_t pageCount = length / 0x1000;
+    size_t pageCount = length / PAGESIZE;
     HeapSegHdr* newSegment = (HeapSegHdr*)heapEnd;
 
     for (size_t i = 0; i < pageCount; i++) {
-        g_PageTableManager.MapMemory(heapEnd, GlobalAllocator.RequestPage());
-        heapEnd = (void*)((size_t)heapEnd + 0x1000);
+        PageTableManager::MapMemory(heapEnd, GlobalAllocator.RequestPage());
+        heapEnd = (void*)((size_t)heapEnd + PAGESIZE);
     }
 
     newSegment->free = true;
     newSegment->last = LastHdr;
     LastHdr->next = newSegment;
     LastHdr = newSegment;
-    newSegment->next = NULL;
+    newSegment->next = nullptr;
     newSegment->length = length - sizeof(HeapSegHdr);
     newSegment->CombineBackward();
 }
@@ -124,7 +123,7 @@ void free(void* address)
 
 void HeapSegHdr::CombineForward()
 {
-    if (next == NULL) 
+    if (next == nullptr) 
         return;
 
     if (!next->free)
@@ -133,7 +132,7 @@ void HeapSegHdr::CombineForward()
     if (next == LastHdr)
         LastHdr = this;
 
-    if (next->next != NULL)
+    if (next->next != nullptr)
         next->next->last = this;
 
     length += next->length + sizeof(HeapSegHdr);
@@ -143,6 +142,6 @@ void HeapSegHdr::CombineForward()
 
 void HeapSegHdr::CombineBackward()
 {
-    if (last != NULL && last->free)
+    if (last != nullptr && last->free)
         last->CombineForward();
 }

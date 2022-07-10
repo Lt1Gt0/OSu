@@ -1,10 +1,11 @@
 #include <userinput/keyboard.h>
+#include <BasicRenderer.h>
 
 bool isLeftShiftPressed;
 bool isRightShiftPressed;
 bool isNextSpecial = false;
 
-void HandlerKeyboardSpecial(uint8_t scancode)
+void HandlerKeyboardSpecial(uint8 scancode)
 {
 	auto charsizeY = GlobalRenderer.PSF1_Font->psf1_Header->charsize;
 	auto charsizeX = charsizeY >> 1;
@@ -37,10 +38,9 @@ void HandlerKeyboardSpecial(uint8_t scancode)
 	isNextSpecial = false;
 }
 
-void HandlerKeyboard(uint8_t scancode)
+void HandlerKeyboard(uint8 scancode)
 {
-	if (isNextSpecial)
-	{
+	if (isNextSpecial) {
 		HandlerKeyboardSpecial(scancode);
 		return;
 	}

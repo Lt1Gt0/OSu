@@ -5,15 +5,16 @@
 #include <memory/heap.h>
 #include <paging/PageFrameAllocator.h>
 #include <memory.h>
+#include <print.h>
 
 namespace AHCI 
 {
     PortType CheckPortType(HBAPort* port)
     {
-        uint32_t sataStatus = port->sataStatus;
+        uint32 sataStatus = port->sataStatus;
 
-        uint8_t interfacePowerManagment = (sataStatus >> 8) & 0b111;
-        uint8_t deviceDetection = sataStatus & 0b111;
+        uint8 interfacePowerManagment = (sataStatus >> 8) & 0b111;
+        uint8 deviceDetection = sataStatus & 0b111;
 
         if (deviceDetection != HBA_PORT_DEB_PRESENT)
             return PortType::None;
@@ -37,7 +38,7 @@ namespace AHCI
 
     void AHCIDriver::ProbePorts()
     {
-        uint32_t portsImplemented = ABAR->portsImplemented;
+        uint32 portsImplemented = ABAR->portsImplemented;
         for (int i = 0; i < 32; i++) {
             if (portsImplemented & (1 << i)) {
                 PortType portType = CheckPortType(&ABAR->ports[i]);
@@ -58,24 +59,24 @@ namespace AHCI
         StopCMD();
 
         void* newBase = GlobalAllocator.RequestPage();
-        hbaPort->commandListBase = (uint32_t)(uint64_t)newBase;
-        hbaPort->commandListBaseUpper = (uint32_t)((uint64_t)newBase >> 32);
+        hbaPort->commandListBase = (uint32)(uint64)newBase;
+        hbaPort->commandListBaseUpper = (uint32)((uint64)newBase >> 32);
         memset((void*)(hbaPort->commandListBase), 0, 1024);
 
         void* fisBase = GlobalAllocator.RequestPage();
-        hbaPort->fisBaseAddress = (uint32_t)(uint64_t)fisBase;
-        hbaPort->fisBaseAddressUpper = (uint32_t)((uint64_t)fisBase >> 32);
+        hbaPort->fisBaseAddress = (uint32)(uint64)fisBase;
+        hbaPort->fisBaseAddressUpper = (uint32)((uint64)fisBase >> 32);
         memset(fisBase, 0, 256);
 
-        HBACommandHeader* cmdHeader = (HBACommandHeader*)((uint64_t)hbaPort->commandListBase + ((uint64_t)hbaPort->commandListBaseUpper << 32));
+        HBACommandHeader* cmdHeader = (HBACommandHeader*)((uint64)hbaPort->commandListBase + ((uint64)hbaPort->commandListBaseUpper << 32));
 
         for (int i = 0; i < 32; i++) {
             cmdHeader[i].prdtLength = 8;
 
             void* cmdTableAddress = GlobalAllocator.RequestPage();
-            uint64_t address = (uint64_t)cmdTableAddress + (i << 8);
-            cmdHeader[i].commandTableBaseAddress = (uint32_t)(uint64_t)address;
-            cmdHeader[i].commandTableBaseAddressUpper = (uint32_t)((uint64_t)address >> 32);
+            uint64 address = (uint64)cmdTableAddress + (i << 8);
+            cmdHeader[i].commandTableBaseAddress = (uint32)(uint64)address;
+            cmdHeader[i].commandTableBaseAddressUpper = (uint32)((uint64)address >> 32);
             memset(cmdTableAddress, 0, 256);
         }
 
@@ -104,9 +105,9 @@ namespace AHCI
         }
     }
 
-    bool Port::Read(uint64_t sector, uint32_t sectorCount, void* buffer)
+    bool Port::Read(uint64 sector, uint32 sectorCount, void* buffer)
     {
-        uint64_t spin = 0;
+        uint64 spin = 0;
         while ((hbaPort->taskFileData & (ATA_DEV_BUSY | ATA_DEV_DRQ)) && spin < 1000000) {
             spin++;
         }
@@ -114,24 +115,24 @@ namespace AHCI
         if (spin == 1000000)
             return false;
     
-        uint32_t sectorL = (uint32_t)sector;
-        uint32_t sectorH = (uint32_t)(sector >> 32);
+        uint32 sectorL = (uint32)sector;
+        uint32 sectorH = (uint32)(sector >> 32);
 
         // Clear pending interrupt bits
-        hbaPort->interruptStatus  = (uint32_t)-1;
+        hbaPort->interruptStatus  = (uint32)-1;
 
         HBACommandHeader* cmdHeader = (HBACommandHeader*)hbaPort->commandListBase;
 
         // Command FIS Size
-        cmdHeader->commandFISLength = sizeof(FIS_REG_H2D) / sizeof(uint32_t);
+        cmdHeader->commandFISLength = sizeof(FIS_REG_H2D) / sizeof(uint32);
         cmdHeader->write = 0;
         cmdHeader->prdtLength = 1;
 
         HBACommandTable* commandTable = (HBACommandTable*)(cmdHeader->commandTableBaseAddress);
         memset(commandTable, 0, sizeof(HBACommandTable) + (cmdHeader->prdtLength-1) * sizeof(HBAPRDTEntry));
 
-        commandTable->prdtEntry[0].dataBaseAddress = (uint32_t)(uint64_t)buffer;
-        commandTable->prdtEntry[0].dataBaseAddressUpper = (uint32_t)((uint64_t)buffer >> 32);
+        commandTable->prdtEntry[0].dataBaseAddress = (uint32)(uint64)buffer;
+        commandTable->prdtEntry[0].dataBaseAddressUpper = (uint32)((uint64)buffer >> 32);
         commandTable->prdtEntry[0].byteCount = (sectorCount << 9) - 1; // 512 bytes per sector
         commandTable->prdtEntry[0].interruptOnCompletion = 1;
 
@@ -140,12 +141,12 @@ namespace AHCI
         cmdFIS->fisType = FIS_TYPE_REG_H2D;
         cmdFIS->commandControl = 1;
         cmdFIS->command = ATA_CMD_READ_DMA_EX;
-        cmdFIS->lba0 = (uint8_t)sectorL;
-        cmdFIS->lba1 = (uint8_t)(sectorL >> 8);
-        cmdFIS->lba2 = (uint8_t)(sectorL >> 16);
-        cmdFIS->lba3 = (uint8_t)sectorH;
-        cmdFIS->lba4 = (uint8_t)(sectorH >> 8);
-        cmdFIS->lba5 = (uint8_t)(sectorH >> 16);
+        cmdFIS->lba0 = (uint8)sectorL;
+        cmdFIS->lba1 = (uint8)(sectorL >> 8);
+        cmdFIS->lba2 = (uint8)(sectorL >> 16);
+        cmdFIS->lba3 = (uint8)sectorH;
+        cmdFIS->lba4 = (uint8)(sectorH >> 8);
+        cmdFIS->lba5 = (uint8)(sectorH >> 16);
 
         cmdFIS->deviceRegister = 1 << 6; // LBA Mode
 
@@ -168,29 +169,29 @@ namespace AHCI
     AHCIDriver::AHCIDriver(PCI::PCIDeviceHeader* pciBaseAddress)
     {
         this->PCIBaseAddress = pciBaseAddress;
-        GlobalRenderer.PrintLine("AHCI Driver instance initialized");
+        kprintf("AHCI Driver instance initialized\n");
 
         ABAR = (HBAMemory*)((PCI::PCIHeader0*)pciBaseAddress)->BAR5;
 
-        g_PageTableManager.MapMemory(ABAR, ABAR);
+        PageTableManager::MapMemory(ABAR, ABAR);
         ProbePorts();
 
-        for (int i = 0; i < portCount; i++) {
-            Port* port = ports[i];
+        // for (int i = 0; i < portCount; i++) {
+        //     Port* port = ports[i];
 
-            port->Configure();
+        //     port->Configure();
 
-            port->buffer = (uint8_t*)GlobalAllocator.RequestPage();
-            memset(port->buffer, 0, 0x1000);
+        //     port->buffer = (uint8*)GlobalAllocator.RequestPage();
+        //     memset(port->buffer, 0, 0x1000);
 
-            port->Read(0, 4, port->buffer);
+        //     port->Read(0, 4, port->buffer);
 
-            for (int t = 0; t < 1024; t++) {
-                GlobalRenderer.PutChar(port->buffer[t]);
-            }
+        //     for (int t = 0; t < 1024; t++) {
+        //         GlobalRenderer.PutChar(port->buffer[t]);
+        //     }
 
-            GlobalRenderer.Next();
-        }
+        //     GlobalRenderer.Next();
+        // }
     }
 
     AHCIDriver::~AHCIDriver()

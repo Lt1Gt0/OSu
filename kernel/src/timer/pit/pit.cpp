@@ -4,7 +4,7 @@
 namespace PIT
 {
     double TimeSinceBoot = 0;
-    uint16_t Divisor = 65535;
+    uint16 Divisor = 65535;
 
     void Sleepd(double seconds)
     {
@@ -14,12 +14,12 @@ namespace PIT
         }
     }
 
-    void Sleep(uint64_t milliseconds)
+    void Sleep(uint64 milliseconds)
     {
         Sleepd((double)milliseconds / 1000);
     }
 
-    void SetDivisor(uint16_t divisor)
+    void SetDivisor(uint16 divisor)
     {
         if (divisor < 100) 
             divisor = 100;
@@ -27,17 +27,17 @@ namespace PIT
         Divisor = divisor;
 
         // Set the divisor for channel 0
-        outb(CHANNEL_0, (uint8_t)(divisor & 0x00ff));           // Set low byte
+        outb(CHANNEL_0, (uint8)(divisor & 0x00ff));           // Set low byte
         io_wait();
-        outb(CHANNEL_0, (uint8_t)((divisor & 0xff00) >> 8));    // Set high byte
+        outb(CHANNEL_0, (uint8)((divisor & 0xff00) >> 8));    // Set high byte
     }
 
-    uint64_t GetFrequency()
+    uint64 GetFrequency()
     {
         return BaseFrequency / Divisor;
     }
 
-    void SetFrequency(uint64_t frequency)
+    void SetFrequency(uint64 frequency)
     {
         SetDivisor(BaseFrequency / frequency);
     }
@@ -55,7 +55,7 @@ namespace PIT
         asm("cli");
 
         // al = channel in bits 6 and 7, remaning bits clear
-        outb(0x43, (uint8_t)0b0000000);
+        outb(0x43, (uint8)0b0000000);
 
         count = inb(0x40);          // Low byte
         count |= inb(0x40) << 8;    // High byte

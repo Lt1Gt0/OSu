@@ -42,7 +42,7 @@ To my knowledge this should work outside of QEMU as in real hardware, I have yet
 
 ## Contributors
 
-- [ZMan2024](https://github.com/Zman2024) (USB-less behavior)
+- [ZMan2024](https://github.com/Zman2024) __(USB-less behavior)__
 
 ## Notable Features
 

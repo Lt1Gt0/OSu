@@ -2,7 +2,7 @@
 #ifndef _FRAME_BUFFER_H
 #define _FRAME_BUFFER_H
 
-#include <stddef.h>
+#include <types.h>
 
 struct FrameBuffer {
 	void* 			BaseAddress;

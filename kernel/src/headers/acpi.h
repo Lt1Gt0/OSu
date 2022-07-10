@@ -2,56 +2,54 @@
 #ifndef _ACPI_H
 #define _ACPI_H
 
-#include <stdint.h>
+#include <types.h>
 
 namespace ACPI
 {
     struct RSDP2 {
-        unsigned char   Signature[8];
-        uint8_t         Checksum;
-        uint8_t         OEMID[6];
-        uint8_t         Revision;
-        uint32_t        RSDTAddress;
-        uint32_t        Length;
-        uint64_t        XSDTAddress;
-        uint8_t         ExtendedChecksum;
-        uint8_t         Reserved[3];
+        unsigned char Signature[8];
+        uint8         Checksum;
+        uint8         OEMID[6];
+        uint8         Revision;
+        uint32        RSDTAddress;
+        uint32        Length;
+        uint64        XSDTAddress;
+        uint8         ExtendedChecksum;
+        uint8         Reserved[3];
     } __attribute__((packed));
 
     struct XSDTHeader {
-        unsigned char   Signature[4];
-        uint32_t        Length;
-        uint8_t         Revision;
-        uint8_t         Checksum;
-        uint8_t         OEMID[6];
-        uint8_t         OEMTableID[8];
-        uint32_t        OEMRevision;
-        uint32_t        CreatorID;
-        uint32_t        CreatorRevision;
+        unsigned char Signature[4];
+        uint32        Length;
+        uint8         Revision;
+        uint8         Checksum;
+        uint8         OEMID[6];
+        uint8         OEMTableID[8];
+        uint32        OEMRevision;
+        uint32        CreatorID;
+        uint32        CreatorRevision;
     } __attribute__((packed));
 
-    struct MCFGHeader {
-        XSDTHeader       Header;
-        uint64_t        Reserved;
+    struct MCFGHeader : XSDTHeader {
+        uint64      Reserved;
     } __attribute__((packed));
 
     struct DeviceConfig {
-        uint64_t        BaseAddress;
-        uint16_t        PCISegGroup;
-        uint8_t         StartBus;
-        uint8_t         EndBus;
-        uint32_t        Reserved;
+        uint64  BaseAddress;
+        uint16  PCISegGroup;
+        uint8   StartBus;
+        uint8   EndBus;
+        uint32  Reserved;
     } __attribute__((packed));
 
     struct RecordHeader {
-        uint8_t EntryType;
-        uint8_t Length;
+        uint8 EntryType;
+        uint8 Length;
     };
 
-    struct MADTHeader {
-        XSDTHeader  Header;
-        uint32_t    LocalAPICAddress;
-        uint32_t    Flags;
+    struct MADTHeader : XSDTHeader {
+        uint32  LocalAPICAddress;
+        uint32  Flags;
     } __attribute__((packed));
 
     void* FindTable(XSDTHeader* XSDTHeader, char* signature);

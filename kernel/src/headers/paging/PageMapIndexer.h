@@ -2,16 +2,16 @@
 #ifndef _PAGE_MAP_INDEXER_H
 #define _PAGE_MAP_INDEXER_H
 
-#include <stdint.h>
+#include <types.h>
 
 class PageMapIndexer
 {
     public:
-        PageMapIndexer(uint64_t virtualAddress);
-        uint64_t PDP_i;
-        uint64_t PD_i;
-        uint64_t PT_i;
-        uint64_t P_i;
+        PageMapIndexer(uint64 virtualAddress);
+        uint64 PDP_i;
+        uint64 PD_i;
+        uint64 PT_i;
+        uint64 P_i;
 };
 
 #endif // _PAGE_MAP_INDEXER_H

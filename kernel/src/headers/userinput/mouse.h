@@ -2,6 +2,7 @@
 #ifndef _MOUSE_H
 #define _MOUSE_H
 
+#include <types.h>
 #include <IO.h>
 #include <math.h>
 #include <BasicRenderer.h>
@@ -28,14 +29,14 @@ void InitPS2Mouse();
  *
  * @param data
  */
-void HandlePS2Mouse(uint8_t data);
+void HandlePS2Mouse(uint8 data);
 
 /**
  * @brief Process a PS2 mouse packet
  */
 void ProcessMousePacket();
 
-extern uint8_t MousePointer[];
+extern uint8 MousePointer[];
 extern Point MousePosition;
 
 #endif // _MOUSE_H

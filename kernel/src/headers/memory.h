@@ -2,10 +2,10 @@
 #ifndef _MEMORY_H
 #define _MEMORY_H
 
-#include <stdint.h>
+#include <types.h>
 #include <efiMemory.h>
 
-uint64_t GetMemorySize(EFI_MEMORY_DESCRIPTOR* mMap, uint64_t mMapEntries, uint64_t mMapDescSize);
-void memset(void* start, uint8_t value, uint64_t num);
+uint64 GetMemorySize(EFI_MEMORY_DESCRIPTOR* mMap, uint64 mMapEntries, uint64 mMapDescSize);
+void memset(void* start, uint8 value, uint64 num);
 
 #endif // _MEMORY_H

@@ -2,10 +2,10 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-#include <stdint.h>
+#include <types.h>
 #include <userinput/kbScancodeTranslation.h>
-#include <BasicRenderer.h>
-#include <globals.h>
-void HandlerKeyboard(uint8_t scancode);
+
+void HandlerKeyboardSpecial(uint8 scancode);
+void HandlerKeyboard(uint8 scancode);
 
 #endif // _KEYBOARD_H

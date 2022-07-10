@@ -2,7 +2,9 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
-#include <stdint.h>
+#define PAGESIZE 0x1000
+
+#include <types.h>
 
 enum PT_Flag {
     Present         = 0, // Page is present meaning the MMU can access it
@@ -19,15 +21,15 @@ enum PT_Flag {
 };
 
 struct PageDirectoryEntry {
-    uint64_t    Value;
-    void        SetFlag(PT_Flag flag, bool enabled);
-    bool        GetFlag(PT_Flag flag);
-    void        SetAddress(uint64_t address);
-    uint64_t    GetAddress();
+    uint64  Value;
+    void    SetFlag(PT_Flag flag, bool enabled);
+    bool    GetFlag(PT_Flag flag);
+    void    SetAddress(uint64 address);
+    uint64  GetAddress();
 };
 
 struct PageTable {
     PageDirectoryEntry entries [512];
-} __attribute__((aligned(0x1000))); // align the page table
+} __attribute__((aligned(PAGESIZE))); // align the page table
 
 #endif // _PAGING_H

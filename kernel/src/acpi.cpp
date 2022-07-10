@@ -8,7 +8,7 @@ namespace ACPI
         int entries = (XSDTHeader->Length - sizeof(ACPI::XSDTHeader)) / 8;
 
         for (int t = 0; t < entries; t++) {
-            ACPI::XSDTHeader* newXSDTHeader = (ACPI::XSDTHeader*)*(uint64_t*)((uint64_t)XSDTHeader + sizeof(ACPI::XSDTHeader) + (t * 8));
+            ACPI::XSDTHeader* newXSDTHeader = (ACPI::XSDTHeader*)*(uint64*)((uint64)XSDTHeader + sizeof(ACPI::XSDTHeader) + (t * 8));
             for (int i = 0; i < 4; i++) {
                 if (newXSDTHeader->Signature[i] != signature[i])
                     break;

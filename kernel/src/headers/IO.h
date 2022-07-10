@@ -2,10 +2,28 @@
 #ifndef _IO_H
 #define _IO_H
 
-#include <stdint.h>
+#include <types.h>
 
-void outb(uint16_t port, uint8_t value);
-uint8_t inb(uint16_t port);
-void io_wait();
+__attribute__((always_inline))
+static inline void outb(uint16 port, byte value)
+{
+    asm volatile ("outb %0, %1" : : "a"(value), "Nd"(port));
+}
+
+__attribute__((always_inline))
+static inline byte inb(uint16 port)
+{
+    byte returnVal;
+    asm volatile("inb %1, %0"
+        : "=a"(returnVal)
+        : "Nd"(port));
+    return returnVal;
+}
+
+__attribute__((always_inline))
+static inline void io_wait()
+{
+    asm volatile("outb %%al, $0x80" : : "a"(0));
+}
 
 #endif // _IO_H

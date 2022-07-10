@@ -7,20 +7,20 @@
 #include <interrupts/IDT.h>
 #include <interrupts/interrupts.h>
 #include <interrupts/PIC.h>
-#include <interrupts/LAPIC.h>
+#include <interrupts/APIC.h>
 #include <timer/pit/pit.h>
+#include <print.h>
 
-KernelInfo kernelInfo;
 void PrepareMemory(BootInfo* bootInfo)
 {
-    uint64_t mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize; // get the total map entries by dividing the size of the map by the descriptor size
+    uint64 mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize; // get the total map entries by dividing the size of the map by the descriptor size
 
     GlobalAllocator = PageFrameAllocator(); // Declare the global allocator to an instance of a PageFrameAllocator
     GlobalAllocator.ReadEFIMemoryMap(bootInfo->mMap, bootInfo->mMapSize, bootInfo->mMapDescSize);
 
     // Get the kernel size 
-    uint64_t kernelSize = (uint64_t)&_KernelEnd - (uint64_t)&_KernelStart;
-    uint64_t kernelPages = (uint64_t)kernelSize / 0x1000 + 1;
+    uint64 kernelSize = (uint64)&_KernelEnd - (uint64)&_KernelStart;
+    uint64 kernelPages = (uint64)kernelSize / 0x1000 + 1;
     
     // Lock the pages that correspond to kernel to prevent corrupting the kernel's code 
     GlobalAllocator.LockPages(&_KernelStart, kernelPages);
@@ -29,30 +29,28 @@ void PrepareMemory(BootInfo* bootInfo)
     PageTable* PML4 = (PageTable*)GlobalAllocator.RequestPage();
     memset(PML4, 0, 0x1000);
 
-    g_PageTableManager = PageTableManager(PML4);
+    PageTableManager::PageTableManager(PML4);
 
-    for (uint64_t t = 0; t < GetMemorySize(bootInfo->mMap, mMapEntries, bootInfo->mMapDescSize); t += 0x1000) {
-        g_PageTableManager.MapMemory((void*)t, (void*)t);
+    for (uint64 t = 0; t < GetMemorySize(bootInfo->mMap, mMapEntries, bootInfo->mMapDescSize); t += 0x1000) {
+        PageTableManager::MapMemory((void*)t, (void*)t);
     }  
 
     // Calculate the frame buffer size
-    uint64_t fbBase = (uint64_t)bootInfo->frameBuffer->BaseAddress;
-    uint64_t fbSize = (uint64_t)bootInfo->frameBuffer->BufferSize + 0x1000;
+    uint64 fbBase = (uint64)bootInfo->frameBuffer->BaseAddress;
+    uint64 fbSize = (uint64)bootInfo->frameBuffer->BufferSize + 0x1000;
     GlobalAllocator.LockPages((void*)fbBase, fbSize / 0x1000 + 1);
-    for (uint64_t t = fbBase; t < fbBase + fbSize; t += 0x1000) {
-        g_PageTableManager.MapMemory((void*)t, (void*)t); //Map the frame buffer pages to virtual memory
+    for (uint64 t = fbBase; t < fbBase + fbSize; t += 0x1000) {
+        PageTableManager::MapMemory((void*)t, (void*)t); //Map the frame buffer pages to virtual memory
     }
 
     asm("mov %0, %%cr3" : : "r" (PML4));
-
-    kernelInfo.pageTableManager = &g_PageTableManager;
 }
 
 IDTR idtr;
-void SetIDTGate(void* handler, uint8_t entryOffset, uint8_t type_attr, uint8_t selector)
+void SetIDTGate(void* handler, uint8 entryOffset, uint8 type_attr, uint8 selector)
 {
     IDTDescEntry* interrupt = (IDTDescEntry*)(idtr.Offset + entryOffset * sizeof(IDTDescEntry));
-    interrupt->SetOffset((uint64_t)handler);
+    interrupt->SetOffset((uint64)handler);
     interrupt->type_attr = type_attr;
     interrupt->selector = selector;
 }
@@ -60,7 +58,7 @@ void SetIDTGate(void* handler, uint8_t entryOffset, uint8_t type_attr, uint8_t s
 void PrepareInterrupts(BootInfo* bootInfo)
 {
     idtr.Limit = 0x0FFF;
-    idtr.Offset = (uint64_t)GlobalAllocator.RequestPage(); // allocate space for IDT
+    idtr.Offset = (uint64)GlobalAllocator.RequestPage(); // allocate space for IDT
     
     SetIDTGate((void*)PageFault_Handler, 0xE, IDT_TA_InterruptGate, 0x08);
     SetIDTGate((void*)DoubleFault_Handler, 0x8, IDT_TA_InterruptGate, 0x08);
@@ -72,22 +70,26 @@ void PrepareInterrupts(BootInfo* bootInfo)
     asm("lidt %0" : : "m" (idtr));  // Load IDT
 
     // PIC::Remap();
-    LAPIC::Enable(bootInfo);
+    // LAPIC::Enable(bootInfo);
 }
 
 void PrepareACPI(BootInfo* bootInfo)
 {
     ACPI::XSDTHeader* xsdt = (ACPI::XSDTHeader*)(bootInfo->rsdp->XSDTAddress);
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
+    ACPI::MADTHeader* madt = (ACPI::MADTHeader*)ACPI::FindTable(xsdt, (char*)"APIC");
 
-    GlobalRenderer.PrintLine("---- Enumerating PCI Devices ----");
+    if (madt)
+        APIC::ParseMADT(madt);
+
+    kprintf("---- Enumerating PCI Devices ----\n");
     PCI::EnumeratePCI(mcfg);
-    GlobalRenderer.PrintLine("---------------------------------");
+    kprintf("---------------------------------\n");
 }
 
 void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff = 0)
 {
-    uint32_t* pixel = (uint32_t*)bootinfo->osulogo;
+    uint32* pixel = (uint32*)bootinfo->osulogo;
     for (unsigned int y = 0; y < 256; y++) {
         for (unsigned int x = 0; x < 256; x++) {
             GlobalRenderer.PutPix(x + xOff, y + yOff, *pixel);
@@ -96,39 +98,37 @@ void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff 
     }
 }
 
-KernelInfo InitializeKernel(BootInfo* bootInfo)
+void InitializeKernel(BootInfo* bootInfo)
 {
     GlobalRenderer = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
-
+    
     GDTDescriptor gdtDescriptor;
     gdtDescriptor.Size = sizeof(GDT) - 1;
-    gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
+    gdtDescriptor.Offset = (uint64)&DefaultGDT;
     LoadGDT(&gdtDescriptor);
-    GlobalRenderer.PrintLine("Loaded GDT");
+    kprintf("Loaded GDT\n");
      
     PrepareMemory(bootInfo);
     memset(bootInfo->frameBuffer->BaseAddress, 0, bootInfo->frameBuffer->BufferSize);
     InitializeHeap((void*)0x0000100000000000, 0x10);
-    GlobalRenderer.PrintLine("Initialized Memory");
+    kprintf("Initialized Memory\n");
 
     PrepareInterrupts(bootInfo);
-    GlobalRenderer.PrintLine("Interrupts Prepared"); 
+    kprintf("Interrupts Prepared\n"); 
 
     InitPS2Mouse(); 
-    GlobalRenderer.PrintLine("Mouse Prepared"); 
+    kprintf("Mouse Prepared\n"); 
 
     PrepareACPI(bootInfo);
-    GlobalRenderer.PrintLine("ACPI Prepared"); 
+    kprintf("ACPI Prepared\n"); 
 
     // outb(PIC1_DATA, 0b11111000);
     // outb(PIC2_DATA, 0b11101111);
-    // GlobalRenderer.PrintLine("Set PIC Data"); 
+    // kprintf("Set PIC Data\n"); 
 
     PIT::SetDivisor(65535);
 
     DrawBootImage(bootInfo, 727, 727);
 
     asm("sti");
-
-    return kernelInfo;
 }

@@ -2,28 +2,28 @@
 #ifndef _IDT_H
 #define _IDT_H
 
-#include <stdint.h>
+#include <types.h>
 
 /*** Common Gates ***/
-#define IDT_TA_InterruptGate    0b10001110
 #define IDT_TA_CallGate         0b10001100
+#define IDT_TA_InterruptGate    0b10001110
 #define IDT_TA_TrapGate         0b10001111
 
 struct IDTDescEntry {
-    uint16_t  offset0;
-    uint16_t  selector;       // Segment selector
-    uint8_t   ist;            // Interrupt stack table offset
-    uint8_t   type_attr;
-    uint16_t  offset1;
-    uint32_t  offset2;
-    uint32_t  ignore;
-    void      SetOffset(uint64_t offset);
-    uint64_t  GetOffset();
+    uint16  offset0;
+    uint16  selector;       // Segment selector
+    uint8   ist;            // Interrupt stack table offset
+    uint8   type_attr;
+    uint16  offset1;
+    uint32  offset2;
+    uint32  ignore;
+    void    SetOffset(uint64 offset);
+    uint64  GetOffset();
 };
 
 struct IDTR {
-    uint16_t  Limit;
-    uint64_t  Offset;
+    uint16  Limit;
+    uint64  Offset;
 } __attribute__((packed));
 
 #endif // _IDT_H

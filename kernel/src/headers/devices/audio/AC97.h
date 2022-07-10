@@ -1,15 +1,15 @@
 #ifndef _AC97_H
 #define _AC97_H
 
-#include <stdint.h>
+#include <types.h>
 
 namespace AC97
 {
-    enum Revision : uint8_t {
+    enum Revision : uint8 {
 
     };
 
-    enum NativeAudioMixerRegister : uint8_t {
+    enum NativeAudioMixerRegister : uint8 {
         Reset                       = 0x00,
         SetMasterOutputVolume       = 0x02,
         SetAuxOutputVolume          = 0x04,
@@ -48,7 +48,7 @@ namespace AC97
         Line2DAC_ADCLevel           = 0x48,
         HandsetDAC_ADCLevel         = 0x4A,
         GPIOPinConfig               = 0x4C,
-        GPIOPinPolarity_Type        = 0x4E,
+        GPIOPinPolarityype          = 0x4E,
         GPIOPinSticky               = 0x50,
         GPIOPinWakeup               = 0x52,
         GPIOPinStatus               = 0x54,
@@ -57,7 +57,7 @@ namespace AC97
         VencodeID2                  = 0x7E
     };
 
-    enum NativeAudioBusChannel : uint8_t {
+    enum NativeAudioBusChannel : uint8 {
         PCMIn           = 0x00,
         PCMOut          = 0x10,
         MicrophoneIn    = 0x20,
@@ -66,7 +66,7 @@ namespace AC97
         SPDIF           = 0x60
     };
 
-    enum NativeAudioBusRegister : uint8_t {
+    enum NativeAudioBusRegister : uint8 {
         GlobalControl = 0x2C
     };
 

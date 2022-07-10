@@ -2,31 +2,34 @@
 #ifndef _BASIC_RENDERER_H
 #define _BASIC_RENDERER_H
 
+#define PRINT_SPECIAL_CHARACTERS 0
+
 #include <math.h>
 #include <FrameBuffer.h>
 #include <SimpleFonts.h>
-#include <stdint.h>
+#include <types.h>
 
 class BasicRenderer 
 {
     public:
-        BasicRenderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Font);
         Point CursorPosition;
         FrameBuffer* TargetFrameBuffer;
         PSF1_FONT* PSF1_Font;
         unsigned int Color;
         unsigned int ClearColor;
-        uint32_t MouseCursorBuffer[16 * 16];
-        uint32_t MouseCursorBufferAfter[16 * 16];
+        uint32 MouseCursorBuffer[16 * 16];
+        uint32 MouseCursorBufferAfter[16 * 16];
         bool MouseDrawn;
-    
+
+    public:
+        BasicRenderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Font);
+
         /**
          * @brief Print a string value to the render buffer
          * 
          * @param str char* string value
          */
         void Print(const char* str);
-        void PrintLine(const char* str);
 
         /**
          * @brief Print a single char value to the render buffer
@@ -51,14 +54,14 @@ class BasicRenderer
          * @brief Console new line
          */
         void Next();
-    
+
         /**
          * @brief Clear the mouse cursoe from the frame buffer
          *
          * @param mouseCursor Pointer to a mouse  
          * @param position Position of mouse
          */
-        void ClearMouseCursor(uint8_t* mouseCursor, Point position);
+        void ClearMouseCursor(uint8* mouseCursor, Point position);
 
         /**
          * @brief Get information about pixel on frame buffer
@@ -66,7 +69,7 @@ class BasicRenderer
          * @param x - Pixel X
          * @param y - Pixel Y
          */
-        uint32_t GetPix(uint32_t x, uint32_t y);
+        uint32 GetPix(uint32 x, uint32 y);
 
         /**
          * @brief place a pixel on framebuffer 
@@ -75,12 +78,12 @@ class BasicRenderer
          * @param y - Pixel Y
          * @param color - Pixel Color
          */
-        void PutPix(uint32_t x, uint32_t y, uint32_t color);
+        void PutPix(uint32 x, uint32 y, uint32 color);
 
         /**
          *
          */
-        void DrawOverlayMouseCursor(uint8_t* MouseCursor, Point position, uint32_t color);
+        void DrawOverlayMouseCursor(uint8* MouseCursor, Point position, uint32 color);
 };
 
 extern BasicRenderer GlobalRenderer;

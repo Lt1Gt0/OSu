@@ -1,26 +1,26 @@
 #include <BasicRenderer.h>
+#include <colors.h>
 
-BasicRenderer GlobalRenderer(NULL, NULL);
-
+BasicRenderer GlobalRenderer(nullptr, nullptr);
 BasicRenderer::BasicRenderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Font)
 {
     TargetFrameBuffer = targetFrameBuffer;
     PSF1_Font = psf1_Font;
-    Color = 0xffffffff; // Default frambuffer foreground color set to white
+    Color = Colors::TTY::WHITE; // Default frambuffer foreground color set to white
     CursorPosition = {0, 0}; // Default framebuffer cursor position set to x = 0, y = 0
 }
 
 void BasicRenderer::Clear()
 {
-    uint64_t fbBase = (uint64_t)TargetFrameBuffer->BaseAddress;
-    uint64_t bytesPerScanLine = TargetFrameBuffer->PixelsPerScanLine * 4; // Bytes in one row
-    uint64_t fbHeight = TargetFrameBuffer->Height;
-    uint64_t fbSize = TargetFrameBuffer->BufferSize;
+    uint64 fbBase = (uint64)TargetFrameBuffer->BaseAddress;
+    uint64 bytesPerScanLine = TargetFrameBuffer->PixelsPerScanLine * 4; // Bytes in one row
+    uint64 fbHeight = TargetFrameBuffer->Height;
+    uint64 fbSize = TargetFrameBuffer->BufferSize;
 
     /* Go through each row in the frame buffer and set each value to the specified color */
     for (int verticalScanLine = 0; verticalScanLine < fbHeight; verticalScanLine++) {
-        uint64_t pixPtrBase = fbBase + (bytesPerScanLine * verticalScanLine); // point to the first pixel in row
-        for (uint32_t* pixPtr = (uint32_t*)pixPtrBase; pixPtr < (uint32_t*)(pixPtrBase + bytesPerScanLine); pixPtr++) {
+        uint64 pixPtrBase = fbBase + (bytesPerScanLine * verticalScanLine); // point to the first pixel in row
+        for (uint32* pixPtr = (uint32*)pixPtrBase; pixPtr < (uint32*)(pixPtrBase + bytesPerScanLine); pixPtr++) {
             *pixPtr = ClearColor; // Set the color
         }
     }
@@ -64,8 +64,12 @@ void BasicRenderer::Next()
 
 void BasicRenderer::Print(const char* str)
 {
+    // Todo, exclude/include special character printing if desired
+
     char* chr = (char*)str;
     while (*chr != 0) {
+
+
         PutChar(*chr, CursorPosition.X, CursorPosition.Y);
         CursorPosition.X += 8;
 
@@ -76,17 +80,23 @@ void BasicRenderer::Print(const char* str)
 
         chr++;
     }
-    Color = 0xFFFFFFFF;
-}
 
-void BasicRenderer::PrintLine(const char* str)
-{
-    Print(str);
-    Next();
+    // Color = Colors::TTY::WHITE;
 }
 
 void BasicRenderer::PutChar(char chr, unsigned int xOff, unsigned int yOff)
 {
+    // Incase a font file has a glyph for a special character that doesn't
+    // need to be printed, just do whatever is needed for the special char
+    // and don't print it
+    switch (chr) {
+        case '\n':
+        {
+            GlobalRenderer.Next();
+            return;
+        }
+    }
+
     unsigned int* pixelPtr = (unsigned int*)TargetFrameBuffer->BaseAddress;
     char* fontPtr = (char*)PSF1_Font->glyphBuffer + (chr * PSF1_Font->psf1_Header->charsize); // Get base address of the glyph buffer + character * character size
     for (unsigned long y = yOff; y < yOff + 16; y++) { // 16 is added as the height of a character (glyph)
@@ -110,17 +120,17 @@ void BasicRenderer::PutChar(char chr)
     }
 }
 
-uint32_t BasicRenderer::GetPix(uint32_t x, uint32_t y)
+uint32 BasicRenderer::GetPix(uint32 x, uint32 y)
 {
-    return *(uint32_t*)((uint64_t)TargetFrameBuffer->BaseAddress + (x*4) + (y * TargetFrameBuffer->PixelsPerScanLine * 4));
+    return *(uint32*)((uint64)TargetFrameBuffer->BaseAddress + (x*4) + (y * TargetFrameBuffer->PixelsPerScanLine * 4));
 }
 
-void BasicRenderer::PutPix(uint32_t x, uint32_t y, uint32_t color)
+void BasicRenderer::PutPix(uint32 x, uint32 y, uint32 color)
 {
-    *(uint32_t*)((uint64_t)TargetFrameBuffer->BaseAddress + (x*4) + (y * TargetFrameBuffer->PixelsPerScanLine * 4)) = color;
+    *(uint32*)((uint64)TargetFrameBuffer->BaseAddress + (x*4) + (y * TargetFrameBuffer->PixelsPerScanLine * 4)) = color;
 }
 
-void BasicRenderer::ClearMouseCursor(uint8_t *mouseCursor, Point position)
+void BasicRenderer::ClearMouseCursor(uint8 *mouseCursor, Point position)
 {
     if (!MouseDrawn)
         return;
@@ -149,7 +159,7 @@ void BasicRenderer::ClearMouseCursor(uint8_t *mouseCursor, Point position)
     }
 }
 
-void BasicRenderer::DrawOverlayMouseCursor(uint8_t *mouseCursor, Point position, uint32_t color)
+void BasicRenderer::DrawOverlayMouseCursor(uint8 *mouseCursor, Point position, uint32 color)
 {
     int xMax = 16;
     int yMax = 16;

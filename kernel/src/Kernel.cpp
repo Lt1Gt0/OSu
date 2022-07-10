@@ -1,11 +1,14 @@
 #include <kernelUtil.h>
+#include <colors.h>
+#include <print.h>
 
 extern "C" void _start(BootInfo *bootInfo)
-{
-    KernelInfo kernelInfo = InitializeKernel(bootInfo);
-    PageTableManager* pageTableManager = kernelInfo.pageTableManager;
+{ 
+    InitializeKernel(bootInfo);
 
-    GlobalRenderer.PrintLine("Kernel Initialized Successfully");
+    GlobalRenderer.Color = Colors::TTY::OSU;
+    kprintf("Kernel Initialize Sucessfully\n");
+    GlobalRenderer.Color = Colors::TTY::WHITE;
 
     while (true) {
         asm("hlt");

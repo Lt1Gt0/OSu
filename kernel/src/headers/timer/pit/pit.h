@@ -2,7 +2,7 @@
 #ifndef _PIT_H
 #define _PIT_H
 
-#include <stdint.h>
+#include <types.h>
 
 namespace PIT
 {
@@ -12,14 +12,14 @@ namespace PIT
     #define MODE_COMMAND_REG    0x43
 
     extern double TimeSinceBoot;
-    const uint64_t BaseFrequency = 1193182;
+    const uint64 BaseFrequency = 1193182;
 
     void Sleepd(double seconds);
-    void Sleep(uint64_t milliseconds);
+    void Sleep(uint64 milliseconds);
 
-    void SetDivisor(uint16_t divisor);
-    uint64_t GetFrequency();
-    void SetFrequecy(uint64_t frequency);
+    void SetDivisor(uint16 divisor);
+    uint64 GetFrequency();
+    void SetFrequecy(uint64 frequency);
     void Tick();
     unsigned ReadCount();
 }

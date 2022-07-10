@@ -1,30 +1,31 @@
 #include <interrupts/LAPIC.h>
 
+#include <interrupts/APIC.h>
+#include <interrupts/APICEntries.h>
 #include <acpi.h>
 #include <paging/PageFrameAllocator.h>
 #include <BasicRenderer.h>
 #include <interrupts/PIC.h>
-#include <cstr.h>
-#include <stdint.h>
 
-namespace LAPIC
+namespace APIC
 {
-    void Enable(BootInfo* bootInfo)
+    namespace LAPIC
     {
-        // PIC::Disable();
-        ParseMADT(bootInfo->rsdp);
+        void Enable()
+        {
+            if (lapic)
+                lapic->SIVR = 0x1FF;
+        }
 
-        // Map
+        void Disable()
+        {
+            if (lapic)
+                lapic->SIVR = 0;
+        }
+
+        void Initialize()
+        {
+            PageTableManager::MapMemory(lapic, lapic);
+        }
     }
-    
-    void ParseMADT(ACPI::RSDP2* rsdp)
-    {
-        ACPI::XSDTHeader* xsdt = (ACPI::XSDTHeader*)(rsdp->XSDTAddress);
-        ACPI::MADTHeader* madt = (ACPI::MADTHeader*)ACPI::FindTable(xsdt, (char*)"APIC");
-
-        GlobalRenderer.Print("MADT Local APIC Address: 0x");
-        GlobalRenderer.PrintLine(to_hstring(madt->LocalAPICAddress));
-    }
-
-
 }

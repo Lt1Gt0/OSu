@@ -1,6 +1,6 @@
 #include <userinput/mouse.h>
 
-uint8_t MousePointer[] = {
+uint8 MousePointer[] = {
     0b10000000, 0b00000000, 
     0b11000000, 0b00000000,
     0b11100000, 0b00000000,
@@ -21,7 +21,7 @@ uint8_t MousePointer[] = {
 
 void MouseWait()
 {
-    uint64_t timeout = 100000;
+    uint64 timeout = 100000;
     while (timeout--) {
         //Check if mouse is avaliable to be read
         if ((inb(0x64) & 0b10) == 0) 
@@ -31,7 +31,7 @@ void MouseWait()
 
 void MouseWaitInput()
 {
-    uint64_t timeout = 100000;
+    uint64 timeout = 100000;
     while (timeout--) {
         //Check if mouse is avaliable to be read
         if (inb(0x64) & 0b1)
@@ -39,7 +39,7 @@ void MouseWaitInput()
     }
 }
 
-void MouseWrite(uint8_t value)
+void MouseWrite(uint8 value)
 {
     MouseWait();
     outb(0x64, 0xD4);
@@ -47,7 +47,7 @@ void MouseWrite(uint8_t value)
     outb(0x60, value);
 }
 
-uint8_t MouseRead()
+uint8 MouseRead()
 {
     MouseWaitInput();
     return inb(0x60);
@@ -60,13 +60,13 @@ uint8_t MouseRead()
  * of the mouse respectively
  */
 
-uint8_t MouseCycle = 0;
-uint8_t MousePacket[4];
+uint8 MouseCycle = 0;
+uint8 MousePacket[4];
 bool MousePacketReady = false;
 Point MousePosition;
 Point MousePositionOld;
 
-void HandlePS2Mouse(uint8_t data)
+void HandlePS2Mouse(uint8 data)
 {
     ProcessMousePacket();
     static bool skip = true;
@@ -162,7 +162,7 @@ void InitPS2Mouse()
     MouseWait();
     outb(0x64, 0x20); //tells the keyboard controller that we want to send a command to the mouse
     MouseWaitInput();
-    uint8_t status = inb(0x60);
+    byte status = inb(0x60);
     status |= 0b10;
     MouseWait();
     outb(0x64, 0x60);
