@@ -20,7 +20,7 @@ namespace AHCI
     #define SATA_SIG_SEMB           0xC33C0101
     #define SATA_SIG_ATAPI          0xEB140101
 
-    #define HBA_PxIS_TFES             (1 << 30)
+    #define HBA_PxIS_TFES           (1 << 30)
     #define ATA_DEV_DRQ             0x08
     #define ATA_CMD_READ_DMA_EX     0x25
     #define ATA_DEV_BUSY            0x80
@@ -33,7 +33,7 @@ namespace AHCI
         SATAPI,
     };
 
-    enum FIS_TYPE {
+    enum FIS_TYPE : uint8 {
         FIS_TYPE_REG_H2D    = 0x27, // Register FIS - host to device
         FIS_TYPE_REG_D2H    = 0x34, // Register FIS - device to host
         FIS_TYPE_DMA_ACT    = 0x39, // DMA activate FIS - device to host

@@ -5,7 +5,14 @@
 kernel/lib/
 gnu-efi/x86_64/lib/
 
-.vs		
+.vs
+.vscode
 .user_misc 	
 /.vs
 /kernel/clean
+
+# vim project information
+compile_commands.json
+.ccls
+.vimrc
+.cache/

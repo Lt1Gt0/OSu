@@ -21,7 +21,7 @@ void PrepareMemory(BootInfo* bootInfo)
     // Get the kernel size 
     uint64 kernelSize = (uint64)&_KernelEnd - (uint64)&_KernelStart;
     uint64 kernelPages = (uint64)kernelSize / 0x1000 + 1;
-    
+
     // Lock the pages that correspond to kernel to prevent corrupting the kernel's code 
     GlobalAllocator.LockPages(&_KernelStart, kernelPages);
 
@@ -69,7 +69,7 @@ void PrepareInterrupts(BootInfo* bootInfo)
 
     asm("lidt %0" : : "m" (idtr));  // Load IDT
 
-    // PIC::Remap();
+    PIC::Remap();
     // LAPIC::Enable(bootInfo);
 }
 
@@ -79,8 +79,12 @@ void PrepareACPI(BootInfo* bootInfo)
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
     ACPI::MADTHeader* madt = (ACPI::MADTHeader*)ACPI::FindTable(xsdt, (char*)"APIC");
 
-    if (madt)
+    if (madt) {
+        kprintf("Parsing MADT\n");
         APIC::ParseMADT(madt);
+    } else {
+        kprintf("MADT not found\n");
+    }
 
     kprintf("---- Enumerating PCI Devices ----\n");
     PCI::EnumeratePCI(mcfg);
@@ -100,6 +104,8 @@ void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff 
 
 void InitializeKernel(BootInfo* bootInfo)
 {
+    asm("cli");
+
     GlobalRenderer = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
     
     GDTDescriptor gdtDescriptor;
@@ -122,9 +128,9 @@ void InitializeKernel(BootInfo* bootInfo)
     PrepareACPI(bootInfo);
     kprintf("ACPI Prepared\n"); 
 
-    // outb(PIC1_DATA, 0b11111000);
-    // outb(PIC2_DATA, 0b11101111);
-    // kprintf("Set PIC Data\n"); 
+    outb(PIC1_DATA, 0b11111000);
+    outb(PIC2_DATA, 0b11101111);
+    kprintf("Set PIC Data\n"); 
 
     PIT::SetDivisor(65535);
 

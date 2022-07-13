@@ -6,6 +6,8 @@
 
 namespace ACPI
 {
+    constexpr uint32 MADT_PCAT_COMPAT_FLAG = (1 << 0);
+
     struct RSDP2 {
         unsigned char Signature[8];
         uint8         Checksum;

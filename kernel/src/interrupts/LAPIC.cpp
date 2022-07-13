@@ -23,9 +23,6 @@ namespace APIC
                 lapic->SIVR = 0;
         }
 
-        void Initialize()
-        {
-            PageTableManager::MapMemory(lapic, lapic);
-        }
+
     }
 }

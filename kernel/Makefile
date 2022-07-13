@@ -1,4 +1,3 @@
-
 OSNAME = OSu
 
 GNUEFI = ../gnu-efi

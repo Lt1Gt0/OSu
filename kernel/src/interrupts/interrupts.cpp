@@ -47,7 +47,7 @@ __attribute__((interrupt)) void PageFault_Handler(interrupt_frame* frame)
     while(true);
 }
 
-/* exception is unhandler or
+/* exception is unhandled or
  * exception occurs when the cpu is trying to call an exception handler */
 __attribute__((interrupt)) void DoubleFault_Handler(interrupt_frame* frame)
 {

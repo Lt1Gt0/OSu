@@ -2,8 +2,6 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
-#define PAGESIZE 0x1000
-
 #include <types.h>
 
 enum PT_Flag {
@@ -30,6 +28,6 @@ struct PageDirectoryEntry {
 
 struct PageTable {
     PageDirectoryEntry entries [512];
-} __attribute__((aligned(PAGESIZE))); // align the page table
+} __attribute__((aligned(PAGE_SIZE))); // align the page table
 
 #endif // _PAGING_H

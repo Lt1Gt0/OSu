@@ -9,6 +9,9 @@
 // https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf#G10.1360148 (Record structures P.153)
 namespace APIC
 {
+    constexpr uint32 LAPIC_PROC_ENABLED_FLAG = (1 << 0);
+    constexpr uint32 LAPIC_ONLINE_CAPABLE_FLAG = (1 << 1);
+
     namespace Record
     {
         struct Header {
@@ -20,14 +23,14 @@ namespace APIC
         struct ProcLAPIC : Header {
             uint8   ProcessorID;
             uint8   ID;
-            uint32  Flags;
+            uint32  Flags; // 0 = proc enabled, 1 = online capable
         } PACKED;
 
         // Type 1
         struct IOAPIC : Header {
             uint8   ID;
             uint8   RESV;
-            uint8   Address;
+            uint32  Address;
             uint32  GlobalSystemInterruptBase;
         } PACKED;
 
