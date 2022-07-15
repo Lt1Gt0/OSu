@@ -15,7 +15,7 @@ namespace APIC
     Record::ProcLAPIC* lapicRecords[0xFF];
     
     Record::IOAPIC* ioapicRecords[0xFF];
-//    IOAPIC ioapics[0xFF];
+	IOAPIC ioapics[0xFF];
     uint16 ioapicCount;
 
     Record::IOAPIC_ISO* ioapicISORecords[0xFF];
@@ -108,15 +108,8 @@ namespace APIC
 
     void RegisterIOAPIC(uint8 id, uint32 addr, uint32 gsiBase)
     {
-        // if (ioapics[id].used) {
-        //     kprintf("IOAPIC %i0 previously registered\n", id);
-        //     return;
-        // }
-
-//        IOAPIC ioapic = IOAPIC(addr, id, gsiBase);
-//        ioapics[id] = ioapic;
-
-        // ioapics[id].ID = id;
+		IOAPIC* ioapic = nullptr;	
+		// ioapics[id].ID = id;
         // ioapics[id].used = 1;
         // ioapics[id].gsiBase = gsiBase;
         // ioapics[id].physAddr = addr;

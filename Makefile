@@ -7,8 +7,8 @@ kernelObj:
 
 bootloaderObj:
 	@echo ~~~~~ GENERATING BOOTLOADER ~~~~~
-	make -C gnu-efi/
-	make bootloader -C gnu-efi/
+	make -C boot/
+	make bootloader -C boot/
 
 run: all
 	make run -C kernel/
@@ -24,6 +24,6 @@ clean_kernel:
 
 clean_bootloader:
 	@echo ~~~~~ CLEANING BOOTLOADER ~~~~~
-	make clean -C gnu-efi/
+	make clean -C boot/ 
 
 .PHONY: all run

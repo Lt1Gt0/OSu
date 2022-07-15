@@ -6,6 +6,13 @@
 
 namespace ACPI
 {
+	constexpr char* RSDP_SIG = (char*)"RSD PTR ";
+	constexpr char* HPET_SIG = (char*)"HPET";
+	constexpr char* MADT_SIG = (char*)"MADT";
+	constexpr char* MCFG_SIG = (char*)"MCFG";
+	constexpr char* RSDT_SIG = (char*)"RSDT";
+	constexpr char* XSDT_SIG = (char*)"XSDT";
+
     constexpr uint32 MADT_PCAT_COMPAT_FLAG = (1 << 0);
 
     struct RSDP2 {

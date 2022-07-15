@@ -7,18 +7,21 @@
 
 namespace APIC
 {
-    IOAPIC::IOAPIC(size_t physRegs, size_t apicID, size_t gsib)
-    {
-        // this->m_virtualAddr
+	#define IOREGSEL 0x00
+	#define IOREGWIN 0x10
 
-        this->m_virtualAddr += this->m_physRegs % PAGE_SIZE;
+    //IOAPIC::IOAPIC(size_t physRegs, size_t apicID, size_t gsib)
+    //{
+        //// this->m_virtualAddr
 
-        this->m_apicID = ((read(IOAPICID) >> 24)) & 0xF0;
-        this->m_apicVersion = read(IOAPICVER);
+        //this->m_virtualAddr += this->m_physRegs % PAGE_SIZE;
 
-        this->m_redirectionEntryCount = (read(IOAPICVER) >> 16) + 1;
-        this->m_globalInterruptBase = gsib;
-    }
+        //this->m_apicID = ((read(IOAPICID) >> 24)) & 0xF0;
+        //this->m_apicVersion = read(IOAPICVER);
+
+        //this->m_redirectionEntryCount = (read(IOAPICVER) >> 16) + 1;
+        //this->m_globalInterruptBase = gsib;
+    //}
 
     uint8 IOAPIC::id()
     {

@@ -4,6 +4,8 @@
 
 kernel/lib/
 gnu-efi/x86_64/lib/
+gnu-efi/x86_64/gnuefi/*.o
+gnu-efi/x86_64/bootloader/*.efi
 
 .vs
 .vscode
@@ -14,5 +16,6 @@ gnu-efi/x86_64/lib/
 # vim project information
 compile_commands.json
 .ccls
+.ccls-cache/
 .vimrc
 .cache/

@@ -24,6 +24,6 @@ struct IDTDescEntry {
 struct IDTR {
     uint16  Limit;
     uint64  Offset;
-} __attribute__((packed));
+} PACKED;
 
 #endif // _IDT_H

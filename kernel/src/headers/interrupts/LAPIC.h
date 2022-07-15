@@ -43,7 +43,7 @@ namespace APIC
             uint16 RemoteIRR          : 1;
             uint16 TriggerMode        : 1;
             uint16 InterruptMask      : 1;
-        } __attribute__((packed));
+        } PACKED;
 
         struct LVT {
             LVTEntry Timer;

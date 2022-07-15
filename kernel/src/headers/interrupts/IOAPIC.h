@@ -12,7 +12,7 @@ namespace APIC
     #define IOAPICARB       0x02
     #define IOAPICREDTBL(n) (0x10 + 2 * n) // Lower 32-bits (add 1 for upper 32 bits)
 
-    class IOAPIC
+    struct IOAPIC
     {
         public:
             enum DeliveryMode {
@@ -45,7 +45,7 @@ namespace APIC
                 };
             };
 
-            IOAPIC(size_t physRegs, size_t apicID, size_t gsib);
+            //IOAPIC(size_t physRegs, size_t apicID, size_t gsib);
             uint8 id();
             uint8 version();
             uint8 redirectionEntries();

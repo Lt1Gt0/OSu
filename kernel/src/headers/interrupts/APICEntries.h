@@ -4,8 +4,6 @@
 
 #include <types.h>
 
-#define PACKED __attribute__((packed));
-
 // https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf#G10.1360148 (Record structures P.153)
 namespace APIC
 {

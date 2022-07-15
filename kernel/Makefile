@@ -1,6 +1,6 @@
 OSNAME = OSu
 
-GNUEFI = ../gnu-efi
+GNUEFI = ../boot
 OVMFDIR = ../OVMFbin
 LDS = kernel.ld
 CC = gcc
