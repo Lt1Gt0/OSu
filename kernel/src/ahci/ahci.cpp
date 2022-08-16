@@ -1,6 +1,6 @@
 #include <ahci/ahci.h>
 
-#include <BasicRenderer.h>
+#include <renderer.h>
 #include <paging/PageTableManager.h>
 #include <memory/heap.h>
 #include <paging/PageFrameAllocator.h>

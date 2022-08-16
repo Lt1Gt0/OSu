@@ -1,6 +1,6 @@
 #include <interrupts/APIC.h>
 
-#include <BasicRenderer.h>
+#include <renderer.h>
 #include <interrupts/APICEntries.h>
 #include <interrupts/LAPIC.h>
 #include <interrupts/IOAPIC.h>

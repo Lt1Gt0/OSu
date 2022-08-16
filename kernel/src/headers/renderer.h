@@ -9,7 +9,7 @@
 #include <SimpleFonts.h>
 #include <types.h>
 
-class BasicRenderer 
+class Renderer 
 {
     public:
         Point CursorPosition;
@@ -22,7 +22,7 @@ class BasicRenderer
         bool MouseDrawn;
 
     public:
-        BasicRenderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Font);
+        Renderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Font);
 
         /**
          * @brief Print a string value to the render buffer
@@ -86,6 +86,6 @@ class BasicRenderer
         void DrawOverlayMouseCursor(uint8* MouseCursor, Point position, uint32 color);
 };
 
-extern BasicRenderer GlobalRenderer;
+extern Renderer GlobalRenderer;
 
 #endif // _BASIC_RENDERER_H

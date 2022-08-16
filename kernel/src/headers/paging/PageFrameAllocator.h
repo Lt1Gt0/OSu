@@ -4,7 +4,7 @@
 
 #include <efiMemory.h>
 #include <types.h>
-#include <Bitmap.h>
+#include <bitmap.h>
 
 class PageFrameAllocator
 {

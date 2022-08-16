@@ -1,7 +1,9 @@
 #include "bootloader/file.h"
 #include "bootloader/video.h"
+#include "bootloader/string.h"
+#include <elf.h>
 
-UINTN GetFileSize(EFI_FILE_HANDLE FileHandle)
+UINTN GetFileSize(IN EFI_FILE_HANDLE FileHandle)
 {
 	/*File Information structure */
 	UINTN size;
@@ -15,15 +17,21 @@ UINTN GetFileSize(EFI_FILE_HANDLE FileHandle)
 	return size; 
 }
 
-EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
+EFI_FILE* LoadFile
+(
+		IN	EFI_FILE*			Directory, 
+		IN	CHAR16*				Path, 
+		IN	EFI_HANDLE			ImageHandle, 
+		IN	EFI_SYSTEM_TABLE*	SystemTable
+)
 {
 	EFI_FILE* LoadedFile;
 
 	EFI_LOADED_IMAGE_PROTOCOL* LoadedImage;
-	SystemTable->BootServices->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (void**)&LoadedImage);
+	SystemTable->BootServices->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID**)&LoadedImage);
 
 	EFI_SIMPLE_FILE_SYSTEM_PROTOCOL* FileSystem;
-	SystemTable->BootServices->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (void**)&FileSystem); //Get file system where booted from
+	SystemTable->BootServices->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID**)&FileSystem); //Get file system where booted from
 
 	//If the directory is null set the directory to the root of the file system
 	if (Directory == NULL)
@@ -36,7 +44,13 @@ EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EF
 	return LoadedFile;
 }
 
-PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
+PSF1_FONT* LoadPSF1Font
+(
+		IN	EFI_FILE*			Directory,
+	   	IN	CHAR16*				Path, 
+		IN	EFI_HANDLE			ImageHandle, 
+		IN	EFI_SYSTEM_TABLE*	SystemTable
+)
 {
 	EFI_FILE* font = LoadFile(Directory, Path, ImageHandle, SystemTable);
 	if (font == NULL)
@@ -44,7 +58,7 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 
 	PSF1_HEADER* fontHeader;
 	UINTN psf1Headersize = sizeof(PSF1_HEADER);
-	SystemTable->BootServices->AllocatePool(EfiLoaderData, psf1Headersize, (void**)&fontHeader);
+	SystemTable->BootServices->AllocatePool(EfiLoaderData, psf1Headersize, (VOID**)&fontHeader);
 	font->Read(font, &psf1Headersize, fontHeader); // Load header into memory
 
 	// Check for incorrect font format
@@ -57,36 +71,42 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 		glyphBufferSize = fontHeader->charsize * 512;
 	
 	// Define glyph buffer and read information into it
-	void* glyphBuffer;
+	VOID* glyphBuffer;
 	
 	{
 		font->SetPosition(font, psf1Headersize);
-		SystemTable->BootServices->AllocatePool(EfiLoaderData, glyphBufferSize, (void**)&glyphBuffer); // Allocate memory for the glyph buffer
+		SystemTable->BootServices->AllocatePool(EfiLoaderData, glyphBufferSize, (VOID**)&glyphBuffer); // Allocate memory for the glyph buffer
 		font->Read(font, &glyphBufferSize, glyphBuffer); // Read data into memory
 	}
 
 	PSF1_FONT* finishedFont;
-	SystemTable->BootServices->AllocatePool(EfiLoaderData, sizeof(PSF1_FONT), (void**)&finishedFont);
+	SystemTable->BootServices->AllocatePool(EfiLoaderData, sizeof(PSF1_FONT), (VOID**)&finishedFont);
 	finishedFont->psf1_Header = fontHeader;
 	finishedFont->glyphBuffer = glyphBuffer;
 	return finishedFont;
 }
 
-EFI_FILE_HANDLE GetVolume(EFI_HANDLE image)
+EFI_FILE_HANDLE GetVolume(IN EFI_HANDLE image)
 {
 	// Instead of using IOVolume this function will just use LibOpenRoot instead
 
 	EFI_LOADED_IMAGE* loadedImage = NULL;
 	EFI_GUID lipGUID = EFI_LOADED_IMAGE_PROTOCOL_GUID;
 
-	uefi_call_wrapper(BS->HandleProtocol, 3, image, &lipGUID, (void**)&loadedImage);
+	uefi_call_wrapper(BS->HandleProtocol, 3, image, &lipGUID, (VOID**)&loadedImage);
 
 	// Get volume handle
 	return LibOpenRoot(loadedImage->DeviceHandle);
 
 }
 
-void* LoadRawImageFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
+VOID* LoadRawImageFile
+(
+		IN	EFI_FILE*			Directory, 
+		IN	CHAR16*				Path, 
+		IN	EFI_HANDLE			ImageHandle, 
+		IN	EFI_SYSTEM_TABLE*	SystemTable
+)
 {
 	EFI_FILE_HANDLE ImageVolume = GetVolume(ImageHandle);
 	EFI_FILE_HANDLE fileHandle;
@@ -94,9 +114,37 @@ void* LoadRawImageFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle
 	uefi_call_wrapper(ImageVolume->Open, 5, ImageVolume, &fileHandle, Path, EFI_FILE_MODE_READ, EFI_FILE_READ_ONLY | EFI_FILE_HIDDEN | EFI_FILE_SYSTEM);
 
 	UINTN size = GetFileSize(fileHandle);
-	void* contents = AllocateZeroPool(size);
+	VOID* contents = AllocateZeroPool(size);
 
 	uefi_call_wrapper(fileHandle->Read, 3, fileHandle, &size, contents);
 
 	return contents;
 }
+
+BOOLEAN ELF_VerifyHeader(IN Elf64_Ehdr* elfHeader)
+{
+	if (memcmp(&elfHeader->e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0	||
+		elfHeader->e_ident[EI_CLASS] != ELFCLASS64					||
+		elfHeader->e_ident[EI_DATA] != ELFDATA2LSB					||
+		elfHeader->e_type != ET_EXEC								||
+		elfHeader->e_machine != EM_X86_64							||
+		elfHeader->e_version != EV_CURRENT) {
+	
+		Print(L"Invalid ELF Header\n\r");
+		return FALSE;	
+	} else {
+		Print(L"ELF Header verified\n\r");
+	}
+
+	return TRUE;
+}
+
+/*
+UINTN ELF_GetTotalFileSize
+(
+	IN Elf64_Ehdr* elfHeader
+)
+{
+
+}
+*/

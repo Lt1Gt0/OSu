@@ -19,12 +19,12 @@ struct GDTEntry {
 } PACKED;
 
 struct GDT {
-    GDTEntry  Null;          // 0x00
-    GDTEntry  KernelCode;    // 0x08
-    GDTEntry  KernelData;    // 0x10
-    GDTEntry  UserNull;      
-    GDTEntry  UserCode;
-    GDTEntry  UserData;
+    GDTEntry Null;          // 0x00
+    GDTEntry KernelCode;    // 0x08
+    GDTEntry KernelData;    // 0x10
+    GDTEntry UserNull;      
+    GDTEntry UserCode;
+    GDTEntry UserData;
 } PACKED __attribute__((aligned(0x1000)));
 
 extern "C" GDT DefaultGDT;

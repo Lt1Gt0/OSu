@@ -1,10 +1,23 @@
+#pragma once
 #ifndef _BOOT_STRING_H
 #define _BOOT_STRING_H
 
 #include <efi.h>
 #include "common.h"
+#include "efibind.h"
 
-int memcmp(const void* aptr, const void* bptr, size_t n);
-UINTN strcmp(CHAR8* a, CHAR8* b, UINTN len);
+UINTN memcmp
+(
+		IN const VOID*	aptr,
+	   	IN const VOID*	bptr,
+	   	IN size_t		n
+);
+
+UINTN strcmp
+(
+		IN CHAR8*	a,
+	   	IN CHAR8*	b,
+	   	IN UINTN	len
+);
 
 #endif // _BOOT_STRING_H

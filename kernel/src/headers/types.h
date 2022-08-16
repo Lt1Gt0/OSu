@@ -2,8 +2,8 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
-#define PACKED __attribute__((packed))
-#define UNUSED __attribute__((unused)) 
+#define PACKED		__attribute__((packed))
+#define UNUSED		__attribute__((unused)) 
 
 #define PAGE_SIZE 0x1000
 

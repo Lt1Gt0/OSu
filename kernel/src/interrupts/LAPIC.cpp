@@ -4,7 +4,7 @@
 #include <interrupts/APICEntries.h>
 #include <acpi.h>
 #include <paging/PageFrameAllocator.h>
-#include <BasicRenderer.h>
+#include <renderer.h>
 #include <interrupts/PIC.h>
 
 namespace APIC

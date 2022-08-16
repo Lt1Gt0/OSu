@@ -5,7 +5,7 @@
 #include <types.h>
 #include <IO.h>
 #include <math.h>
-#include <BasicRenderer.h>
+#include <renderer.h>
 
 /* IO PORTS FOR MOUSE COMM 
  * 0x60 (after Initialize of mouse) -  

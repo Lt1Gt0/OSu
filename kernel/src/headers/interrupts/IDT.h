@@ -13,10 +13,10 @@ struct IDTDescEntry {
     uint16  offset0;
     uint16  selector;       // Segment selector
     uint8   ist;            // Interrupt stack table offset
-    uint8   type_attr;
+    uint8   type_attr;		// Gate Type | 0 | DPL | P
     uint16  offset1;
     uint32  offset2;
-    uint32  ignore;
+    uint32  RESV;
     void    SetOffset(uint64 offset);
     uint64  GetOffset();
 };

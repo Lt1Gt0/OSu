@@ -59,10 +59,32 @@ void PrepareInterrupts(BootInfo* bootInfo)
 {
     idtr.Limit = 0x0FFF;
     idtr.Offset = (uint64)GlobalAllocator.RequestPage(); // allocate space for IDT
-    
-    SetIDTGate((void*)PageFault_Handler, 0xE, IDT_TA_InterruptGate, 0x08);
-    SetIDTGate((void*)DoubleFault_Handler, 0x8, IDT_TA_InterruptGate, 0x08);
-    SetIDTGate((void*)GPFault_Handler, 0xD, IDT_TA_InterruptGate, 0x08);
+
+	SetIDTGate((void*)DivideByZero_Handler, 0x00, IDT_TA_InterruptGate, 0x08); 
+	SetIDTGate((void*)Debug_Handler, 0x01, IDT_TA_TrapGate, 0x08); 
+	SetIDTGate((void*)NMI_Handler, 0x02, IDT_TA_InterruptGate, 0x08); 
+	SetIDTGate((void*)Breakpoint_Handler, 0x03, IDT_TA_TrapGate, 0x08); 
+	SetIDTGate((void*)Overflow_Handler, 0x04, IDT_TA_TrapGate, 0x08); 
+	SetIDTGate((void*)BoundRangeExceeded_Handler, 0x05, IDT_TA_InterruptGate, 0x08); 
+	SetIDTGate((void*)InvalidOpcode_Hander, 0x06, IDT_TA_InterruptGate, 0x08); 
+	SetIDTGate((void*)DeviceNotAvaliable_Handler, 0x07, IDT_TA_InterruptGate, 0x08); 
+    SetIDTGate((void*)DoubleFault_Handler, 0x08, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)CoprocessorSegmentOverrun_Handler, 0x09, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)InvalidTSS_Handler, 0x0A, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)SegmentNotPresent_Handler, 0x0B, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)StackSegmentFault_Handler, 0x0C, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)GPFault_Handler, 0x0D, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)PageFault_Handler, 0x0E, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)x87FloatingPointException_Handler, 0x10, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)AlignmentCheck_Handler, 0x11, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)MachineCheck_Handler, 0x12, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)SIMDFloatingPointException_Handler, 0x13, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)VirtualizationException_Handler, 0x14, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)ControlProtectionException_Handler, 0x15, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)HypervisorInjectionException_Handler, 0x1C, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)VMMCommunicationException_Handler, 0x1D, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)SecurityException_Handler, 0x1E, IDT_TA_InterruptGate, 0x08);
+		
     SetIDTGate((void*)KeyboardInt_Handler, 0x21, IDT_TA_InterruptGate, 0x08); 
     SetIDTGate((void*)MouseInt_Handler, 0x2C, IDT_TA_InterruptGate, 0x08);
     SetIDTGate((void*)PITInt_Handler, 0x20, IDT_TA_InterruptGate, 0x08);
@@ -106,7 +128,7 @@ void InitializeKernel(BootInfo* bootInfo)
 {
     asm("cli");
 
-    GlobalRenderer = BasicRenderer(bootInfo->frameBuffer, bootInfo->psf1_font);
+    GlobalRenderer = Renderer(bootInfo->frameBuffer, bootInfo->psf1_font);
     
     GDTDescriptor gdtDescriptor;
     gdtDescriptor.Size = sizeof(GDT) - 1;

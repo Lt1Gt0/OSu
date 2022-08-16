@@ -1,6 +1,11 @@
 #include "bootloader/string.h"
 
-int memcmp(const void *aptr, const void *bptr, size_t n)
+UINTN memcmp
+(
+		IN const VOID*	aptr,
+	   	IN const VOID*	bptr,
+	   	IN size_t		n
+)
 {
 	const unsigned char* a = aptr, *b = bptr;
 	for (size_t i = 0; i < n; i++) {
@@ -14,7 +19,12 @@ int memcmp(const void *aptr, const void *bptr, size_t n)
 	return 0;
 }
 
-UINTN strcmp(CHAR8 *a, CHAR8 *b, UINTN len)
+UINTN strcmp
+(
+		IN CHAR8*	a,
+	   	IN CHAR8*	b,
+	   	IN UINTN	len
+)
 {
 	for (UINTN i = 0; i < len; i++) {
 		if (*a != *b)

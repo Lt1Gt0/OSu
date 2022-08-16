@@ -87,7 +87,6 @@ CFLAGS += -Wno-error=implicit-function-declaration -Wno-error=unused-parameter -
 all:	$(TARGETS)
 
 clean:
-	@echo ----- OBJS=$(OBJS) -----  
 	rm -f $(TARGETS) *~ *.o *.so
 
 .PHONY: install

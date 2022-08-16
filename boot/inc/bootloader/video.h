@@ -1,9 +1,9 @@
+#pragma once
 #ifndef _BOOT_VIDEO_H
 #define _BOOT_VIDEO_H
 
 #include "efi.h"
 #include "efilib.h"
-
 #include "common.h"
 
 #define PSF1_MAGIC0 0x36

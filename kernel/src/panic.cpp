@@ -1,5 +1,5 @@
 #include <panic.h>
-#include <BasicRenderer.h>
+#include <renderer.h>
 #include <print.h>
 #include <colors.h>
 

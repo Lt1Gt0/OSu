@@ -181,4 +181,4 @@ endif
 ARFLAGS := rDv
 ASFLAGS += $(ARCH3264)
 LDFLAGS	+= -nostdlib --warn-common --no-undefined --fatal-warnings \
-	   --build-id=sha1
+	   --build-id=sha1 -z execstack # Fix for binutils update (2.39+)

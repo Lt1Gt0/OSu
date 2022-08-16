@@ -8,7 +8,7 @@
 #include <bootloader/string.h>
 #include <bootloader/file.h>
 
-EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 {
 	InitializeLib(ImageHandle, SystemTable); //Set up the UEFI environment commands
 	Print(L"Bootloader Initialized\n\r");
@@ -22,8 +22,8 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 		Print(L"Kernel Loaded Successfully\n\r"); 
 	}
 
-	// Prepare ELF64 header
-	Elf64_Ehdr header;
+	// Prepare ELF64 elfHeader
+	Elf64_Ehdr elfHeader;
 	
 	{
 		UINTN FileInfoSize;
@@ -32,49 +32,28 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 		SystemTable->BootServices->AllocatePool(EfiLoaderData, FileInfoSize, (void**)&FileInfo); // Allocate memory for the ELF Header
 		Kernel->GetInfo(Kernel, &gEfiFileInfoGuid, &FileInfoSize, (void**)&FileInfo);
 
-		UINTN size = sizeof(header);
-		Kernel->Read(Kernel, &size, &header); // Read amount of bytes in size from the header
+		UINTN size = sizeof(elfHeader);
+		Kernel->Read(Kernel, &size, &elfHeader); // Read amount of bytes in size from the elfHeader
 	}
 	
-	void* osulogo = LoadRawImageFile(NULL, L"osulogo.raw", ImageHandle, SystemTable);
-
-	// Because the OSU logo isn't a vital part of booting it won't return an error if not found
-	if (!osulogo)
-		Print(L"Error Loading OSU Image\n\r");
-	else 
-		Print(L"Loaded OSU Image successfully\n\r");
-
-	// Check if kernel header is correct
-	if (memcmp(&header.e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0 ||
-		header.e_ident[EI_CLASS] != ELFCLASS64 ||
-		header.e_ident[EI_DATA] != ELFDATA2LSB ||
-		header.e_type != ET_EXEC ||
-		header.e_machine != EM_X86_64 ||
-		header.e_version != EV_CURRENT) {
-
-		Print(L"Invalid Kernel Format\n\r");
-		return 0; // Not really the correct way to return from errors
-	} else {
-		Print(L"Kernel header successfully verified\n\r");
-	}
-
+	ELF_VerifyHeader(&elfHeader);
 	Elf64_Phdr* phdrs;
 	
 	{
-		Kernel->SetPosition(Kernel, header.e_phoff); // Set offset in bytes when read
-		UINTN size = header.e_phnum * header.e_phentsize; // Program header num * Program header entry size
+		Kernel->SetPosition(Kernel, elfHeader.e_phoff); // Set offset in bytes when read
+		UINTN size = elfHeader.e_phnum * elfHeader.e_phentsize; // Program elfHeader num * Program elfHeader entry size
 		SystemTable->BootServices->AllocatePool(EfiLoaderData, size, (void**)&phdrs);
 		Kernel->Read(Kernel, &size, phdrs);
 	}
 
-	// Go through each program header and load their binary information
+	// Go through each program elfHeader and load their binary information
 	for (
 		Elf64_Phdr* phdr = phdrs;
-		(char*)phdr < (char*)phdrs + header.e_phnum * header.e_phentsize;
-		phdr = (Elf64_Phdr*)((char*)phdr + header.e_phentsize)
+		(char*)phdr < (char*)phdrs + elfHeader.e_phnum * elfHeader.e_phentsize;
+		phdr = (Elf64_Phdr*)((char*)phdr + elfHeader.e_phentsize)
 	) {
 		switch (phdr->p_type) {
-		case PT_LOAD:
+			case PT_LOAD:
 			{
 				int pages = (phdr->p_memsz + 0x1000 - 1) / 0x1000; // Get memory size and round up
 				Elf64_Addr segment = phdr->p_paddr;
@@ -89,6 +68,14 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	
 	Print(L"Kernel Loaded\n\r");
 	
+	void* osulogo = LoadRawImageFile(NULL, L"osulogo.raw", ImageHandle, SystemTable);
+
+	// Because the OSU logo isn't a vital part of booting it won't return an error if not found
+	if (!osulogo)
+		Print(L"Error Loading OSU Image\n\r");
+	else 
+		Print(L"Loaded OSU Image successfully\n\r");
+
 	// Load the font file into memory
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
 	if (newFont == NULL) {
@@ -109,9 +96,10 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	newBuffer->PixelsPerScanLine);
 
 	EFI_MEMORY_DESCRIPTOR* Map = NULL; // Pointer to memory descriptor, contains number of pages of the memory section, address of the memory segment, type of memory segment, etc... 
-	UINTN MapSize, MapKey; //MapSize - Complete size of the map in bytes. MapKey - Needed for UEFI
-	UINTN DescriptorSize; //Size of descriptor entries
-	UINT32 DescriptorVersion;
+	UINTN MapSize = 0; //MapSize - Complete size of the map in bytes. MapKey - Needed for UEFI
+	UINTN MapKey = 0;
+	UINTN DescriptorSize = 0; //Size of descriptor entries
+	UINT32 DescriptorVersion = 0;
 	
 	{
 		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
@@ -128,12 +116,13 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	    	if (strcmp((CHAR8*)"RSD PTR ", (CHAR8*)configTable->VendorTable, 8))
     			rsdp = (void*)configTable->VendorTable;
     	}
+
     	configTable++;
   	}
 
-	void(*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void (*)(BootInfo*) ) header.e_entry); // Define an void function pointer at the address of header.e_entry with the attribute provided
+	void(*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void (*)(BootInfo*)) elfHeader.e_entry);
 
-	// Define the boot info to pass into the kernel
+	// store boot info
 	BootInfo bootInfo;
 	bootInfo.frameBuffer = newBuffer;
 	bootInfo.psf1_font = newFont;
@@ -144,11 +133,9 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 	bootInfo.osulogo = osulogo;
 
 	// Exit the boot services
-	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey); //Exit boot services
+	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey);
 	
 	// Load the kernel in to memeory
-
 	KernelStart(&bootInfo);
-
 	return EFI_SUCCESS; // Exit the UEFI application
 }
