@@ -6,13 +6,12 @@
 
 namespace PIT
 {
-    #define CHANNEL_0           0x40
-    #define CHANNEL_1           0x41
-    #define CHANNEL_2           0x42
-    #define MODE_COMMAND_REG    0x43
-
+    constexpr byte CHANNEL_0			{0x40}; 
+    constexpr byte CHANNEL_1            {0x41}; 
+    constexpr byte CHANNEL_2            {0x42}; 
+    constexpr byte MODE_COMMAND_REG     {0x43}; 
+	constexpr uint64 BASE_FREQUENCY		{1193182};
     extern double TimeSinceBoot;
-    const uint64 BaseFrequency = 1193182;
 
     void Sleepd(double seconds);
     void Sleep(uint64 milliseconds);

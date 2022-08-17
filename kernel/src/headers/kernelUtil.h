@@ -3,8 +3,8 @@
 #define _KERNEL_UTIL_H
 
 #include <types.h>
-#include <FrameBuffer.h>
-#include <SimpleFonts.h>
+#include <framebuffer.h>
+#include <fonts.h>
 #include <ahci/ahci.h>
 #include <efiMemory.h>
 

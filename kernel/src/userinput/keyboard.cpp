@@ -7,32 +7,38 @@ bool isNextSpecial = false;
 
 void HandlerKeyboardSpecial(uint8 scancode)
 {
-	auto charsizeY = GlobalRenderer.PSF1_Font->psf1_Header->charsize;
+	auto charsizeY = GlobalRenderer.mPSF1Font->psf1_Header->charsize;
 	auto charsizeX = charsizeY >> 1;
+
 	switch (scancode) {
-	case CursorUp:
-		if (GlobalRenderer.CursorPosition.Y - charsizeY >= 0)
-			GlobalRenderer.CursorPosition.Y -= charsizeY;
-			
-		break;
+		case CursorUp:
+		{
+			if (GlobalRenderer.mCursorPosition.Y - charsizeY >= 0)
+				GlobalRenderer.mCursorPosition.Y -= charsizeY;
+				
+			break;
+		}
+		case CursorRight:
+		{
+			if (GlobalRenderer.mCursorPosition.X < GlobalRenderer.mTargetFrameBuffer->Width - charsizeX)
+				GlobalRenderer.mCursorPosition.X += charsizeX;
 
-	case CursorRight:
-		if (GlobalRenderer.CursorPosition.X < GlobalRenderer.TargetFrameBuffer->Width - charsizeX)
-			GlobalRenderer.CursorPosition.X += charsizeX;
+			break;
+		}
+		case CursorLeft:
+		{
+			if (GlobalRenderer.mCursorPosition.X - charsizeX >= 0)
+				GlobalRenderer.mCursorPosition.X -= charsizeX;
 
-		break;
+			break;
+		}
+		case CursorDown:
+		{
+			if (GlobalRenderer.mCursorPosition.Y < GlobalRenderer.mTargetFrameBuffer->Height - charsizeY)
+				GlobalRenderer.mCursorPosition.Y += charsizeY;
 
-	case CursorLeft:
-		if (GlobalRenderer.CursorPosition.X - charsizeX >= 0)
-			GlobalRenderer.CursorPosition.X -= charsizeX;
-
-		break;
-
-	case CursorDown:
-		if (GlobalRenderer.CursorPosition.Y < GlobalRenderer.TargetFrameBuffer->Height - charsizeY)
-			GlobalRenderer.CursorPosition.Y += charsizeY;
-
-		break;
+			break;
+		}
 	}
 
 	isNextSpecial = false;

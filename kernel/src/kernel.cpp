@@ -6,9 +6,9 @@ extern "C" void _start(BootInfo *bootInfo)
 { 
     InitializeKernel(bootInfo);
 
-    GlobalRenderer.Color = Colors::TTY::OSU;
+    GlobalRenderer.mColor = Colors::TTY::OSU;
     kprintf("Kernel Initialize Sucessfully\n");
-    GlobalRenderer.Color = Colors::TTY::WHITE;
+    GlobalRenderer.mColor = Colors::TTY::WHITE;
 
     while (true) {
         asm("hlt");

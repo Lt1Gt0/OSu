@@ -1,9 +1,9 @@
 #include <ahci/ahci.h>
 
 #include <renderer.h>
-#include <paging/PageTableManager.h>
+#include <paging/pagetableManager.h>
 #include <memory/heap.h>
-#include <paging/PageFrameAllocator.h>
+#include <paging/pageframeAllocator.h>
 #include <memory.h>
 #include <print.h>
 

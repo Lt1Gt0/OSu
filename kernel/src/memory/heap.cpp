@@ -1,7 +1,7 @@
 #include <memory/heap.h>
 
-#include <paging/PageTableManager.h>
-#include <paging/PageFrameAllocator.h>
+#include <paging/pagetableManager.h>
+#include <paging/pageframeAllocator.h>
 #include <types.h>
 
 void* heapStart;

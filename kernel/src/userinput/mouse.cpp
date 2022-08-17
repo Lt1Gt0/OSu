@@ -100,7 +100,10 @@ void ProcessMousePacket()
     if (!MousePacketReady)
         return;
 
-    bool xNegative, yNegative, xOverflow, yOverflow;
+    bool xNegative;
+	bool yNegative;
+	bool xOverflow;
+	bool yOverflow;
 
     xNegative = (MousePacket[0] & PS2XSign);
     yNegative = (MousePacket[0] & PS2YSign);
@@ -132,23 +135,21 @@ void ProcessMousePacket()
     if (MousePosition.X < 0) 
         MousePosition.X = 0;
 
-    if (MousePosition.X > GlobalRenderer.TargetFrameBuffer->Width-1) 
-        MousePosition.X = GlobalRenderer.TargetFrameBuffer->Width-1;
+    if (MousePosition.X > GlobalRenderer.mTargetFrameBuffer->Width-1) 
+        MousePosition.X = GlobalRenderer.mTargetFrameBuffer->Width-1;
 
     if (MousePosition.Y < 0) 
         MousePosition.Y = 0;
 
-    if (MousePosition.Y > GlobalRenderer.TargetFrameBuffer->Height-1) 
-        MousePosition.Y = GlobalRenderer.TargetFrameBuffer->Height-1;
+    if (MousePosition.Y > GlobalRenderer.mTargetFrameBuffer->Height-1) 
+        MousePosition.Y = GlobalRenderer.mTargetFrameBuffer->Height-1;
     
     GlobalRenderer.ClearMouseCursor(MousePointer, MousePositionOld);
-    GlobalRenderer.DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
+    GlobalRenderer.DrawOverlayMouseCursor(MousePointer, MousePosition, 0xFFFFFFFF);
     
     /* No current opperations for mouse buttons so leave blank for now */
     // if (MousePacket[0] & PS2LeftButton) {}
-    
     // if (MousePacket[0] & PS2MiddleButton) {} 
-    
     // if (MousePacket[0] & PS2RightButton) {}
     
     MousePacketReady = false;

@@ -4,7 +4,7 @@
 
 #include <types.h>
 #include <acpi.h>
-#include <paging/PageTableManager.h>
+#include <paging/pagetableManager.h>
 #include <string.h>
 #include <memory/heap.h>
 

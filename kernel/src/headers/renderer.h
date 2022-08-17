@@ -5,21 +5,21 @@
 #define PRINT_SPECIAL_CHARACTERS 0
 
 #include <math.h>
-#include <FrameBuffer.h>
-#include <SimpleFonts.h>
+#include <framebuffer.h>
+#include <fonts.h>
 #include <types.h>
 
 class Renderer 
 {
     public:
-        Point CursorPosition;
-        FrameBuffer* TargetFrameBuffer;
-        PSF1_FONT* PSF1_Font;
-        unsigned int Color;
-        unsigned int ClearColor;
-        uint32 MouseCursorBuffer[16 * 16];
-        uint32 MouseCursorBufferAfter[16 * 16];
-        bool MouseDrawn;
+        Point mCursorPosition;
+        FrameBuffer* mTargetFrameBuffer;
+        PSF1_FONT* mPSF1Font;
+        uint32 mColor;
+        uint32 mClearColor;
+        uint32 mMouseCursorBuffer[16 * 16];
+        uint32 mMouseCursorBufferAfter[16 * 16];
+        bool mMouseDrawn;
 
     public:
         Renderer(FrameBuffer* targetFrameBuffer, PSF1_FONT* psf1_Font);
@@ -38,7 +38,7 @@ class Renderer
          * @param xOff offset of the x position for the char
          * @param yOff offset of the y position for the char
          */
-        void PutChar(char chr, unsigned int xOff, unsigned int yOff); 
+        void PutChar(char chr, uint32 xOff, uint32 yOff); 
         void PutChar(char chr);
 
         void ClearChar();

@@ -6,7 +6,7 @@
 #include <userinput/keyboard.h>
 #include <userinput/mouse.h>
 #include <timer/pit/pit.h>
-#include <interrupts/PIC.h>
+#include <interrupts/pic.h>
 
 /* ---------- EXCEPTION HANDLERS ---------- */
 

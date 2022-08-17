@@ -1,22 +1,23 @@
 #include <kernelUtil.h>
-
-#include <memory.h>
-#include <paging/PageFrameAllocator.h>
+#include <memory/memory.h>
+#include <paging/pageframeAllocator.h>
 #include <userinput/mouse.h>
 #include <gdt/gdt.h>
-#include <interrupts/IDT.h>
+#include <interrupts/idt.h>
 #include <interrupts/interrupts.h>
-#include <interrupts/PIC.h>
-#include <interrupts/APIC.h>
+#include <interrupts/pic.h>
+#include <interrupts/apic.h>
 #include <timer/pit/pit.h>
 #include <print.h>
 
 void PrepareMemory(BootInfo* bootInfo)
 {
-    uint64 mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize; // get the total map entries by dividing the size of the map by the descriptor size
-
-    GlobalAllocator = PageFrameAllocator(); // Declare the global allocator to an instance of a PageFrameAllocator
-    GlobalAllocator.ReadEFIMemoryMap(bootInfo->mMap, bootInfo->mMapSize, bootInfo->mMapDescSize);
+	// get the total map entries by dividing the size of the map by the descriptor size
+    uint64 mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize;
+	
+	// Declare the global allocator to an instance of a PageFrameAllocator
+    GlobalAllocator = PageFrameAllocator(); 
+	GlobalAllocator.ReadEFIMemoryMap(bootInfo->mMap, bootInfo->mMapSize, bootInfo->mMapDescSize);
 
     // Get the kernel size 
     uint64 kernelSize = (uint64)&_KernelEnd - (uint64)&_KernelStart;
@@ -39,6 +40,7 @@ void PrepareMemory(BootInfo* bootInfo)
     uint64 fbBase = (uint64)bootInfo->frameBuffer->BaseAddress;
     uint64 fbSize = (uint64)bootInfo->frameBuffer->BufferSize + 0x1000;
     GlobalAllocator.LockPages((void*)fbBase, fbSize / 0x1000 + 1);
+
     for (uint64 t = fbBase; t < fbBase + fbSize; t += 0x1000) {
         PageTableManager::MapMemory((void*)t, (void*)t); //Map the frame buffer pages to virtual memory
     }
@@ -113,11 +115,11 @@ void PrepareACPI(BootInfo* bootInfo)
     kprintf("---------------------------------\n");
 }
 
-void DrawBootImage(BootInfo* bootinfo, unsigned int xOff = 0, unsigned int yOff = 0)
+void DrawBootImage(BootInfo* bootinfo, uint32 xOff = 0, uint32 yOff = 0)
 {
     uint32* pixel = (uint32*)bootinfo->osulogo;
-    for (unsigned int y = 0; y < 256; y++) {
-        for (unsigned int x = 0; x < 256; x++) {
+    for (uint32 y = 0; y < 256; y++) {
+        for (uint32 x = 0; x < 256; x++) {
             GlobalRenderer.PutPix(x + xOff, y + yOff, *pixel);
             pixel++;
         }
@@ -150,12 +152,13 @@ void InitializeKernel(BootInfo* bootInfo)
     PrepareACPI(bootInfo);
     kprintf("ACPI Prepared\n"); 
 
-    outb(PIC1_DATA, 0b11111000);
-    outb(PIC2_DATA, 0b11101111);
+    outb(PIC::PIC1_DATA, 0b11111000);
+    outb(PIC::PIC2_DATA, 0b11101111);
     kprintf("Set PIC Data\n"); 
 
     PIT::SetDivisor(65535);
 
+	// WYSI
     DrawBootImage(bootInfo, 727, 727);
 
     asm("sti");

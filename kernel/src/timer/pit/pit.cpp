@@ -34,12 +34,12 @@ namespace PIT
 
     uint64 GetFrequency()
     {
-        return BaseFrequency / Divisor;
+        return BASE_FREQUENCY / Divisor;
     }
 
     void SetFrequency(uint64 frequency)
     {
-        SetDivisor(BaseFrequency / frequency);
+        SetDivisor(BASE_FREQUENCY / frequency);
     }
 
     void Tick()
