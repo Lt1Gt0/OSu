@@ -18,7 +18,7 @@ namespace PageTableManager
         PageMapIndexer indexer = PageMapIndexer((uint64)virtualMemory);
         PageDirectoryEntry PDE;
 
-        PDE = PML4->entries[indexer.PDP_i];
+        PDE = PML4->entries[indexer.mPDP_idx];
         PageTable* PDP;
 
         // Create new PDP
@@ -28,12 +28,12 @@ namespace PageTableManager
             PDE.SetAddress((uint64)PDP >> 12);
             PDE.SetFlag(PT_Flag::Present, true);
             PDE.SetFlag(PT_Flag::ReadWrite, true);
-            PML4->entries[indexer.PDP_i] = PDE;
+            PML4->entries[indexer.mPDP_idx] = PDE;
         } else {
             PDP = (PageTable*)((uint64)PDE.GetAddress() << 12); // Get the address stored in the PDP
         }
 
-        PDE = PDP->entries[indexer.PD_i];
+        PDE = PDP->entries[indexer.mPD_idx];
         PageTable* PD;
 
         // Create new PD
@@ -43,12 +43,12 @@ namespace PageTableManager
             PDE.SetAddress((uint64)PD >> 12);
             PDE.SetFlag(PT_Flag::Present, true);
             PDE.SetFlag(PT_Flag::ReadWrite, true);
-            PDP->entries[indexer.PD_i] = PDE;
+            PDP->entries[indexer.mPD_idx] = PDE;
         } else {
             PD = (PageTable*)((uint64)PDE.GetAddress() << 12); // Get the address stored in the PDP
         }
 
-        PDE = PD->entries[indexer.PT_i];
+        PDE = PD->entries[indexer.mPT_idx];
         PageTable* PT;
 
         // Create new PT
@@ -58,15 +58,15 @@ namespace PageTableManager
             PDE.SetAddress((uint64)PT >> 12);
             PDE.SetFlag(PT_Flag::Present, true);
             PDE.SetFlag(PT_Flag::ReadWrite, true);
-            PD->entries[indexer.PT_i] = PDE;
+            PD->entries[indexer.mPT_idx] = PDE;
         } else {
             PT = (PageTable*)((uint64)PDE.GetAddress() << 12); // Get the address stored in the PDP
         }
 
-        PDE = PT->entries[indexer.P_i];
+        PDE = PT->entries[indexer.mP_idx];
         PDE.SetAddress((uint64)physicalMemory >> 12); // Convert physical memory into an accessible address for the PDP
         PDE.SetFlag(PT_Flag::Present, true);
         PDE.SetFlag(PT_Flag::ReadWrite, true);
-        PT->entries[indexer.P_i] = PDE;
+        PT->entries[indexer.mP_idx] = PDE;
     }
 }

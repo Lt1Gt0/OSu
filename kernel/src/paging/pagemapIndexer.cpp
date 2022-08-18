@@ -3,11 +3,11 @@
 PageMapIndexer::PageMapIndexer(uint64 virtualAddress)
 {
     virtualAddress >>= 12; // Each address in the pages are aligned by 12 bits
-    P_i = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
+    this->mP_idx = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
     virtualAddress >>= 9;
-    PT_i = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
+    this->mPT_idx = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
     virtualAddress >>= 9;
-    PD_i = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
+    this->mPD_idx = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
     virtualAddress >>= 9;
-    PDP_i = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
+    this->mPDP_idx = virtualAddress & 0x1ff; // Part of the virtual address that corresponds to index
 }

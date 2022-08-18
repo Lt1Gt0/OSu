@@ -4,7 +4,6 @@
 
 #define PACKED	__attribute__((packed))
 #define UNUSED	__attribute__((unused)) 
-#define PAGE_SIZE 0x1000
 
 typedef signed char sbyte;
 typedef signed char int8;
@@ -24,5 +23,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned long long u64;
+
+constexpr uint16 PAGE_SIZE {0x1000};
 
 #endif // _TYPES_H

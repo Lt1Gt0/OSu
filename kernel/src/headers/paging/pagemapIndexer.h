@@ -8,10 +8,10 @@ class PageMapIndexer
 {
     public:
         PageMapIndexer(uint64 virtualAddress);
-        uint64 PDP_i;
-        uint64 PD_i;
-        uint64 PT_i;
-        uint64 P_i;
+        uint64 mPDP_idx;
+        uint64 mPD_idx;
+        uint64 mPT_idx;
+        uint64 mP_idx;
 };
 
 #endif // _PAGE_MAP_INDEXER_H

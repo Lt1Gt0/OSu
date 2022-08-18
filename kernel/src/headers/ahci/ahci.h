@@ -25,7 +25,7 @@ namespace AHCI
     #define ATA_CMD_READ_DMA_EX     0x25
     #define ATA_DEV_BUSY            0x80
 
-    enum PortType {
+    enum class PortType {
         None,
         SATA,
         SEMB,
@@ -33,15 +33,15 @@ namespace AHCI
         SATAPI,
     };
 
-    enum FIS_TYPE : uint8 {
-        FIS_TYPE_REG_H2D    = 0x27, // Register FIS - host to device
-        FIS_TYPE_REG_D2H    = 0x34, // Register FIS - device to host
-        FIS_TYPE_DMA_ACT    = 0x39, // DMA activate FIS - device to host
-        FIS_TYPE_DMA_SETUP  = 0x41, // DMA setup FIS - bidirectional
-        FIS_TYPE_DATA       = 0x46, // Data FIS - bidirectional
-        FIS_TYPE_BIST       = 0x58, // BIST activate FIS - bidirectional
-        FIS_TYPE_PIO_SETUP  = 0x5F, // PIO setup FIS - device to host
-        FIS_TYPE_DEV_BITS   = 0xA1, // Set device bits FIS - device to host
+    enum class FIS_TYPE : uint8 {
+        REG_H2D    = 0x27, // Register FIS - host to device
+        REG_D2H    = 0x34, // Register FIS - device to host
+        DMA_ACT    = 0x39, // DMA activate FIS - device to host
+        DMA_SETUP  = 0x41, // DMA setup FIS - bidirectional
+        DATA       = 0x46, // Data FIS - bidirectional
+        BIST       = 0x58, // BIST activate FIS - bidirectional
+        PIO_SETUP  = 0x5F, // PIO setup FIS - device to host
+        DEV_BITS   = 0xA1, // Set device bits FIS - device to host
     };
 
     struct HBAPort {
@@ -120,7 +120,7 @@ namespace AHCI
     };
 
     struct FIS_REG_H2D {
-        uint8 fisType;
+        FIS_TYPE fisType;
         
         uint8 portMultiplier  : 4;
         uint8 rsv0            : 3;
@@ -150,10 +150,10 @@ namespace AHCI
     class Port
     {
         public:
-            HBAPort*    hbaPort;
-            PortType    portType;
-            uint8*      buffer;
-            uint8       portNumber;
+            HBAPort*    mHBAPort;
+            PortType    mPortType;
+            uint8*      mBuffer;
+            uint8       mPortNumber;
 
             void        Configure();
             void        StartCMD();
@@ -166,14 +166,12 @@ namespace AHCI
         public:
             AHCIDriver(PCI::PCIDeviceHeader* pciBaseAddress);
             ~AHCIDriver();
-
-            PCI::PCIDeviceHeader* PCIBaseAddress;
-            HBAMemory* ABAR;
-
             void ProbePorts();
 
-            Port* ports[32];
-            uint8 portCount;
+            PCI::PCIDeviceHeader*	mPCIBaseAddress;
+            HBAMemory*				mABAR;
+            Port*					mPorts[32];
+            uint8					mPortCount;
     };
 }
 
