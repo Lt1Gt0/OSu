@@ -11,40 +11,38 @@
 EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 {
 	InitializeLib(ImageHandle, SystemTable); //Set up the UEFI environment commands
-	Print(L"Bootloader Initialized\n\r");
+    PrintWithColor(SystemTable, L"Bootloader Initialized\n\r", EFI_GREEN);
 
 	// Attempt to load the kernel file
 	EFI_FILE* Kernel = LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable);
 	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL) {
-		Print(L"Could Not Load Kernel \n\r");
-		return 0; // Not the correct way to return from errors
+        PrintWithColor(SystemTable, L"Unable to load kernel", EFI_RED);
+		return -1; // Not the correct way to return from errors
 	} else { 
-		Print(L"Kernel Loaded Successfully\n\r"); 
+        PrintWithColor(SystemTable, L"Kernel loaded successfully\n\r", EFI_GREEN);
 	}
 
-	// Prepare ELF64 elfHeader
-	Elf64_Ehdr elfHeader;
-	
-	{
-		UINTN FileInfoSize;
-		EFI_FILE_INFO* FileInfo;
-		Kernel->GetInfo(Kernel, &gEfiFileInfoGuid, &FileInfoSize, NULL); //Set the file info size to the size of the kernel
-		SystemTable->BootServices->AllocatePool(EfiLoaderData, FileInfoSize, (void**)&FileInfo); // Allocate memory for the ELF Header
-		Kernel->GetInfo(Kernel, &gEfiFileInfoGuid, &FileInfoSize, (void**)&FileInfo);
+    Elf64_Ehdr elfHeader;
 
-		UINTN size = sizeof(elfHeader);
-		Kernel->Read(Kernel, &size, &elfHeader); // Read amount of bytes in size from the elfHeader
-	}
-	
-	ELF_VerifyHeader(&elfHeader);
-	Elf64_Phdr* phdrs;
-	
-	{
-		Kernel->SetPosition(Kernel, elfHeader.e_phoff); // Set offset in bytes when read
-		UINTN size = elfHeader.e_phnum * elfHeader.e_phentsize; // Program elfHeader num * Program elfHeader entry size
-		SystemTable->BootServices->AllocatePool(EfiLoaderData, size, (void**)&phdrs);
-		Kernel->Read(Kernel, &size, phdrs);
-	}
+    {
+        UINTN FileInfoSize;
+        EFI_FILE_INFO* FileInfo;
+        Kernel->GetInfo(Kernel, &gEfiFileInfoGuid, &FileInfoSize, NULL); //Set the file info size to the size of the kernel
+        SystemTable->BootServices->AllocatePool(EfiLoaderData, FileInfoSize, (void**)&FileInfo); // Allocate memory for the ELF Header
+        Kernel->GetInfo(Kernel, &gEfiFileInfoGuid, &FileInfoSize, (void**)&FileInfo);
+        UINTN size = sizeof(elfHeader);
+        Kernel->Read(Kernel, &size, &elfHeader); // Read amount of bytes in size from the elfHeader
+    }
+
+    ELF_VerifyHeader(&elfHeader);
+    Elf64_Phdr* phdrs;
+
+    {
+        Kernel->SetPosition(Kernel, elfHeader.e_phoff); // Set offset in bytes when read
+        UINTN size = elfHeader.e_phnum * elfHeader.e_phentsize; // Program elfHeader num * Program elfHeader entry size
+        SystemTable->BootServices->AllocatePool(EfiLoaderData, size, (void**)&phdrs);
+        Kernel->Read(Kernel, &size, phdrs);
+    }
 
 	// Go through each program elfHeader and load their binary information
 	for (
@@ -65,21 +63,25 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 			}
 		}
 	}
-	
-	Print(L"Kernel Loaded\n\r");
-	
-	void* osulogo = LoadRawImageFile(NULL, L"osulogo.raw", ImageHandle, SystemTable);
 
-	// Because the OSU logo isn't a vital part of booting it won't return an error if not found
-	if (!osulogo)
-		Print(L"Error Loading OSU Image\n\r");
-	else 
-		Print(L"Loaded OSU Image successfully\n\r");
+    Print(L"ELF File loaded\n\r");
+    PrintWithColor(SystemTable, L"Kernel Loaded", EFI_GREEN);
+	
+    /*PrintWithColor(SystemTable, L"Kernel loaded\n\r", EFI_GREEN);*/
+    VOID* osulogo = LoadRawImageFile(NULL, L"osulogo.raw", ImageHandle, SystemTable);
+
+    /*Because the OSU logo isn't a vital part of booting it won't return an error if not found*/
+    if (!osulogo) {
+        PrintWithColor(SystemTable, L"Unable to load OSU logo\n\r", EFI_RED);
+    } else {
+        PrintWithColor(SystemTable, L"Loaded OSU logo\n\r", EFI_GREEN);
+    }
 
 	// Load the font file into memory
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
+
 	if (newFont == NULL) {
-		Print(L"Font is not valid or not found\n\r");
+        PrintWithColor(SystemTable, L"Font is not valid or not found\n\r", EFI_RED);
 		return EFI_LOAD_ERROR;
 	} else { 
 		Print(L"Font Found. Char size = %d\r\n", newFont->psf1_Header->charsize);
@@ -130,7 +132,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 	bootInfo.mMapSize = MapSize;
 	bootInfo.mMapDescSize = DescriptorSize;
 	bootInfo.rsdp = rsdp;
-	bootInfo.osulogo = osulogo;
+    bootInfo.osulogo = osulogo;
 
 	// Exit the boot services
 	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey);

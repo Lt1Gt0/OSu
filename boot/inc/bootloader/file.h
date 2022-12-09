@@ -48,9 +48,16 @@ VOID* LoadRawImageFile
 
 /* ELF File operations */
 
-BOOLEAN ELF_VerifyHeader
+VOID ELF_VerifyHeader
 (
 	IN Elf64_Ehdr* elfHeader
+);
+
+VOID ELF_Load64
+(
+    IN EFI_FILE* file, 
+    IN EFI_SYSTEM_TABLE* SystemTable, 
+    IN OUT Elf64_Ehdr* elfHeader
 );
 
 UINTN ELF_GetTotalFileSize

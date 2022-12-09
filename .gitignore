@@ -3,6 +3,7 @@
 *.tmp		
 
 kernel/lib/
+gnu-efi/x86_64//
 gnu-efi/x86_64/lib/
 gnu-efi/x86_64/gnuefi/*.o
 gnu-efi/x86_64/bootloader/*.efi

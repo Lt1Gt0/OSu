@@ -29,6 +29,16 @@ typedef struct {
 } FrameBuffer;
 
 FrameBuffer* InitializeGOP();
+
+VOID SetForegroundColor(EFI_SYSTEM_TABLE* SystemTable, UINT8 color);
+VOID PrintL(IN EFI_SYSTEM_TABLE* st, IN CHAR16* fmt);
+
+/**
+ * Because 'c' does not have support for default values, The default colors to return to will
+ * be simply a white fg on a black bg until I decide to change that
+ */
+VOID PrintWithColor(IN EFI_SYSTEM_TABLE* st, IN CHAR16* fmt, IN UINT8 fg);
+
 extern FrameBuffer frameBuffer;
 
 #endif // _BOOT_VIDEO_H

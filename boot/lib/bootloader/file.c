@@ -121,7 +121,7 @@ VOID* LoadRawImageFile
 	return contents;
 }
 
-BOOLEAN ELF_VerifyHeader(IN Elf64_Ehdr* elfHeader)
+VOID ELF_VerifyHeader(IN Elf64_Ehdr* elfHeader)
 {
 	if (memcmp(&elfHeader->e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0	||
 		elfHeader->e_ident[EI_CLASS] != ELFCLASS64					||
@@ -129,14 +129,53 @@ BOOLEAN ELF_VerifyHeader(IN Elf64_Ehdr* elfHeader)
 		elfHeader->e_type != ET_EXEC								||
 		elfHeader->e_machine != EM_X86_64							||
 		elfHeader->e_version != EV_CURRENT) {
-	
-		Print(L"Invalid ELF Header\n\r");
-		return FALSE;	
-	} else {
-		Print(L"ELF Header verified\n\r");
+		return;	
+	}
+}
+
+VOID ELF_Load64(IN EFI_FILE* file, IN EFI_SYSTEM_TABLE* SystemTable, IN OUT Elf64_Ehdr* elfHeader)
+{
+    {
+        UINTN FileInfoSize;
+        EFI_FILE_INFO* FileInfo;
+        file->GetInfo(file, &gEfiFileInfoGuid, &FileInfoSize, NULL); //Set the file info size to the size of the kernel
+        SystemTable->BootServices->AllocatePool(EfiLoaderData, FileInfoSize, (void**)&FileInfo); // Allocate memory for the ELF Header
+        file->GetInfo(file, &gEfiFileInfoGuid, &FileInfoSize, (void**)&FileInfo);
+        UINTN size = sizeof(*elfHeader);
+        file->Read(file, &size, elfHeader); // Read amount of bytes in size from the elfHeader
+    }
+
+    ELF_VerifyHeader(elfHeader);
+    Elf64_Phdr* phdrs;
+
+    {
+        file->SetPosition(file, elfHeader->e_phoff); // Set offset in bytes when read
+        UINTN size = elfHeader->e_phnum * elfHeader->e_phentsize; // Program elfHeader num * Program elfHeader entry size
+        SystemTable->BootServices->AllocatePool(EfiLoaderData, size, (void**)&phdrs);
+        file->Read(file, &size, phdrs);
+    }
+
+	// Go through each program elfHeader and load their binary information
+	for (
+		Elf64_Phdr* phdr = phdrs;
+		(char*)phdr < (char*)phdrs + elfHeader->e_phnum * elfHeader->e_phentsize;
+		phdr = (Elf64_Phdr*)((char*)phdr + elfHeader->e_phentsize)
+	) {
+		switch (phdr->p_type) {
+			case PT_LOAD:
+			{
+				int pages = (phdr->p_memsz + 0x1000 - 1) / 0x1000; // Get memory size and round up
+				Elf64_Addr segment = phdr->p_paddr;
+				SystemTable->BootServices->AllocatePages(AllocateAddress, EfiLoaderData, pages, &segment);
+				file->SetPosition(file, phdr->p_offset);
+				UINTN size = phdr->p_filesz;
+				file->Read(file, &size, (void *)segment);
+				break;
+			}
+		}
 	}
 
-	return TRUE;
+    Print(L"ELF File loaded\n\r");
 }
 
 /*

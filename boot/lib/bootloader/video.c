@@ -23,3 +23,20 @@ FrameBuffer* InitializeGOP()
 
 	return &frameBuffer;
 }
+
+VOID SetForegroundColor(EFI_SYSTEM_TABLE* SystemTable, UINT8 color)
+{
+    SystemTable->ConOut->SetAttribute(SystemTable->ConOut, color);
+}
+
+VOID PrintL(IN EFI_SYSTEM_TABLE* st, IN CHAR16* fmt)
+{
+    st->ConOut->OutputString(st->ConOut, fmt);
+}
+
+VOID PrintWithColor(IN EFI_SYSTEM_TABLE* st, IN CHAR16* fmt, IN UINT8 fg)
+{
+    st->ConOut->SetAttribute(st->ConOut, fg);
+    PrintL(st, fmt);
+    st->ConOut->SetAttribute(st->ConOut, EFI_WHITE);
+}

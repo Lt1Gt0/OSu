@@ -72,6 +72,7 @@ mkvars:
 	@echo prefix=$(prefix)
 	@echo PREFIX=$(PREFIX)
 	@echo RANLIB=$(RANLIB)
+	@echo MKFILE_PATH=$(MKFILE_PATH)
 	@echo SRCDIR=$(SRCDIR)
 	@echo TOPDIR=$(TOPDIR)
 
