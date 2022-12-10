@@ -133,6 +133,9 @@ make clean
 - [ ] Scheduling :(
   - [ ] Threads
   - [ ] Context Switching
-- [ ] File Storage (beatmaps need to be stored somehow)
+- [ ] File System (beatmaps need to be stored somehow)
+- [ ] Program Loading
 - [ ] Debugging
 - [ ] Local/IO APIC
+- [ ] Global Constructors (CTORS)
+- [ ] Stack Smashing Protection
