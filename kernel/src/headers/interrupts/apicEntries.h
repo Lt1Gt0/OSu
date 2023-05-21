@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _APIC_ENTRIES_H
-#define _APIC_ENTRIES_H
+#ifndef _APIC_ENTRIES_H_
+#define _APIC_ENTRIES_H_
 
 #include <types.h>
 
@@ -198,4 +198,4 @@ namespace APIC
 }
 
 #undef PACKED
-#endif // _APIC_ENTRIES_H
+#endif // _APIC_ENTRIES_H_

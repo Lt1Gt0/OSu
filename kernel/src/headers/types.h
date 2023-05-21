@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _TYPES_H
-#define _TYPES_H
+#ifndef _TYPES_H_
+#define _TYPES_H_
 
 #define PACKED	__attribute__((packed))
 #define UNUSED	__attribute__((unused)) 
@@ -26,4 +26,4 @@ typedef unsigned long long u64;
 
 constexpr uint16 PAGE_SIZE {0x1000};
 
-#endif // _TYPES_H
+#endif // _TYPES_H_

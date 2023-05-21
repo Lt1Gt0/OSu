@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _IO_H
-#define _IO_H
+#ifndef _IO_H_
+#define _IO_H_
 
 #include <types.h>
 
@@ -26,4 +26,4 @@ static inline void io_wait()
     asm volatile("outb %%al, $0x80" : : "a"(0));
 }
 
-#endif // _IO_H
+#endif // _IO_H_

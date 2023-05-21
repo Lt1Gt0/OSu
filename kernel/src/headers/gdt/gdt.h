@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GDT_H
-#define _GDT_H
+#ifndef _GDT_H_
+#define _GDT_H_
 
 #include <types.h>
 
@@ -30,4 +30,4 @@ struct GDT {
 extern "C" GDT DefaultGDT;
 extern "C" void LoadGDT(GDTDescriptor* gdtDescriptor);
 
-#endif // _GDT_H
+#endif // _GDT_H_

@@ -1,5 +1,5 @@
 #pragma once
-#ifndef _SPINLOCK_H
-#define _SPINLOCK_H
+#ifndef _SPINLOCK_H_
+#define _SPINLOCK_H_
 
-#endif // _SPINLOCK_H
+#endif // _SPINLOCK_H_

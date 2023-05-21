@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _STRING_H
-#define _STRING_H
+#ifndef _STRING_H_
+#define _STRING_H_
 
 #ifndef UNUSED
     #define UNUSED __attribute__((unused))
@@ -35,4 +35,4 @@ size_t strlen(const char* str);
 const char* format(const char* fstring, nint p0 = 0, nint p1 = 0, nint p2 = 0, nint p3 = 0, nint p4 = 0, nint p5 = 0, 
 					nint p6 = 0, nint p7 = 0, nint p8 = 0, nint p9 = 0);
 
-#endif // _STRING_H
+#endif // _STRING_H_

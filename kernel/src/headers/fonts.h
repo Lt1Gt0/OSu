@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _SIMPLE_FONTS_H
-#define _SIMPLE_FONTS_H
+#ifndef _SIMPLE_FONTS_H_
+#define _SIMPLE_FONTS_H_
 
 #include <types.h>
 
@@ -11,8 +11,8 @@ struct PSF1_HEADER {
 };
 
 struct PSF1_FONT {
-	PSF1_HEADER* 	psf1_Header;
+	PSF1_HEADER* 	psf1Header;
 	void* 			glyphBuffer;
 };
 
-#endif // _SIMPLE_FONTS_H
+#endif // _SIMPLE_FONTS_H_

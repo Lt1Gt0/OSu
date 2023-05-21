@@ -2,7 +2,7 @@
 #include <colors.h>
 #include <print.h>
 
-extern "C" void _start(BootInfo *bootInfo)
+extern "C" void _start(BootInfo* bootInfo)
 { 
     InitializeKernel(bootInfo);
 

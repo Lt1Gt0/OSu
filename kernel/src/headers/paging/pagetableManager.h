@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PAGE_TABLE_MANAGER_H
-#define _PAGE_TABLE_MANAGER_H
+#ifndef _PAGE_TABLE_MANAGER_H_
+#define _PAGE_TABLE_MANAGER_H_
 
 #include <paging/paging.h>
 
@@ -17,4 +17,4 @@ namespace PageTableManager
     void MapMemory(void* virtualMemory, void* physicalMemory);
 };
 
-#endif // _PAGE_TABLE_MANAGER_H
+#endif // _PAGE_TABLE_MANAGER_H_

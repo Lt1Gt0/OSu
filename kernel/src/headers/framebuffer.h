@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _FRAME_BUFFER_H
-#define _FRAME_BUFFER_H
+#ifndef _FRAME_BUFFER_H_
+#define _FRAME_BUFFER_H_
 
 #include <types.h>
 
@@ -12,4 +12,4 @@ struct FrameBuffer {
 	uint32 	PixelsPerScanLine;
 };
 
-#endif // _FRAME_BUFFER_H
+#endif // _FRAME_BUFFER_H_

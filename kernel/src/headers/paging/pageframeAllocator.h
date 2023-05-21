@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PAGE_FRAME_ALLOCATOR_H
-#define _PAGE_FRAME_ALLOCATOR_H
+#ifndef _PAGE_FRAME_ALLOCATOR_H_
+#define _PAGE_FRAME_ALLOCATOR_H_
 
 #include <efiMemory.h>
 #include <types.h>
@@ -38,4 +38,4 @@ class PageFrameAllocator
 
 extern PageFrameAllocator GlobalAllocator;
 
-#endif // _PAGE_FRAME_ALLOCATOR_H
+#endif // _PAGE_FRAME_ALLOCATOR_H_

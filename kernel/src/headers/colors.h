@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _COLORS_H
-#define _COLORS_H
+#ifndef _COLORS_H_
+#define _COLORS_H_
 
 #include <types.h>
 
@@ -21,4 +21,4 @@ namespace Colors
     }
 }
 
-#endif // _COLORS_H
+#endif // _COLORS_H_

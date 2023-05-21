@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _HEAP_H
-#define _HEAP_H
+#ifndef _HEAP_H_
+#define _HEAP_H_
 
 #include <types.h>
 
@@ -39,4 +39,4 @@ inline void operator delete[](void* p)
     free(p);
 }
 
-#endif // _HEAP_H
+#endif // _HEAP_H_

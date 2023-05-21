@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _KERNEL_UTIL_H
-#define _KERNEL_UTIL_H
+#ifndef _KERNEL_UTIL_H_
+#define _KERNEL_UTIL_H_
 
 #include <ahci/ahci.h>
 #include <efiMemory.h>
@@ -10,7 +10,7 @@
 
 struct BootInfo {
   FrameBuffer *frameBuffer;
-  PSF1_FONT *psf1_font;
+  PSF1_FONT *psf1Font;
   EFI_MEMORY_DESCRIPTOR *mMap;
   uint64 mMapSize;
   uint64 mMapDescSize;
@@ -23,4 +23,4 @@ extern "C" uint64 _KERNEL_END_;
 
 void InitializeKernel(BootInfo *bootInfo);
 
-#endif // _KERNEL_UTIL_H
+#endif // _KERNEL_UTIL_H_

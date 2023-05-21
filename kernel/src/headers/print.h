@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _KERNEL_PRINT_H
-#define _KERNEL_PRINT_H
+#ifndef _KERNEL_PRINT_H_
+#define _KERNEL_PRINT_H_
 
 #include <renderer.h>
 #include <string.h>
@@ -10,4 +10,4 @@ __attribute__((always_inline)) inline void kprintf(const char* fstr, nint p0 = 0
 	GlobalRenderer.Print(format(fstr, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9));
 }
 
-#endif // _KERNEL_PRINT_H
+#endif // _KERNEL_PRINT_H_

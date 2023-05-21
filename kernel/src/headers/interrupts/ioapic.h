@@ -1,15 +1,15 @@
 #pragma once
-#ifndef _IO_APIC_H
-#define _IO_APIC_H
+#ifndef _IO_APIC_H_
+#define _IO_APIC_H_
 
 #include <interrupts/apicEntries.h>
 #include <types.h>
 
 namespace APIC
 {
-    #define IOAPICID        0x00
-    #define IOAPICVER       0x01
-    #define IOAPICARB       0x02
+    constexpr u8 IOAPICID        {0x00}; 
+    constexpr u8 IOAPICVER       {0x01};
+    constexpr u8 IOAPICARB       {0x02};
     #define IOAPICREDTBL(n) (0x10 + 2 * n) // Lower 32-bits (add 1 for upper 32 bits)
 
     struct IOAPIC
@@ -54,16 +54,16 @@ namespace APIC
             void writeRedirectionEntry(uint8 entryNum, RedirectionEntry* entry);
 
         private:
-            size_t m_physRegs;
-            size_t m_virtualAddr;
-            size_t m_globalInterruptBase;
-            uint8 m_apicID;
-            uint8 m_apicVersion;
-            uint8 m_redirectionEntryCount;
+            size_t mPhysRegs;
+            size_t mVirtualAddr;
+            size_t mGlobalInterruptBase;
+            uint8 mApicID;
+            uint8 mApicVersion;
+            uint8 mRedirectionEntryCount;
 
             uint32 read(uint8 regOff);
             void write(uint8 regOff, uint32 data);
     };
 }
 
-#endif // _IO_APIC_H
+#endif // _IO_APIC_H_

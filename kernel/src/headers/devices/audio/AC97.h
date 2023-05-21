@@ -1,5 +1,6 @@
-#ifndef _AC97_H
-#define _AC97_H
+#pragma once
+#ifndef _AC97_H_
+#define _AC97_H_
 
 #include <types.h>
 
@@ -76,4 +77,4 @@ namespace AC97
 }
 
 
-#endif // _AC97_H
+#endif // _AC97_H_

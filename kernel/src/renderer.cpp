@@ -67,7 +67,6 @@ void Renderer::Print(const char* str)
     char* chr = (char*)str;
     while (*chr != 0) {
 
-
         PutChar(*chr, this->mCursorPosition.X, this->mCursorPosition.Y);
         this->mCursorPosition.X += 8;
 
@@ -94,10 +93,16 @@ void Renderer::PutChar(char chr, uint32 xOff, uint32 yOff)
     }
 
     uint32* pixelPtr = (uint32*)this->mTargetFrameBuffer->BaseAddress;
-    char* fontPtr = (char*)this->mPSF1Font->glyphBuffer + (chr * this->mPSF1Font->psf1_Header->charsize); // Get base address of the glyph buffer + character * character size
-    for (size_t y = yOff; y < yOff + 16; y++) { // 16 is added as the height of a character (glyph)
-        for (size_t x = xOff; x < xOff + 8; x++) { // 8 is added as the width of a character (glyph)
-            if ((*fontPtr & 0b10000000 >> (x - xOff)) > 0) { // Bitshift single bit to the right by (x - xOff) to select bit from bitmap
+
+    // Get base address of the glyph buffer + character * character size
+    char* fontPtr = (char*)this->mPSF1Font->glyphBuffer + (chr * this->mPSF1Font->psf1Header->charsize); 
+
+    // 16 is added as the height of a character (glyph)
+    for (size_t y = yOff; y < yOff + 16; y++) { 
+        // 8 is added as the width of a character (glyph)
+        for (size_t x = xOff; x < xOff + 8; x++) { 
+            // Bitshift single bit to the right by (x - xOff) to select bit from bitmap
+            if ((*fontPtr & 0b10000000 >> (x - xOff)) > 0) { 
                 *(uint32*)(pixelPtr + x + (y * this->mTargetFrameBuffer->PixelsPerScanLine)) = this->mColor;
             }
         }

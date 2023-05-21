@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PIT_H
-#define _PIT_H
+#ifndef _PIT_H_
+#define _PIT_H_
 
 #include <types.h>
 
@@ -23,4 +23,4 @@ namespace PIT
     unsigned ReadCount();
 }
 
-#endif // _PIT_H
+#endif // _PIT_H_

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _BASIC_RENDERER_H
-#define _BASIC_RENDERER_H
+#ifndef _BASIC_RENDERER_H_
+#define _BASIC_RENDERER_H_
 
 #define PRINT_SPECIAL_CHARACTERS 0
 
@@ -88,4 +88,4 @@ class Renderer
 
 extern Renderer GlobalRenderer;
 
-#endif // _BASIC_RENDERER_H
+#endif // _BASIC_RENDERER_H_

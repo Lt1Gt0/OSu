@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PIC_H
-#define _PIC_H
+#ifndef _PIC_H_
+#define _PIC_H_
 
 #include <types.h>
 
@@ -21,4 +21,4 @@ namespace PIC
     void Disable();
 }
 
-#endif // _PIC_H
+#endif // _PIC_H_

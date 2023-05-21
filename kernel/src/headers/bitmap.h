@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _BITMAP_H
-#define _BITMAP_H
+#ifndef _BITMAP_H_
+#define _BITMAP_H_
 
 #include <types.h>
 
@@ -21,4 +21,4 @@ class Bitmap
         bool Get(uint64 index);
 };
 
-#endif // _BITMAP_H
+#endif // _BITMAP_H_

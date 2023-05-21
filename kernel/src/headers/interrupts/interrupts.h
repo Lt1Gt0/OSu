@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _INTERRUPTS_H 
-#define _INTERRUPTS_H 
+#ifndef _INTERRUPTS_H_
+#define _INTERRUPTS_H_
 
 struct interruptFrame;
 
@@ -80,4 +80,4 @@ void RemapPIC();
 void PIC_EndMaster();
 void PIC_EndSlave();
 
-#endif // _INTERRUPTS_H 
+#endif // _INTERRUPTS_H_

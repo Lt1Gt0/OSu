@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _AHCI_H
-#define _AHCI_H
+#ifndef _AHCI_H_
+#define _AHCI_H_
 
 #include <types.h>
 #include <pci.h>
@@ -175,4 +175,4 @@ namespace AHCI
     };
 }
 
-#endif // _ACHI_H
+#endif // _ACHI_H_

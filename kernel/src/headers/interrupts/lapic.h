@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _LAPIC_H
-#define _LAPIC_H
+#ifndef _LAPIC_H_
+#define _LAPIC_H_
 
 #include <types.h>
 #include <kernelUtil.h>
@@ -124,4 +124,4 @@ namespace APIC
         void Initialize();
     }
 }
-#endif // _LAPIC_H
+#endif // _LAPIC_H_

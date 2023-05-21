@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _ACPI_H
-#define _ACPI_H
+#ifndef _ACPI_H_
+#define _ACPI_H_
 
 #include <types.h>
 
@@ -64,4 +64,4 @@ namespace ACPI
     void* FindTable(XSDTHeader* XSDTHeader, char* signature);
 }
 
-#endif // _ACPI_H
+#endif // _ACPI_H_

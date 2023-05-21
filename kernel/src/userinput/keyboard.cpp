@@ -7,7 +7,9 @@ bool isNextSpecial = false;
 
 void HandlerKeyboardSpecial(uint8 scancode)
 {
-	auto charsizeY = GlobalRenderer.mPSF1Font->psf1_Header->charsize;
+	using namespace QWERTYKeyboard;
+
+	auto charsizeY = GlobalRenderer.mPSF1Font->psf1Header->charsize;
 	auto charsizeX = charsizeY >> 1;
 
 	switch (scancode) {
@@ -46,6 +48,8 @@ void HandlerKeyboardSpecial(uint8 scancode)
 
 void HandlerKeyboard(uint8 scancode)
 {
+	using namespace QWERTYKeyboard;
+
 	if (isNextSpecial) {
 		HandlerKeyboardSpecial(scancode);
 		return;

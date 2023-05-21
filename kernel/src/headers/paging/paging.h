@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PAGING_H
-#define _PAGING_H
+#ifndef _PAGING_H_
+#define _PAGING_H_
 
 #include <types.h>
 
@@ -27,7 +27,7 @@ struct PageDirectoryEntry {
 };
 
 struct PageTable {
-    PageDirectoryEntry entries [512];
+    PageDirectoryEntry entries[512];
 } __attribute__((aligned(PAGE_SIZE))); // align the page table
 
-#endif // _PAGING_H
+#endif // _PAGING_H_

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _APIC_H
-#define _APIC_H
+#ifndef _APIC_H_
+#define _APIC_H_
 
 #include <acpi.h>
 #include <interrupts/lapic.h>
@@ -17,4 +17,4 @@ namespace APIC
     uint32 readIOAPICReg(const uint32 apicBase, const uint8 offset); 
 }
 
-#endif // _APIC_H
+#endif // _APIC_H_

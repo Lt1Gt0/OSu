@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PCI_H
-#define _PCI_H
+#ifndef _PCI_H_
+#define _PCI_H_
 
 #include <types.h>
 #include <acpi.h>
@@ -62,4 +62,4 @@ namespace PCI
     const char* GetProgIFName(uint8 classCode, uint8 subclassCode, uint8 progIF);
 }
 
-#endif // _PCI_H
+#endif // _PCI_H_
