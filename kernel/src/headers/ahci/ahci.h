@@ -7,23 +7,23 @@
 
 namespace AHCI
 {
-    #define HBA_PORT_IPM_ACTIVE     0x1
-    #define HBA_PORT_DEB_PRESENT    0x3
+    constexpr uint8 HBA_PORT_DEB_PRESENT   {0x3};
+    constexpr uint8 HBA_PORT_IPM_ACTIVE    {0x1};
 
-    #define HBA_PxCMD_ST            0x0001
-    #define HBA_PxCMD_FRE           0x0010
-    #define HBA_PxCMD_FR            0x4000
-    #define HBA_PxCMD_CR            0x8000
+    constexpr uint16 HBA_PxCMD_ST          {0x0001};
+    constexpr uint16 HBA_PxCMD_FRE         {0x0010};
+    constexpr uint16 HBA_PxCMD_FR          {0x4000};
+    constexpr uint16 HBA_PxCMD_CR          {0x8000};
 
-    #define SATA_SIG_ATA            0x00000101
-    #define SATA_SIG_PM             0x96690101
-    #define SATA_SIG_SEMB           0xC33C0101
-    #define SATA_SIG_ATAPI          0xEB140101
+    constexpr uint32 SATA_SIG_ATA          {0x00000101};
+    constexpr uint32 SATA_SIG_PM           {0x96690101};
+    constexpr uint32 SATA_SIG_SEMB         {0xC33C0101};
+    constexpr uint32 SATA_SIG_ATAPI        {0xEB140101};
 
-    #define HBA_PxIS_TFES           (1 << 30)
-    #define ATA_DEV_DRQ             0x08
-    #define ATA_CMD_READ_DMA_EX     0x25
-    #define ATA_DEV_BUSY            0x80
+    constexpr uint32 HBA_PxIS_TFES         {1 << 30};
+    constexpr uint8 ATA_DEV_DRQ            {0x08};
+    constexpr uint8 ATA_CMD_READ_DMA_EX    {0x25};
+    constexpr uint8 ATA_DEV_BUSY           {0x80};
 
     enum class PortType {
         None,

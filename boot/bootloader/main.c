@@ -15,6 +15,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 
 	// Attempt to load the kernel file
 	EFI_FILE* Kernel = LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable);
+
 	if (LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable) == NULL) {
         PrintWithColor(SystemTable, L"Unable to load kernel", EFI_RED);
 		return -1; // Not the correct way to return from errors

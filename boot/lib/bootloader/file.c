@@ -138,6 +138,7 @@ VOID ELF_Load64(IN EFI_FILE* file, IN EFI_SYSTEM_TABLE* SystemTable, IN OUT Elf6
     {
         UINTN FileInfoSize;
         EFI_FILE_INFO* FileInfo;
+
         file->GetInfo(file, &gEfiFileInfoGuid, &FileInfoSize, NULL); //Set the file info size to the size of the kernel
         SystemTable->BootServices->AllocatePool(EfiLoaderData, FileInfoSize, (void**)&FileInfo); // Allocate memory for the ELF Header
         file->GetInfo(file, &gEfiFileInfoGuid, &FileInfoSize, (void**)&FileInfo);

@@ -7,9 +7,9 @@ CC = gcc
 ASMC = nasm
 LD = ld
 
-CFLAGS = -g -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -fno-stack-protector $(INCLUDES)
+CFLAGS = -g -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -fno-stack-protector -nostartfiles $(INCLUDES)
 ASMFLAGS = 
-LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
+LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib 
 
 SRCDIR := src
 OBJDIR := lib
