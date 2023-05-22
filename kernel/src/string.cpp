@@ -241,7 +241,7 @@ __attribute__((always_inline)) inline void finsert(nint value, char pformat, nin
 		// Hex string
 		case 'x':
 		case 'X':
-			// str = (char*)tohex(value);
+			str = (char*)tohstr((u64)value);
 			break;
 
 		// Unsigned integer

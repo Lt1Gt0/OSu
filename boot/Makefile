@@ -43,7 +43,7 @@ VPATH = $(SRCDIR)
 
 include $(SRCDIR)/Make.defaults
 
-SUBDIRS = lib gnuefi inc apps bootloader
+SUBDIRS = lib gnuefi inc apps bootloader $(ARCH)
 gnuefi: lib
 
 all:	check_gcc $(SUBDIRS)
@@ -82,6 +82,7 @@ $(SUBDIRS):
 
 clean:
 	rm -f *~
+	rm -f $(ARCH) -r
 	@for d in $(SUBDIRS); do \
 		if [ -d $(OBJDIR)/$$d ]; then \
 			$(MAKE) -C $(OBJDIR)/$$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d clean; \

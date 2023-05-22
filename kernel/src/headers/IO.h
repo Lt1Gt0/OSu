@@ -7,7 +7,7 @@
 __attribute__((always_inline))
 static inline void outb(uint16 port, byte value)
 {
-    asm volatile ("outb %0, %1" : : "a"(value), "Nd"(port));
+    asm volatile("outb %0, %1" : : "a"(value), "Nd"(port));
 }
 
 __attribute__((always_inline))

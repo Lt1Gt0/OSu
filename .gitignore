@@ -7,12 +7,11 @@ gnu-efi/x86_64//
 gnu-efi/x86_64/lib/
 gnu-efi/x86_64/gnuefi/*.o
 gnu-efi/x86_64/bootloader/*.efi
+boot/x86_64/
 
 .vs
 .vscode
 .user_misc 	
-/.vs
-/kernel/clean
 
 # vim project information
 compile_commands.json

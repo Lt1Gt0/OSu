@@ -30,7 +30,7 @@ namespace APIC
     
     void Initialize()
     {
-        // PIC::Disable();
+        PIC::Disable();
 
         // Map Local APIC
         PageTableManager::MapMemory(lapic, lapic);

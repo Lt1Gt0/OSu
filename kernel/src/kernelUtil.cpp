@@ -57,6 +57,7 @@ void SetIDTGate(void* handler, uint8 entryOffset, uint8 type_attr, uint8 selecto
     interrupt->selector = selector;
 }
 
+extern "C" void intStub();
 void PrepareInterrupts(BootInfo* bootInfo) 
 {
     idtr.Limit = 0x0FFF;
@@ -94,8 +95,8 @@ void PrepareInterrupts(BootInfo* bootInfo)
     asm("lidt %0" : : "m"(idtr)); // Load IDT
 
     PIC::Remap();
-
     APIC::Initialize(); 
+
     // APIC::LAPIC::Enable(bootInfo);
 }
 
@@ -145,6 +146,10 @@ void InitializeKernel(BootInfo* bootInfo)
     InitializeHeap((void*)0x0000100000000000, 0x10);
     kprintf("Initialized Memory\n");
 
+    outb(PIC::PIC1_DATA, 0b11111000);
+    outb(PIC::PIC2_DATA, 0b11101111);
+    kprintf("Set PIC Data\n");
+
     PrepareInterrupts(bootInfo);
     kprintf("Interrupts Prepared\n");
 
@@ -153,10 +158,6 @@ void InitializeKernel(BootInfo* bootInfo)
 
     PrepareACPI(bootInfo);
     kprintf("ACPI Prepared\n");
-
-    outb(PIC::PIC1_DATA, 0b11111000);
-    outb(PIC::PIC2_DATA, 0b11101111);
-    kprintf("Set PIC Data\n");
 
     PIT::SetDivisor(65535);
 
