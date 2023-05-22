@@ -16,6 +16,12 @@ namespace FileSystem
         constexpr char FILE_SYS_TYPE_FAT32[8]   {"FAT32  "};
         constexpr char FILE_SYS_TYPE_FAT[8]     {"FAT    "};
 
+        constexpr u32  VALID_LEAD_SIG           {0x41615252};
+                                                // WYSI
+        constexpr u32  VALID_SIG_2              {0x61417272};
+
+        constexpr u32  FAT_32_TRAIL_SIG         {0xAA550000};
+
         struct Fat32BPB {
             u8  jmpBoot[3];
             u8  oemName[8];
@@ -41,11 +47,14 @@ namespace FileSystem
                     u8      volLabel[11];
                     char    FilSysType[8];
                     
-                    // TODO: Documentation says there is 
                     //  448 bytes worth of '0x00'
-                    //  2 bytes dedicated to 0x55AA afterwards
-                    //  {x} byes worth of '0x00' for all bytes left in sector (bytesPerSector > 512)
-                    //
+                    u8  bootCode[448];
+
+                    //  2 bytes dedicated to 0x55AA 
+                    u16 bootPartSig;
+                    
+                    // TODO: Documentation says there is 
+                    // {x} byes worth of '0x00' for all bytes left in sector (bytesPerSector > 512)
                     // here so I guess I will set the padding and sig word in the implementation code
                 } FAT16;
 
@@ -65,14 +74,28 @@ namespace FileSystem
                     u8      volLabel[11];
                     char    FileSysType[8];
 
-                    // TODO: Documentation says there is 
                     //  420 bytes worth of '0x00'
-                    //  2 bytes dedicated to 0x55AA afterwards
-                    //  {x} byes worth of '0x00' for all bytes left in sector (bytesPerSector > 512)
-                    //
+                    u8  bootCode[420];
+
+                    //  2 bytes dedicated to 0x55AA 
+                    u16 bootPartSig;
+                    
+                    // TODO: Documentation says there is 
+                    // {x} byes worth of '0x00' for all bytes left in sector (bytesPerSector > 512)
                     // here so I guess I will set the padding and sig word in the implementation code
                 } FAT32;
             } description;
+        };
+
+        // FAT32 only
+        struct FSInfo {
+            u32 leadSig;
+            u8 RESV0[480];
+            u32 sig2; 
+            u32 lstFreeClusterCount;
+            u32 clusterNum;
+            u8 RESV1[12];
+
         };
     }
 }

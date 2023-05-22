@@ -30,6 +30,8 @@ namespace APIC
     
     void Initialize()
     {
+        // PIC::Disable();
+
         // Map Local APIC
         PageTableManager::MapMemory(lapic, lapic);
     }
@@ -99,9 +101,11 @@ namespace APIC
                     break;
                 }
             }
+
             // Get the next record in the madt by adding the length of the current record to its address
             currentRecord = (Record::Header*)((uint64)currentRecord + currentRecord->Length);
         }
+
         lapic = (LAPIC::LAPIC_REGS*)lAPICPhysAddr;
     }
 

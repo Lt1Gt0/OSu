@@ -94,7 +94,9 @@ void PrepareInterrupts(BootInfo* bootInfo)
     asm("lidt %0" : : "m"(idtr)); // Load IDT
 
     PIC::Remap();
-    // LAPIC::Enable(bootInfo);
+
+    APIC::Initialize(); 
+    // APIC::LAPIC::Enable(bootInfo);
 }
 
 void PrepareACPI(BootInfo* bootInfo) 

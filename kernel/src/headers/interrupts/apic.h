@@ -4,9 +4,12 @@
 
 #include <acpi.h>
 #include <interrupts/lapic.h>
+#include <types.h>
 
 namespace APIC
 {
+    constexpr u32 APIC_BASE {0xFEE00000};
+
     extern LAPIC::LAPIC_REGS* lapic;   
 
     void Initialize();

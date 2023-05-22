@@ -25,10 +25,25 @@ namespace APIC
                     *ptr = value;
                 }
 
-                inline operator uint32() {return this->Get();}
-                inline void operator = (uint32 value) {this->Set(value);}
-                inline void operator |= (uint32 value) {this->Set(this->Get() | value);}
-                inline void operator &= (uint32 value) {this->Set(this->Get() & value);}
+                inline operator uint32() 
+                {
+                    return this->Get();
+                }
+
+                inline void operator = (uint32 value) 
+                {
+                    this->Set(value);
+                }
+
+                inline void operator |= (uint32 value) 
+                {
+                    this->Set(this->Get() | value);
+                }
+
+                inline void operator &= (uint32 value) 
+                {
+                    this->Set(this->Get() & value);
+                }
 
             private:
                 volatile uint8 padding[0x10 - 4];

@@ -22,7 +22,5 @@ namespace APIC
             if (lapic)
                 lapic->SIVR = 0;
         }
-
-
     }
 }

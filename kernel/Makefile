@@ -2,6 +2,7 @@ OSNAME = OSu
 
 GNUEFI = ../boot
 OVMFDIR = ../OVMFbin
+MISCDIR = ../misc
 LDS = kernel.ld
 CC = gcc
 ASMC = nasm
@@ -12,7 +13,7 @@ ASMFLAGS =
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib 
 
 SRCDIR := src
-OBJDIR := lib
+OBJDIR := obj
 BUILDDIR = bin
 BOOTEFI := $(GNUEFI)/x86_64/bootloader/main.efi
 
@@ -27,7 +28,7 @@ OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 DIRS = $(wildcard $(SRCDIR)/*)
 
-kernel: $(OBJS) link
+kernel: setup $(OBJS) link
 
 $(OBJDIR)/interrupts/interrupts.o: $(SRCDIR)/interrupts/interrupts.cpp
 	@ echo ~~~~~ COMPILING $^ ~~~~~
@@ -49,9 +50,8 @@ link:
 	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
 
 setup:
-	@mkdir $(BUILDDIR)
-	@mkdir $(SRCDIR)
-	@mkdir $(OBJDIR)
+	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(OBJDIR)
 
 buildimg:
 	dd if=/dev/zero of=$(BUILDDIR)/$(OSNAME).img bs=512 count=93750
@@ -61,8 +61,8 @@ buildimg:
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BOOTEFI) ::/EFI/BOOT
 	mcopy -i $(BUILDDIR)/$(OSNAME).img startup.nsh ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
-	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
-	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/osulogo.raw ::
+	mcopy -i $(BUILDDIR)/$(OSNAME).img $(MISCDIR)/kernel/zap-light16.psf ::
+	mcopy -i $(BUILDDIR)/$(OSNAME).img $(MISCDIR)/kernel/osulogo.raw ::
 
 run:
 	sudo qemu-system-x86_64 -machine q35 -device ac97 -drive file=$(BUILDDIR)/$(OSNAME).img -m 1G -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none -vga virtio
@@ -72,3 +72,4 @@ debug:
 
 clean:
 	@rm $(OBJDIR)/ -rf
+	@rm $(BUILDDIR)/ -rf

@@ -7,8 +7,8 @@
 
 namespace APIC
 {
-	#define IOREGSEL 0x00
-	#define IOREGWIN 0x10
+	constexpr u8 IOREGSEL {0x00}; 
+	constexpr u8 IOREGWIN {0x10};
 
     //IOAPIC::IOAPIC(size_t physRegs, size_t apicID, size_t gsib)
     //{
